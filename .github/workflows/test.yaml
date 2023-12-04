@@ -1,0 +1,88 @@
+name: Test
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  check-package:
+    name: Check Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version: latest
+
+      - name: Enable Yarn
+        run: corepack enable yarn
+
+      - name: Check Yarn Version
+        run: yarn set version stable && git diff --exit-code HEAD
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3.3.2
+        with:
+          path: .yarn
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Check Format
+        run: yarn format && git diff --exit-code HEAD
+
+      - name: Check Lint
+        run: yarn lint
+
+  test-package:
+    name: Test Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version: latest
+
+      - name: Enable Yarn
+        run: corepack enable yarn
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3.3.2
+        with:
+          path: .yarn
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Test Package
+        run: yarn test
+        env:
+          NODE_OPTIONS: --experimental-vm-modules
+
+  test-action:
+    name: Test Action
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows, ubuntu, macos]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Create Directory
+        uses: ./
+        with:
+          path: parent/child
+
+      - name: Check Directory
+        shell: bash
+        run: test -d parent/child
