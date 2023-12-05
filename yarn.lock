@@ -1271,25 +1271,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"action-starter@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "action-starter@workspace:."
-  dependencies:
-    "@actions/core": "npm:^1.10.1"
-    "@types/node": "npm:^20.10.3"
-    "@typescript-eslint/eslint-plugin": "npm:^6.13.1"
-    "@typescript-eslint/parser": "npm:^6.13.1"
-    "@vercel/ncc": "npm:^0.38.1"
-    eslint: "npm:^8.55.0"
-    eslint-config-prettier: "npm:^9.0.0"
-    eslint-plugin-json-files: "npm:^4.1.0"
-    eslint-plugin-tsdoc: "npm:^0.2.17"
-    jest: "npm:^29.7.0"
-    prettier: "npm:^3.1.0"
-    typescript: "npm:^5.3.2"
-  languageName: unknown
-  linkType: soft
-
 "agent-base@npm:6, agent-base@npm:^6.0.2":
   version: 6.0.2
   resolution: "agent-base@npm:6.0.2"
@@ -4815,6 +4796,25 @@ __metadata:
   checksum: ccd7e723e61ad5965fffbb791366db689572b80cca80e0f96aad968dfff4156cd7cd1ad18607afe1046d8241e6fb2d6c08bf7fa7bfb5eaec818735d8feac8f05
   languageName: node
   linkType: hard
+
+"yarn-install-action@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "yarn-install-action@workspace:."
+  dependencies:
+    "@actions/core": "npm:^1.10.1"
+    "@types/node": "npm:^20.10.3"
+    "@typescript-eslint/eslint-plugin": "npm:^6.13.1"
+    "@typescript-eslint/parser": "npm:^6.13.1"
+    "@vercel/ncc": "npm:^0.38.1"
+    eslint: "npm:^8.55.0"
+    eslint-config-prettier: "npm:^9.0.0"
+    eslint-plugin-json-files: "npm:^4.1.0"
+    eslint-plugin-tsdoc: "npm:^0.2.17"
+    jest: "npm:^29.7.0"
+    prettier: "npm:^3.1.0"
+    typescript: "npm:^5.3.2"
+  languageName: unknown
+  linkType: soft
 
 "yocto-queue@npm:^0.1.0":
   version: 0.1.0
