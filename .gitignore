@@ -2,7 +2,5 @@
 !.eslint*
 !.git*
 
-coverage/
 dist/
-docs/
 node_modules/
