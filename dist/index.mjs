@@ -27255,6 +27255,7 @@ async function main() {
         // Prevent `yarn install` from outputting group log messages.
         const env = external_process_namespaceObject.env;
         env["GITHUB_ACTIONS"] = "";
+        env["FORCE_COLOR"] = "true";
         return exec.exec("corepack", ["yarn", "install"], { env });
     });
 }
