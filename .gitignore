@@ -4,5 +4,4 @@
 
 node_modules/
 
-src/*.d.mts
 src/*.mjs
