@@ -1,5 +1,3 @@
-import core from "@actions/core";
-import { mkdirRecursive } from "./mkdir.mjs";
+import exec from "@actions/exec";
 
-const path = core.getInput("path", { required: true });
-mkdirRecursive(path);
+exec.exec("yarn", ["install"]);
