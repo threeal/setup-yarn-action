@@ -88,9 +88,6 @@ jobs:
             action.yaml
             main
 
-      - name: Enable Yarn
-        run: corepack enable yarn
-
       - name: Install Dependencies
         uses: ./yarn-install-action
 
