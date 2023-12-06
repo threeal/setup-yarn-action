@@ -5,10 +5,10 @@ jest.unstable_mockModule("@actions/exec", () => ({
   default: {
     ...jest.requireActual("@actions/exec"),
     exec: async (commandLine, args) => {
-      if (commandLine == "corepack" && args.length > 0) {
-        if (args[0] == "yarn" && args.length > 1) {
-          if (args[1] == "install") installed = true;
-        }
+      switch ([commandLine, ...args].join(" ")) {
+        case "corepack yarn install":
+          installed = true;
+          break;
       }
     },
   },
