@@ -1,12 +1,19 @@
 import { jest } from "@jest/globals";
 
+let enabled = false;
 let installed = false;
+
 jest.unstable_mockModule("@actions/exec", () => ({
   default: {
     ...jest.requireActual("@actions/exec"),
     exec: async (commandLine, args) => {
       switch ([commandLine, ...args].join(" ")) {
+        case "corepack enable yarn":
+          enabled = true;
+          break;
+
         case "corepack yarn install":
+          if (!enabled) throw new Error("Yarn is not enabled");
           installed = true;
           break;
       }
@@ -16,6 +23,7 @@ jest.unstable_mockModule("@actions/exec", () => ({
 
 describe("install dependencies", () => {
   beforeEach(() => {
+    enabled = false;
     installed = false;
   });
 
