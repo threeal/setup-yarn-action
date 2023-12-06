@@ -6,4 +6,4 @@ branding:
   color: black
 runs:
   using: node20
-  main: main/index.mjs
+  main: dist/index.mjs
