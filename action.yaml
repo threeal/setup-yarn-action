@@ -1,16 +1,9 @@
-# Modify the following action metadata according to the specification of your JavaScript action.
-# Learn more: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
-
-name: Mkdir Action
+name: Yarn Install Action
 author: Alfi Maulana
-description: Create a new directory
+description: Install Node.js dependencies using Yarn with cache support
 branding:
+  icon: chevrons-right
   color: black
-  icon: folder-plus
-inputs:
-  path:
-    description: Path of the directory to create
-    required: true
 runs:
   using: node20
   main: main/index.mjs
