@@ -2,5 +2,6 @@
 !.eslint*
 !.git*
 
-dist/
 node_modules/
+
+src/*.mjs
