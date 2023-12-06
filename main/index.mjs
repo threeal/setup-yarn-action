@@ -1334,7 +1334,7 @@ var exec = __nccwpck_require__(926);
  * Install dependencies using Yarn.
  */
 async function install() {
-    await exec.exec("yarn", ["install"]);
+    await exec.exec("corepack", ["yarn", "install"]);
 }
 
 ;// CONCATENATED MODULE: ./dist/main.mjs

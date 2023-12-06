@@ -95,4 +95,4 @@ jobs:
         uses: ./yarn-install-action
 
       - name: Build Package
-        run: yarn pack
+        run: corepack yarn pack
