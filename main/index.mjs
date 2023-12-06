@@ -1325,9 +1325,21 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("timers");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(926);
 
-_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec("yarn", ["install"]);
+// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-exec-npm-1.1.1-90973d2f96-10c0.zip/node_modules/@actions/exec/lib/exec.js
+var exec = __nccwpck_require__(926);
+;// CONCATENATED MODULE: ./dist/yarn.mjs
+
+/**
+ * Install dependencies using Yarn.
+ */
+async function install() {
+    await exec.exec("yarn", ["install"]);
+}
+
+;// CONCATENATED MODULE: ./dist/main.mjs
+
+install();
 
 })();
 

@@ -1,3 +1,3 @@
-import exec from "@actions/exec";
+import { install } from "./yarn.mjs";
 
-exec.exec("yarn", ["install"]);
+install();
