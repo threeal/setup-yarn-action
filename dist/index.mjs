@@ -27236,16 +27236,26 @@ module.exports = parseParams
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2340);
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4926);
+
+// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-core-npm-1.10.1-3cb1000b4d-10c0.zip/node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2340);
+// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-exec-npm-1.1.1-90973d2f96-10c0.zip/node_modules/@actions/exec/lib/exec.js
+var exec = __nccwpck_require__(4926);
+;// CONCATENATED MODULE: external "process"
+const external_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("process");
+;// CONCATENATED MODULE: ./src/index.mjs
+
 
 
 async function main() {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_0__.group("Enabling Yarn", async () => {
-        return _actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec("corepack", ["enable", "yarn"]);
+    await core.group("Enabling Yarn", async () => {
+        return exec.exec("corepack", ["enable", "yarn"]);
     });
-    await _actions_core__WEBPACK_IMPORTED_MODULE_0__.group("Installing dependencies", async () => {
-        return _actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec("corepack", ["yarn", "install"]);
+    await core.group("Installing dependencies", async () => {
+        // Prevent `yarn install` from outputting group log messages.
+        const env = external_process_namespaceObject.env;
+        env["GITHUB_ACTIONS"] = "";
+        return exec.exec("corepack", ["yarn", "install"], { env });
     });
 }
 main();
