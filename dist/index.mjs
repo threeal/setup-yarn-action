@@ -81380,8 +81380,9 @@ async function main() {
     });
     const cachePaths = [".yarn"];
     const cacheKey = `yarn-install-action-${external_os_.type()}`;
-    await core.group("Restoring cache", async () => {
-        return cache.restoreCache(cachePaths.slice(), cacheKey);
+    const cacheFound = await core.group("Restoring cache", async () => {
+        const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
+        return cacheId !== undefined;
     });
     await core.group("Installing dependencies", async () => {
         // Prevent `yarn install` from outputting group log messages.
@@ -81390,9 +81391,11 @@ async function main() {
         env["FORCE_COLOR"] = "true";
         return exec.exec("corepack", ["yarn", "install"], { env });
     });
-    await core.group("Saving cache", async () => {
-        return cache.saveCache(cachePaths.slice(), cacheKey);
-    });
+    if (!cacheFound) {
+        await core.group("Saving cache", async () => {
+            return cache.saveCache(cachePaths.slice(), cacheKey);
+        });
+    }
 }
 main();
 

@@ -12,8 +12,9 @@ async function main() {
   const cachePaths = [".yarn"];
   const cacheKey = `yarn-install-action-${os.type()}`;
 
-  await core.group("Restoring cache", async () => {
-    return cache.restoreCache(cachePaths.slice(), cacheKey);
+  const cacheFound = await core.group("Restoring cache", async () => {
+    const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
+    return cacheId !== undefined;
   });
 
   await core.group("Installing dependencies", async () => {
@@ -25,9 +26,11 @@ async function main() {
     return exec.exec("corepack", ["yarn", "install"], { env });
   });
 
-  await core.group("Saving cache", async () => {
-    return cache.saveCache(cachePaths.slice(), cacheKey);
-  });
+  if (!cacheFound) {
+    await core.group("Saving cache", async () => {
+      return cache.saveCache(cachePaths.slice(), cacheKey);
+    });
+  }
 }
 
 main();
