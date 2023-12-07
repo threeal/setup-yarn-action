@@ -81520,23 +81520,35 @@ async function main() {
         return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["enable", "yarn"]);
     });
     const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
-        return hash;
+        try {
+            const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
+            return hash;
+        }
+        catch (err) {
+            const errMsg = err instanceof Error ? err.message : "unknown error";
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Unable to calculate lock file hash: ${errMsg}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Skipping cache`);
+            return undefined;
+        }
     });
     const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
-    const cacheKey = `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`;
-    const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
-        const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
-        if (cacheId === undefined) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
-            return false;
+    const cacheKey = lockFileHash !== undefined
+        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`
+        : undefined;
+    if (cacheKey !== undefined) {
+        const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
+            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
+            if (cacheId === undefined) {
+                _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+                return false;
+            }
+            return true;
+        });
+        if (cacheFound) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+            return;
         }
-        return true;
-    });
-    if (cacheFound) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
-        return;
     }
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
         return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", [
@@ -81554,9 +81566,11 @@ async function main() {
         env["FORCE_COLOR"] = "true";
         return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["yarn", "install"], { env });
     });
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
-        return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
-    });
+    if (cacheKey !== undefined) {
+        await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
+            return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+        });
+    }
 }
 main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err));
 
