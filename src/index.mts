@@ -18,6 +18,16 @@ async function main() {
   });
 
   if (!cacheFound) {
+    await core.group("Disabling global cache", async () => {
+      return exec.exec("corepack", [
+        "yarn",
+        "config",
+        "set",
+        "enableGlobalCache",
+        "false",
+      ]);
+    });
+
     await core.group("Installing dependencies", async () => {
       // Prevent `yarn install` from outputting group log messages.
       const env = process.env as { [key: string]: string };
