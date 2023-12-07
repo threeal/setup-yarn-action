@@ -79569,10 +79569,24 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("net");
 
 /***/ }),
 
+/***/ 6005:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:crypto");
+
+/***/ }),
+
 /***/ 5673:
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:events");
+
+/***/ }),
+
+/***/ 7561:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 
 /***/ }),
 
@@ -79587,6 +79601,13 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:stream"
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:util");
+
+/***/ }),
+
+/***/ 4086:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:worker_threads");
 
 /***/ }),
 
@@ -79608,6 +79629,13 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("path");
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("perf_hooks");
+
+/***/ }),
+
+/***/ 7282:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("process");
 
 /***/ }),
 
@@ -81302,6 +81330,241 @@ module.exports = parseParams
 
 /***/ }),
 
+/***/ 6242:
+/***/ ((__webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+__nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "Th": () => (/* binding */ hashFile)
+/* harmony export */ });
+/* unused harmony exports hash, hashSync, hashFileSync, hashingStream */
+/* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7561);
+/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(6005);
+
+
+
+
+const {Worker} = await (async () => {
+	try {
+		return await Promise.resolve(/* import() */).then(__nccwpck_require__.t.bind(__nccwpck_require__, 4086, 19));
+	} catch {
+		return {};
+	}
+})();
+
+let worker; // Lazy
+let taskIdCounter = 0;
+const tasks = new Map();
+
+const recreateWorkerError = sourceError => {
+	const error = new Error(sourceError.message);
+
+	for (const [key, value] of Object.entries(sourceError)) {
+		if (key !== 'message') {
+			error[key] = value;
+		}
+	}
+
+	return error;
+};
+
+const createWorker = () => {
+	worker = new Worker(__nccwpck_require__.ab + "thread.js");
+
+	worker.on('message', message => {
+		const task = tasks.get(message.id);
+		tasks.delete(message.id);
+
+		if (tasks.size === 0) {
+			worker.unref();
+		}
+
+		if (message.error === undefined) {
+			task.resolve(message.value);
+		} else {
+			task.reject(recreateWorkerError(message.error));
+		}
+	});
+
+	worker.on('error', error => {
+		// Any error here is effectively an equivalent of segfault, and have no scope, so we just throw it on callback level
+		throw error;
+	});
+};
+
+const taskWorker = (method, arguments_, transferList) => new Promise((resolve, reject) => {
+	const id = taskIdCounter++;
+	tasks.set(id, {resolve, reject});
+
+	if (worker === undefined) {
+		createWorker();
+	}
+
+	worker.ref();
+	worker.postMessage({id, method, arguments_}, transferList);
+});
+
+async function hash(input, options = {}) {
+	if (isStream(input)) {
+		return new Promise((resolve, reject) => {
+			// TODO: Use `stream.compose` and `.toArray()`.
+			input
+				.on('error', reject)
+				.pipe(hashingStream(options))
+				.on('error', reject)
+				.on('finish', function () {
+					resolve(this.read());
+				});
+		});
+	}
+
+	if (Worker === undefined) {
+		return hashSync(input, options);
+	}
+
+	let {
+		encoding = 'hex',
+		algorithm = 'sha512',
+	} = options;
+
+	if (encoding === 'buffer') {
+		encoding = undefined;
+	}
+
+	const hash = await taskWorker('hash', [algorithm, input]);
+
+	if (encoding === undefined) {
+		return Buffer.from(hash);
+	}
+
+	return Buffer.from(hash).toString(encoding);
+}
+
+function hashSync(input, {encoding = 'hex', algorithm = 'sha512'} = {}) {
+	if (encoding === 'buffer') {
+		encoding = undefined;
+	}
+
+	const hash = crypto.createHash(algorithm);
+
+	const update = buffer => {
+		const inputEncoding = typeof buffer === 'string' ? 'utf8' : undefined;
+		hash.update(buffer, inputEncoding);
+	};
+
+	for (const element of [input].flat()) {
+		update(element);
+	}
+
+	return hash.digest(encoding);
+}
+
+async function hashFile(filePath, options = {}) {
+	if (Worker === undefined) {
+		return hash(node_fs__WEBPACK_IMPORTED_MODULE_0__.createReadStream(filePath), options);
+	}
+
+	const {
+		encoding = 'hex',
+		algorithm = 'sha512',
+	} = options;
+
+	const hash = await taskWorker('hashFile', [algorithm, filePath]);
+
+	if (encoding === 'buffer') {
+		return Buffer.from(hash);
+	}
+
+	return Buffer.from(hash).toString(encoding);
+}
+
+function hashFileSync(filePath, options) {
+	return hashSync(fs.readFileSync(filePath), options);
+}
+
+function hashingStream({encoding = 'hex', algorithm = 'sha512'} = {}) {
+	if (encoding === 'buffer') {
+		encoding = undefined;
+	}
+
+	const stream = crypto.createHash(algorithm);
+	stream.setEncoding(encoding);
+	return stream;
+}
+
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } }, 1);
+
+/***/ }),
+
+/***/ 5461:
+/***/ ((__webpack_module__, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
+
+__nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+/* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5756);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2340);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4926);
+/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(6242);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2037);
+/* harmony import */ var process__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(7282);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_5__]);
+hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
+
+
+
+
+
+async function main() {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
+        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["enable", "yarn"]);
+    });
+    const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
+        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
+        return hash;
+    });
+    const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+    const cacheKey = `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`;
+    const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
+        const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
+        if (cacheId === undefined) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+            return false;
+        }
+        return true;
+    });
+    if (cacheFound) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+        return;
+    }
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
+        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", [
+            "yarn",
+            "config",
+            "set",
+            "enableGlobalCache",
+            "false",
+        ]);
+    });
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
+        // Prevent `yarn install` from outputting group log messages.
+        const env = process__WEBPACK_IMPORTED_MODULE_4__.env;
+        env["GITHUB_ACTIONS"] = "";
+        env["FORCE_COLOR"] = "true";
+        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["yarn", "install"], { env });
+    });
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
+        return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+    });
+}
+main();
+
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
+
+/***/ }),
+
 /***/ 9539:
 /***/ ((module) => {
 
@@ -81349,70 +81612,142 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ }
 /******/ 
 /************************************************************************/
+/******/ /* webpack/runtime/async module */
+/******/ (() => {
+/******/ 	var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
+/******/ 	var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
+/******/ 	var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
+/******/ 	var resolveQueue = (queue) => {
+/******/ 		if(queue && !queue.d) {
+/******/ 			queue.d = 1;
+/******/ 			queue.forEach((fn) => (fn.r--));
+/******/ 			queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
+/******/ 		}
+/******/ 	}
+/******/ 	var wrapDeps = (deps) => (deps.map((dep) => {
+/******/ 		if(dep !== null && typeof dep === "object") {
+/******/ 			if(dep[webpackQueues]) return dep;
+/******/ 			if(dep.then) {
+/******/ 				var queue = [];
+/******/ 				queue.d = 0;
+/******/ 				dep.then((r) => {
+/******/ 					obj[webpackExports] = r;
+/******/ 					resolveQueue(queue);
+/******/ 				}, (e) => {
+/******/ 					obj[webpackError] = e;
+/******/ 					resolveQueue(queue);
+/******/ 				});
+/******/ 				var obj = {};
+/******/ 				obj[webpackQueues] = (fn) => (fn(queue));
+/******/ 				return obj;
+/******/ 			}
+/******/ 		}
+/******/ 		var ret = {};
+/******/ 		ret[webpackQueues] = x => {};
+/******/ 		ret[webpackExports] = dep;
+/******/ 		return ret;
+/******/ 	}));
+/******/ 	__nccwpck_require__.a = (module, body, hasAwait) => {
+/******/ 		var queue;
+/******/ 		hasAwait && ((queue = []).d = 1);
+/******/ 		var depQueues = new Set();
+/******/ 		var exports = module.exports;
+/******/ 		var currentDeps;
+/******/ 		var outerResolve;
+/******/ 		var reject;
+/******/ 		var promise = new Promise((resolve, rej) => {
+/******/ 			reject = rej;
+/******/ 			outerResolve = resolve;
+/******/ 		});
+/******/ 		promise[webpackExports] = exports;
+/******/ 		promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
+/******/ 		module.exports = promise;
+/******/ 		body((deps) => {
+/******/ 			currentDeps = wrapDeps(deps);
+/******/ 			var fn;
+/******/ 			var getResult = () => (currentDeps.map((d) => {
+/******/ 				if(d[webpackError]) throw d[webpackError];
+/******/ 				return d[webpackExports];
+/******/ 			}))
+/******/ 			var promise = new Promise((resolve) => {
+/******/ 				fn = () => (resolve(getResult));
+/******/ 				fn.r = 0;
+/******/ 				var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
+/******/ 				currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
+/******/ 			});
+/******/ 			return fn.r ? promise : getResult();
+/******/ 		}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
+/******/ 		queue && (queue.d = 0);
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/create fake namespace object */
+/******/ (() => {
+/******/ 	var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 	var leafPrototypes;
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 16: return value when it's Promise-like
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__nccwpck_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = this(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if(typeof value === 'object' && value) {
+/******/ 			if((mode & 4) && value.__esModule) return value;
+/******/ 			if((mode & 16) && typeof value.then === 'function') return value;
+/******/ 		}
+/******/ 		var ns = Object.create(null);
+/******/ 		__nccwpck_require__.r(ns);
+/******/ 		var def = {};
+/******/ 		leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
+/******/ 		for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 			Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
+/******/ 		}
+/******/ 		def['default'] = () => (value);
+/******/ 		__nccwpck_require__.d(ns, def);
+/******/ 		return ns;
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__nccwpck_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__nccwpck_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
 /******/ /* webpack/runtime/compat */
 /******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 /******/ 
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-cache-npm-3.2.2-2fd98c2edc-10c0.zip/node_modules/@actions/cache/lib/cache.js
-var cache = __nccwpck_require__(5756);
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-core-npm-1.10.1-3cb1000b4d-10c0.zip/node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2340);
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-exec-npm-1.1.1-90973d2f96-10c0.zip/node_modules/@actions/exec/lib/exec.js
-var exec = __nccwpck_require__(4926);
-// EXTERNAL MODULE: external "os"
-var external_os_ = __nccwpck_require__(2037);
-;// CONCATENATED MODULE: external "process"
-const external_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("process");
-;// CONCATENATED MODULE: ./src/index.mjs
-
-
-
-
-
-async function main() {
-    await core.group("Enabling Yarn", async () => {
-        return exec.exec("corepack", ["enable", "yarn"]);
-    });
-    const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
-    const cacheKey = `yarn-install-action-${external_os_.type()}`;
-    const cacheFound = await core.group("Restoring cache", async () => {
-        const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-        if (cacheId === undefined) {
-            core.warning("Cache not found");
-            return false;
-        }
-        return true;
-    });
-    if (cacheFound) {
-        core.info("Cache restored successfully");
-        return;
-    }
-    await core.group("Disabling global cache", async () => {
-        return exec.exec("corepack", [
-            "yarn",
-            "config",
-            "set",
-            "enableGlobalCache",
-            "false",
-        ]);
-    });
-    await core.group("Installing dependencies", async () => {
-        // Prevent `yarn install` from outputting group log messages.
-        const env = external_process_namespaceObject.env;
-        env["GITHUB_ACTIONS"] = "";
-        env["FORCE_COLOR"] = "true";
-        return exec.exec("corepack", ["yarn", "install"], { env });
-    });
-    await core.group("Saving cache", async () => {
-        return cache.saveCache(cachePaths.slice(), cacheKey);
-    });
-}
-main();
-
-})();
-
+/******/ 
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ // This entry module used 'module' so it can't be inlined
+/******/ var __webpack_exports__ = __nccwpck_require__(5461);
+/******/ __webpack_exports__ = await __webpack_exports__;
+/******/ 
