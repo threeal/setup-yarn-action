@@ -57,7 +57,7 @@ jobs:
           path: yarn-install-action
           sparse-checkout: |
             action.yaml
-            dist/index.mjs
+            dist
 
       - name: Install Dependencies
         uses: ./yarn-install-action
