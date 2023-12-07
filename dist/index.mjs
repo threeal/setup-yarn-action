@@ -81558,7 +81558,7 @@ async function main() {
         return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
     });
 }
-main();
+main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err));
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
