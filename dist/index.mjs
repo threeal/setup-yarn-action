@@ -81504,11 +81504,13 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5756);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2340);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4926);
-/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(6242);
-/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2037);
-/* harmony import */ var process__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(7282);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_5__]);
-hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(6242);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2037);
+/* harmony import */ var process__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(7282);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_6__]);
+hasha__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
 
 
 
@@ -81520,21 +81522,17 @@ async function main() {
         return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["enable", "yarn"]);
     });
     const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
-        try {
-            const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
-            return hash;
-        }
-        catch (err) {
-            const errMsg = err instanceof Error ? err.message : "unknown error";
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Unable to calculate lock file hash: ${errMsg}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Skipping cache`);
+        if (!fs__WEBPACK_IMPORTED_MODULE_3__.existsSync("yarn.lock")) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
             return undefined;
         }
+        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_6__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
+        return hash;
     });
     const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
     const cacheKey = lockFileHash !== undefined
-        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`
+        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_4__.type()}-${lockFileHash}`
         : undefined;
     if (cacheKey !== undefined) {
         const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
@@ -81560,12 +81558,14 @@ async function main() {
         ]);
     });
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-        const env = process__WEBPACK_IMPORTED_MODULE_4__.env;
+        const env = process__WEBPACK_IMPORTED_MODULE_5__.env;
         // Prevent `yarn install` from outputting group log messages.
         env["GITHUB_ACTIONS"] = "";
         env["FORCE_COLOR"] = "true";
         // Prevent no lock file causing errors.
-        env["CI"] = "";
+        if (lockFileHash === undefined) {
+            env["CI"] = "";
+        }
         return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["yarn", "install"], { env });
     });
     if (cacheKey !== undefined) {

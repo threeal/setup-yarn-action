@@ -2,6 +2,7 @@ import cache from "@actions/cache";
 import core from "@actions/core";
 import exec from "@actions/exec";
 import { hashFile } from "hasha";
+import fs from "fs";
 import os from "os";
 import process from "process";
 
@@ -13,16 +14,13 @@ async function main() {
   const lockFileHash = await core.group(
     "Calculating lock file hash",
     async () => {
-      try {
-        const hash = await hashFile("yarn.lock", { algorithm: "md5" });
-        core.info(`Hash: ${hash}`);
-        return hash;
-      } catch (err) {
-        const errMsg = err instanceof Error ? err.message : "unknown error";
-        core.warning(`Unable to calculate lock file hash: ${errMsg}`);
-        core.warning(`Skipping cache`);
+      if (!fs.existsSync("yarn.lock")) {
+        core.warning(`Lock file not found, skipping cache`);
         return undefined;
       }
+      const hash = await hashFile("yarn.lock", { algorithm: "md5" });
+      core.info(`Hash: ${hash}`);
+      return hash;
     },
   );
 
@@ -66,7 +64,9 @@ async function main() {
     env["FORCE_COLOR"] = "true";
 
     // Prevent no lock file causing errors.
-    env["CI"] = "";
+    if (lockFileHash === undefined) {
+      env["CI"] = "";
+    }
 
     return exec.exec("corepack", ["yarn", "install"], { env });
   });
