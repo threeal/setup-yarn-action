@@ -9,7 +9,7 @@ async function main() {
     return exec.exec("corepack", ["enable", "yarn"]);
   });
 
-  const cachePaths = [".yarn"];
+  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
   const cacheKey = `yarn-install-action-${os.type()}`;
 
   const cacheFound = await core.group("Restoring cache", async () => {
