@@ -12,7 +12,11 @@ async function main() {
 
   const lockFileHash = await core.group(
     "Calculating lock file hash",
-    async () => hashFile("yarn.lock", { algorithm: "md5" }),
+    async () => {
+      const hash = await hashFile("yarn.lock", { algorithm: "md5" });
+      core.info(`Hash: ${hash}`);
+      return hash;
+    },
   );
 
   const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
