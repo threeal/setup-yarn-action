@@ -1,6 +1,7 @@
 import cache from "@actions/cache";
 import core from "@actions/core";
 import exec from "@actions/exec";
+import { hashFile } from "hasha";
 import os from "os";
 import process from "process";
 
@@ -9,8 +10,13 @@ async function main() {
     return exec.exec("corepack", ["enable", "yarn"]);
   });
 
+  const lockFileHash = await core.group(
+    "Calculating lock file hash",
+    async () => hashFile("yarn.lock", { algorithm: "md5" }),
+  );
+
   const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
-  const cacheKey = `yarn-install-action-${os.type()}`;
+  const cacheKey = `yarn-install-action-${os.type()}-${lockFileHash}`;
 
   const cacheFound = await core.group("Restoring cache", async () => {
     const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
