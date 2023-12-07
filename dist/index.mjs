@@ -81378,7 +81378,7 @@ async function main() {
     const cachePaths = [".yarn"];
     const cacheKey = "yarn-install-action";
     await core.group("Restoring cache", async () => {
-        return cache.restoreCache(cachePaths, cacheKey);
+        return cache.restoreCache(cachePaths.slice(), cacheKey);
     });
     await core.group("Installing dependencies", async () => {
         // Prevent `yarn install` from outputting group log messages.
@@ -81388,7 +81388,7 @@ async function main() {
         return exec.exec("corepack", ["yarn", "install"], { env });
     });
     await core.group("Saving cache", async () => {
-        return cache.saveCache(cachePaths, cacheKey);
+        return cache.saveCache(cachePaths.slice(), cacheKey);
     });
 }
 main();

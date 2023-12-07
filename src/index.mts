@@ -12,7 +12,7 @@ async function main() {
   const cacheKey = "yarn-install-action";
 
   await core.group("Restoring cache", async () => {
-    return cache.restoreCache(cachePaths, cacheKey);
+    return cache.restoreCache(cachePaths.slice(), cacheKey);
   });
 
   await core.group("Installing dependencies", async () => {
@@ -25,7 +25,7 @@ async function main() {
   });
 
   await core.group("Saving cache", async () => {
-    return cache.saveCache(cachePaths, cacheKey);
+    return cache.saveCache(cachePaths.slice(), cacheKey);
   });
 }
 
