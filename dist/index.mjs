@@ -81384,14 +81384,14 @@ async function main() {
         const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
         return cacheId !== undefined;
     });
-    await core.group("Installing dependencies", async () => {
-        // Prevent `yarn install` from outputting group log messages.
-        const env = external_process_namespaceObject.env;
-        env["GITHUB_ACTIONS"] = "";
-        env["FORCE_COLOR"] = "true";
-        return exec.exec("corepack", ["yarn", "install"], { env });
-    });
     if (!cacheFound) {
+        await core.group("Installing dependencies", async () => {
+            // Prevent `yarn install` from outputting group log messages.
+            const env = external_process_namespaceObject.env;
+            env["GITHUB_ACTIONS"] = "";
+            env["FORCE_COLOR"] = "true";
+            return exec.exec("corepack", ["yarn", "install"], { env });
+        });
         await core.group("Saving cache", async () => {
             return cache.saveCache(cachePaths.slice(), cacheKey);
         });
