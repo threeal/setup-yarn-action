@@ -58,6 +58,7 @@ jobs:
           sparse-checkout: |
             action.yaml
             dist
+          sparse-checkout-cone-mode: false
 
       - name: Install Dependencies
         uses: ./yarn-install-action
