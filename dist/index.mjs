@@ -81382,29 +81382,35 @@ async function main() {
     const cacheKey = `yarn-install-action-${external_os_.type()}`;
     const cacheFound = await core.group("Restoring cache", async () => {
         const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-        return cacheId !== undefined;
+        if (cacheId === undefined) {
+            core.warning("Cache not found");
+            return false;
+        }
+        return true;
     });
-    if (!cacheFound) {
-        await core.group("Disabling global cache", async () => {
-            return exec.exec("corepack", [
-                "yarn",
-                "config",
-                "set",
-                "enableGlobalCache",
-                "false",
-            ]);
-        });
-        await core.group("Installing dependencies", async () => {
-            // Prevent `yarn install` from outputting group log messages.
-            const env = external_process_namespaceObject.env;
-            env["GITHUB_ACTIONS"] = "";
-            env["FORCE_COLOR"] = "true";
-            return exec.exec("corepack", ["yarn", "install"], { env });
-        });
-        await core.group("Saving cache", async () => {
-            return cache.saveCache(cachePaths.slice(), cacheKey);
-        });
+    if (cacheFound) {
+        core.info("Cache restored successfully");
+        return;
     }
+    await core.group("Disabling global cache", async () => {
+        return exec.exec("corepack", [
+            "yarn",
+            "config",
+            "set",
+            "enableGlobalCache",
+            "false",
+        ]);
+    });
+    await core.group("Installing dependencies", async () => {
+        // Prevent `yarn install` from outputting group log messages.
+        const env = external_process_namespaceObject.env;
+        env["GITHUB_ACTIONS"] = "";
+        env["FORCE_COLOR"] = "true";
+        return exec.exec("corepack", ["yarn", "install"], { env });
+    });
+    await core.group("Saving cache", async () => {
+        return cache.saveCache(cachePaths.slice(), cacheKey);
+    });
 }
 main();
 
