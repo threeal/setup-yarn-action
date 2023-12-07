@@ -81364,9 +81364,12 @@ var cache = __nccwpck_require__(5756);
 var core = __nccwpck_require__(2340);
 // EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-exec-npm-1.1.1-90973d2f96-10c0.zip/node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(4926);
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(2037);
 ;// CONCATENATED MODULE: external "process"
 const external_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("process");
 ;// CONCATENATED MODULE: ./src/index.mjs
+
 
 
 
@@ -81376,7 +81379,7 @@ async function main() {
         return exec.exec("corepack", ["enable", "yarn"]);
     });
     const cachePaths = [".yarn"];
-    const cacheKey = "yarn-install-action";
+    const cacheKey = `yarn-install-action-${external_os_.type()}`;
     await core.group("Restoring cache", async () => {
         return cache.restoreCache(cachePaths.slice(), cacheKey);
     });

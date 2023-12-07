@@ -1,6 +1,7 @@
 import cache from "@actions/cache";
 import core from "@actions/core";
 import exec from "@actions/exec";
+import os from "os";
 import process from "process";
 
 async function main() {
@@ -9,7 +10,7 @@ async function main() {
   });
 
   const cachePaths = [".yarn"];
-  const cacheKey = "yarn-install-action";
+  const cacheKey = `yarn-install-action-${os.type()}`;
 
   await core.group("Restoring cache", async () => {
     return cache.restoreCache(cachePaths.slice(), cacheKey);
