@@ -81560,10 +81560,12 @@ async function main() {
         ]);
     });
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-        // Prevent `yarn install` from outputting group log messages.
         const env = process__WEBPACK_IMPORTED_MODULE_4__.env;
+        // Prevent `yarn install` from outputting group log messages.
         env["GITHUB_ACTIONS"] = "";
         env["FORCE_COLOR"] = "true";
+        // Prevent no lock file causing errors.
+        env["CI"] = "";
         return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["yarn", "install"], { env });
     });
     if (cacheKey !== undefined) {

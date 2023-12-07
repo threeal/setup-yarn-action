@@ -59,10 +59,14 @@ async function main() {
   });
 
   await core.group("Installing dependencies", async () => {
-    // Prevent `yarn install` from outputting group log messages.
     const env = process.env as { [key: string]: string };
+
+    // Prevent `yarn install` from outputting group log messages.
     env["GITHUB_ACTIONS"] = "";
     env["FORCE_COLOR"] = "true";
+
+    // Prevent no lock file causing errors.
+    env["CI"] = "";
 
     return exec.exec("corepack", ["yarn", "install"], { env });
   });
