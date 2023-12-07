@@ -65,3 +65,31 @@ jobs:
 
       - name: Build Package
         run: corepack yarn pack
+
+  test-action-without-lock-file:
+    name: Test Action Without Lock File
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Package
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: threeal/nodejs-starter
+          sparse-checkout: |
+            /**/*
+            !yarn.lock
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout Action
+        uses: actions/checkout@v4.1.1
+        with:
+          path: yarn-install-action
+          sparse-checkout: |
+            action.yaml
+            dist
+          sparse-checkout-cone-mode: false
+
+      - name: Install Dependencies
+        uses: ./yarn-install-action
+
+      - name: Build Package
+        run: corepack yarn pack
