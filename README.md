@@ -5,7 +5,10 @@
 [![build status](https://img.shields.io/github/actions/workflow/status/threeal/yarn-install-action/build.yaml?branch=main&label=build&style=flat-square)](https://github.com/threeal/yarn-install-action/actions/workflows/build.yaml)
 [![test status](https://img.shields.io/github/actions/workflow/status/threeal/yarn-install-action/test.yaml?branch=main&label=test&style=flat-square)](https://github.com/threeal/yarn-install-action/actions/workflows/test.yaml)
 
-The Yarn Install Action is a [GitHub Action](https://github.com/features/actions) designed to install [Node.js](https://nodejs.org/en) dependencies using [Yarn](https://yarnpkg.com/) with cache support .
+The Yarn Install Action is a [GitHub Action](https://github.com/features/actions) crafted for effortless installation of dependencies in a [Node.js](https://nodejs.org/en) package utilizing the [Yarn](https://yarnpkg.com/) package manager.
+Yarn is a fast, reliable, and secure dependency management tool for Node.js projects, offering features such as deterministic dependency resolution and offline capabilities.
+
+This action is designed to streamline GitHub workflows for Node.js projects, enabling quick and efficient installation by supporting the caching of dependencies. Whether you're working on a small project or a complex application, the Yarn Install Action ensures a smooth and accelerated dependency setup for your Node.js packages.
 
 ## Key Features
 
