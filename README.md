@@ -7,6 +7,14 @@
 
 The Yarn Install Action is a [GitHub Action](https://github.com/features/actions) designed to install [Node.js](https://nodejs.org/en) dependencies using [Yarn](https://yarnpkg.com/) with cache support .
 
+## Key Features
+
+The Yarn Install Action provides the following key features:
+
+- Install dependencies for a Node.js package using Yarn.
+- Automatic Yarn enablement using [Corepack](https://nodejs.org/api/corepack.html) before installation.
+- Support for caching dependencies installation, enhancing workflow speed.
+
 ## Usage
 
 To begin using the Yarn Install Action, refer to the [action.yaml](./action.yaml) file for detailed configuration options.
