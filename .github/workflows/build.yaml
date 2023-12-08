@@ -27,7 +27,9 @@ jobs:
           key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install Dependencies
-        run: yarn install
+        run: corepack yarn install
 
       - name: Build Package
-        run: yarn build && git diff --exit-code --text HEAD
+        run: |
+          corepack yarn build
+          git diff --exit-code --text HEAD
