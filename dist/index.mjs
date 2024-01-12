@@ -1795,7 +1795,7 @@ exports.AbortError = AbortError;
 
 /***/ }),
 
-/***/ 2633:
+/***/ 7083:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -1835,9 +1835,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.saveCache = exports.restoreCache = exports.isFeatureAvailable = exports.ReserveCacheError = exports.ValidationError = void 0;
 const core = __importStar(__nccwpck_require__(4278));
 const path = __importStar(__nccwpck_require__(1017));
-const utils = __importStar(__nccwpck_require__(6819));
-const cacheHttpClient = __importStar(__nccwpck_require__(9956));
-const tar_1 = __nccwpck_require__(2719);
+const utils = __importStar(__nccwpck_require__(7274));
+const cacheHttpClient = __importStar(__nccwpck_require__(3781));
+const tar_1 = __nccwpck_require__(1729);
 class ValidationError extends Error {
     constructor(message) {
         super(message);
@@ -2036,7 +2036,7 @@ exports.saveCache = saveCache;
 
 /***/ }),
 
-/***/ 9956:
+/***/ 3781:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2080,10 +2080,10 @@ const auth_1 = __nccwpck_require__(1361);
 const crypto = __importStar(__nccwpck_require__(6113));
 const fs = __importStar(__nccwpck_require__(7147));
 const url_1 = __nccwpck_require__(7310);
-const utils = __importStar(__nccwpck_require__(6819));
-const downloadUtils_1 = __nccwpck_require__(3324);
-const options_1 = __nccwpck_require__(5428);
-const requestUtils_1 = __nccwpck_require__(5503);
+const utils = __importStar(__nccwpck_require__(7274));
+const downloadUtils_1 = __nccwpck_require__(5057);
+const options_1 = __nccwpck_require__(1773);
+const requestUtils_1 = __nccwpck_require__(7136);
 const versionSalt = '1.0';
 function getCacheApiUrl(resource) {
     const baseUrl = process.env['ACTIONS_CACHE_URL'] || '';
@@ -2111,7 +2111,8 @@ function createHttpClient() {
     return new http_client_1.HttpClient('actions/cache', [bearerCredentialHandler], getRequestOptions());
 }
 function getCacheVersion(paths, compressionMethod, enableCrossOsArchive = false) {
-    const components = paths;
+    // don't pass changes upstream
+    const components = paths.slice();
     // Add compression method to cache version to restore
     // compressed cache as per compression method
     if (compressionMethod) {
@@ -2303,7 +2304,7 @@ exports.saveCache = saveCache;
 
 /***/ }),
 
-/***/ 6819:
+/***/ 7274:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2357,7 +2358,7 @@ const path = __importStar(__nccwpck_require__(1017));
 const semver = __importStar(__nccwpck_require__(2211));
 const util = __importStar(__nccwpck_require__(3837));
 const uuid_1 = __nccwpck_require__(4609);
-const constants_1 = __nccwpck_require__(671);
+const constants_1 = __nccwpck_require__(2190);
 // From https://github.com/actions/toolkit/blob/main/packages/tool-cache/src/tool-cache.ts#L23
 function createTempDirectory() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -2399,26 +2400,21 @@ function resolvePaths(patterns) {
             implicitDescendants: false
         });
         try {
-            for (var _e = true, _f = __asyncValues(globber.globGenerator()), _g; _g = yield _f.next(), _a = _g.done, !_a;) {
+            for (var _e = true, _f = __asyncValues(globber.globGenerator()), _g; _g = yield _f.next(), _a = _g.done, !_a; _e = true) {
                 _c = _g.value;
                 _e = false;
-                try {
-                    const file = _c;
-                    const relativeFile = path
-                        .relative(workspace, file)
-                        .replace(new RegExp(`\\${path.sep}`, 'g'), '/');
-                    core.debug(`Matched: ${relativeFile}`);
-                    // Paths are made relative so the tar entries are all relative to the root of the workspace.
-                    if (relativeFile === '') {
-                        // path.relative returns empty string if workspace and file are equal
-                        paths.push('.');
-                    }
-                    else {
-                        paths.push(`${relativeFile}`);
-                    }
+                const file = _c;
+                const relativeFile = path
+                    .relative(workspace, file)
+                    .replace(new RegExp(`\\${path.sep}`, 'g'), '/');
+                core.debug(`Matched: ${relativeFile}`);
+                // Paths are made relative so the tar entries are all relative to the root of the workspace.
+                if (relativeFile === '') {
+                    // path.relative returns empty string if workspace and file are equal
+                    paths.push('.');
                 }
-                finally {
-                    _e = true;
+                else {
+                    paths.push(`${relativeFile}`);
                 }
             }
         }
@@ -2509,7 +2505,7 @@ exports.isGhes = isGhes;
 
 /***/ }),
 
-/***/ 671:
+/***/ 2190:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2519,7 +2515,7 @@ var CacheFilename;
 (function (CacheFilename) {
     CacheFilename["Gzip"] = "cache.tgz";
     CacheFilename["Zstd"] = "cache.tzst";
-})(CacheFilename = exports.CacheFilename || (exports.CacheFilename = {}));
+})(CacheFilename || (exports.CacheFilename = CacheFilename = {}));
 var CompressionMethod;
 (function (CompressionMethod) {
     CompressionMethod["Gzip"] = "gzip";
@@ -2527,12 +2523,12 @@ var CompressionMethod;
     // This enum is for earlier version of zstd that does not have --long support
     CompressionMethod["ZstdWithoutLong"] = "zstd-without-long";
     CompressionMethod["Zstd"] = "zstd";
-})(CompressionMethod = exports.CompressionMethod || (exports.CompressionMethod = {}));
+})(CompressionMethod || (exports.CompressionMethod = CompressionMethod = {}));
 var ArchiveToolType;
 (function (ArchiveToolType) {
     ArchiveToolType["GNU"] = "gnu";
     ArchiveToolType["BSD"] = "bsd";
-})(ArchiveToolType = exports.ArchiveToolType || (exports.ArchiveToolType = {}));
+})(ArchiveToolType || (exports.ArchiveToolType = ArchiveToolType = {}));
 // The default number of retry attempts.
 exports.DefaultRetryAttempts = 2;
 // The default delay in milliseconds between retry attempts.
@@ -2551,7 +2547,7 @@ exports.ManifestFilename = 'manifest.txt';
 
 /***/ }),
 
-/***/ 3324:
+/***/ 5057:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2596,9 +2592,9 @@ const buffer = __importStar(__nccwpck_require__(4300));
 const fs = __importStar(__nccwpck_require__(7147));
 const stream = __importStar(__nccwpck_require__(2781));
 const util = __importStar(__nccwpck_require__(3837));
-const utils = __importStar(__nccwpck_require__(6819));
-const constants_1 = __nccwpck_require__(671);
-const requestUtils_1 = __nccwpck_require__(5503);
+const utils = __importStar(__nccwpck_require__(7274));
+const constants_1 = __nccwpck_require__(2190);
+const requestUtils_1 = __nccwpck_require__(7136);
 const abort_controller_1 = __nccwpck_require__(39);
 /**
  * Pipes the body of a HTTP response to a stream
@@ -2935,7 +2931,7 @@ const promiseWithTimeout = (timeoutMs, promise) => __awaiter(void 0, void 0, voi
 
 /***/ }),
 
-/***/ 5503:
+/***/ 7136:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2975,7 +2971,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.retryHttpClientResponse = exports.retryTypedResponse = exports.retry = exports.isRetryableStatusCode = exports.isServerErrorStatusCode = exports.isSuccessStatusCode = void 0;
 const core = __importStar(__nccwpck_require__(4278));
 const http_client_1 = __nccwpck_require__(223);
-const constants_1 = __nccwpck_require__(671);
+const constants_1 = __nccwpck_require__(2190);
 function isSuccessStatusCode(statusCode) {
     if (!statusCode) {
         return false;
@@ -3078,7 +3074,7 @@ exports.retryHttpClientResponse = retryHttpClientResponse;
 
 /***/ }),
 
-/***/ 2719:
+/***/ 1729:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3120,8 +3116,8 @@ const exec_1 = __nccwpck_require__(8434);
 const io = __importStar(__nccwpck_require__(6584));
 const fs_1 = __nccwpck_require__(7147);
 const path = __importStar(__nccwpck_require__(1017));
-const utils = __importStar(__nccwpck_require__(6819));
-const constants_1 = __nccwpck_require__(671);
+const utils = __importStar(__nccwpck_require__(7274));
+const constants_1 = __nccwpck_require__(2190);
 const IS_WINDOWS = process.platform === 'win32';
 // Returns tar path and type: BSD or GNU
 function getTarPath() {
@@ -3356,7 +3352,7 @@ exports.createTar = createTar;
 
 /***/ }),
 
-/***/ 5428:
+/***/ 1773:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -44078,7 +44074,7 @@ function expand(str, isTop) {
 
 var util = __nccwpck_require__(3837);
 var Stream = (__nccwpck_require__(2781).Stream);
-var DelayedStream = __nccwpck_require__(2439);
+var DelayedStream = __nccwpck_require__(6819);
 
 module.exports = CombinedStream;
 function CombinedStream() {
@@ -44308,7 +44304,7 @@ var isArray = Array.isArray || function (xs) {
 
 /***/ }),
 
-/***/ 2439:
+/***/ 6819:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var Stream = (__nccwpck_require__(2781).Stream);
@@ -81501,7 +81497,7 @@ __webpack_async_result__();
 /***/ ((__webpack_module__, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-/* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2633);
+/* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7083);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8434);
 /* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(7219);
