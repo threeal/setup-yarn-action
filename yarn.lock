@@ -2380,6 +2380,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"root-workspace-0b6124@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "root-workspace-0b6124@workspace:."
+  dependencies:
+    "@actions/cache": "npm:^3.2.4"
+    "@actions/core": "npm:^1.10.1"
+    "@actions/exec": "npm:^1.1.1"
+    "@types/node": "npm:^20.11.10"
+    "@typescript-eslint/eslint-plugin": "npm:^6.20.0"
+    "@typescript-eslint/parser": "npm:^6.20.0"
+    "@vercel/ncc": "npm:^0.38.1"
+    eslint: "npm:^8.56.0"
+    eslint-config-prettier: "npm:^9.1.0"
+    eslint-plugin-json-files: "npm:^4.1.0"
+    eslint-plugin-tsdoc: "npm:^0.2.17"
+    hasha: "npm:^6.0.0"
+    prettier: "npm:^3.2.4"
+    typescript: "npm:^5.3.3"
+  languageName: unknown
+  linkType: soft
+
 "run-parallel@npm:^1.1.9":
   version: 1.2.0
   resolution: "run-parallel@npm:1.2.0"
@@ -2875,27 +2896,6 @@ __metadata:
   checksum: 2286b5e8dbfe22204ab66e2ef5cc9bbb1e55dfc873bbe0d568aa943eb255d131890dfd5bf243637273d31119b870f49c18fcde2c6ffbb7a7a092b870dc90625a
   languageName: node
   linkType: hard
-
-"yarn-install-action@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "yarn-install-action@workspace:."
-  dependencies:
-    "@actions/cache": "npm:^3.2.4"
-    "@actions/core": "npm:^1.10.1"
-    "@actions/exec": "npm:^1.1.1"
-    "@types/node": "npm:^20.11.10"
-    "@typescript-eslint/eslint-plugin": "npm:^6.20.0"
-    "@typescript-eslint/parser": "npm:^6.20.0"
-    "@vercel/ncc": "npm:^0.38.1"
-    eslint: "npm:^8.56.0"
-    eslint-config-prettier: "npm:^9.1.0"
-    eslint-plugin-json-files: "npm:^4.1.0"
-    eslint-plugin-tsdoc: "npm:^0.2.17"
-    hasha: "npm:^6.0.0"
-    prettier: "npm:^3.2.4"
-    typescript: "npm:^5.3.3"
-  languageName: unknown
-  linkType: soft
 
 "yocto-queue@npm:^0.1.0":
   version: 0.1.0
