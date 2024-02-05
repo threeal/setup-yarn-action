@@ -1,5 +1,4 @@
 {
-  "name": "yarn-install-action",
   "private": true,
   "type": "module",
   "scripts": {
