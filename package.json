@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && ncc build src/index.mjs",
-    "format": "prettier --write . !dist",
+    "format": "prettier --write --cache . !dist",
     "lint": "eslint --ignore-path .gitignore ."
   },
   "dependencies": {
