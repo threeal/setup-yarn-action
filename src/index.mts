@@ -1,10 +1,8 @@
 import cache from "@actions/cache";
 import core from "@actions/core";
-import exec from "@actions/exec";
 import { hashFile } from "hasha";
 import fs from "fs";
 import os from "os";
-import process from "process";
 import yarn from "./yarn.mjs";
 
 async function main() {
@@ -52,18 +50,7 @@ async function main() {
   });
 
   await core.group("Installing dependencies", async () => {
-    const env = process.env as { [key: string]: string };
-
-    // Prevent `yarn install` from outputting group log messages.
-    env["GITHUB_ACTIONS"] = "";
-    env["FORCE_COLOR"] = "true";
-
-    // Prevent no lock file causing errors.
-    if (lockFileHash === undefined) {
-      env["CI"] = "";
-    }
-
-    return exec.exec("corepack", ["yarn", "install"], { env });
+    return yarn.install();
   });
 
   if (cacheKey !== undefined) {

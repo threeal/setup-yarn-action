@@ -14,4 +14,17 @@ async function enable() {
   await exec("corepack", ["enable", "yarn"]);
 }
 
-export default { disableGlobalCache, enable };
+async function install() {
+  const env = process.env as { [key: string]: string };
+
+  // Prevent `yarn install` from outputting group log messages.
+  env["GITHUB_ACTIONS"] = "";
+  env["FORCE_COLOR"] = "true";
+
+  // Prevent no lock file causing errors.
+  env["CI"] = "";
+
+  return exec("corepack", ["yarn", "install"], { env });
+}
+
+export default { disableGlobalCache, enable, install };
