@@ -4,6 +4,16 @@
   "extends": ["eslint:recommended"],
   "overrides": [
     {
+      "files": ["**/*.mjs"],
+      "parserOptions": {
+        "ecmaVersion": "2023",
+        "sourceType": "module"
+      },
+      "env": {
+        "node": true
+      }
+    },
+    {
       "files": ["package.json"],
       "plugins": ["json-files"],
       "rules": {
