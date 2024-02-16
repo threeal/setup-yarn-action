@@ -79631,13 +79631,6 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("perf_hooks")
 
 /***/ }),
 
-/***/ 7282:
-/***/ ((module) => {
-
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("process");
-
-/***/ }),
-
 /***/ 5477:
 /***/ ((module) => {
 
@@ -81502,14 +81495,12 @@ __webpack_async_result__();
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(294);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8434);
-/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(7219);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
-/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2037);
-/* harmony import */ var process__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(7282);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_6__]);
-hasha__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
-
+/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(7219);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7147);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2037);
+/* harmony import */ var _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6177);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_5__]);
+hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
 
 
@@ -81518,20 +81509,20 @@ hasha__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (awa
 
 async function main() {
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
-        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["enable", "yarn"]);
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].enable */ .Z.enable();
     });
     const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
-        if (!fs__WEBPACK_IMPORTED_MODULE_3__.existsSync("yarn.lock")) {
+        if (!fs__WEBPACK_IMPORTED_MODULE_2__.existsSync("yarn.lock")) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
             return undefined;
         }
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_6__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
         return hash;
     });
     const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
     const cacheKey = lockFileHash !== undefined
-        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_4__.type()}-${lockFileHash}`
+        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`
         : undefined;
     if (cacheKey !== undefined) {
         const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
@@ -81548,24 +81539,10 @@ async function main() {
         }
     }
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
-        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", [
-            "yarn",
-            "config",
-            "set",
-            "enableGlobalCache",
-            "false",
-        ]);
+        return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].disableGlobalCache */ .Z.disableGlobalCache();
     });
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-        const env = process__WEBPACK_IMPORTED_MODULE_5__.env;
-        // Prevent `yarn install` from outputting group log messages.
-        env["GITHUB_ACTIONS"] = "";
-        env["FORCE_COLOR"] = "true";
-        // Prevent no lock file causing errors.
-        if (lockFileHash === undefined) {
-            env["CI"] = "";
-        }
-        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["yarn", "install"], { env });
+        return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].install */ .Z.install();
     });
     if (cacheKey !== undefined) {
         await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
@@ -81577,6 +81554,40 @@ main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err))
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
+
+/***/ }),
+
+/***/ 6177:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
+
+async function disableGlobalCache() {
+    return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", [
+        "yarn",
+        "config",
+        "set",
+        "enableGlobalCache",
+        "false",
+    ]);
+}
+async function enable() {
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
+}
+async function install() {
+    const env = process.env;
+    // Prevent `yarn install` from outputting group log messages.
+    env["GITHUB_ACTIONS"] = "";
+    env["FORCE_COLOR"] = "true";
+    // Prevent no lock file causing errors.
+    env["CI"] = "";
+    return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, install });
+
 
 /***/ }),
 
