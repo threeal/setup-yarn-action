@@ -81503,12 +81503,14 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(294);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8434);
-/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(7219);
+/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(7219);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
 /* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2037);
 /* harmony import */ var process__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(7282);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_6__]);
-hasha__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+/* harmony import */ var _yarn_mjs__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(6177);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_7__]);
+hasha__WEBPACK_IMPORTED_MODULE_7__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
 
 
 
@@ -81518,14 +81520,14 @@ hasha__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (awa
 
 async function main() {
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
-        return _actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec("corepack", ["enable", "yarn"]);
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_6__/* ["default"].enable */ .Z.enable();
     });
     const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
         if (!fs__WEBPACK_IMPORTED_MODULE_3__.existsSync("yarn.lock")) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
             return undefined;
         }
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_6__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_7__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
         return hash;
     });
@@ -81577,6 +81579,22 @@ main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err))
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
+
+/***/ }),
+
+/***/ 6177:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
+
+async function enable() {
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ enable });
+
 
 /***/ }),
 

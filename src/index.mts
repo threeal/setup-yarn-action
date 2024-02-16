@@ -5,10 +5,11 @@ import { hashFile } from "hasha";
 import fs from "fs";
 import os from "os";
 import process from "process";
+import yarn from "./yarn.mjs";
 
 async function main() {
   await core.group("Enabling Yarn", async () => {
-    return exec.exec("corepack", ["enable", "yarn"]);
+    await yarn.enable();
   });
 
   const lockFileHash = await core.group(
