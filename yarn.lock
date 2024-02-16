@@ -323,25 +323,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/tsdoc-config@npm:0.16.2":
-  version: 0.16.2
-  resolution: "@microsoft/tsdoc-config@npm:0.16.2"
-  dependencies:
-    "@microsoft/tsdoc": "npm:0.14.2"
-    ajv: "npm:~6.12.6"
-    jju: "npm:~1.4.0"
-    resolve: "npm:~1.19.0"
-  checksum: 9e8c176b68f01c8bb38e6365d5b543e471bba59fced6070d9bd35b32461fbd650c2e1a6f686e8dca0cf22bc5e7d796e4213e66bce4426c8cb9864c1f6ca6836c
-  languageName: node
-  linkType: hard
-
-"@microsoft/tsdoc@npm:0.14.2":
-  version: 0.14.2
-  resolution: "@microsoft/tsdoc@npm:0.14.2"
-  checksum: c018857ad439144559ce34a397a29ace7cf5b24b999b8e3c1b88d878338088b3a453eaac4435beaf2c7eae13c4c0aac81e42f96f0f1d48e8d4eeb438eb3bb82f
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -670,7 +651,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^6.12.4, ajv@npm:~6.12.6":
+"ajv@npm:^6.12.4":
   version: 6.12.6
   resolution: "ajv@npm:6.12.6"
   dependencies:
@@ -1088,17 +1069,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^9.1.0":
-  version: 9.1.0
-  resolution: "eslint-config-prettier@npm:9.1.0"
-  peerDependencies:
-    eslint: ">=7.0.0"
-  bin:
-    eslint-config-prettier: bin/cli.js
-  checksum: 6d332694b36bc9ac6fdb18d3ca2f6ac42afa2ad61f0493e89226950a7091e38981b66bac2b47ba39d15b73fff2cd32c78b850a9cf9eed9ca9a96bfb2f3a2f10d
-  languageName: node
-  linkType: hard
-
 "eslint-plugin-json-files@npm:^4.1.0":
   version: 4.1.0
   resolution: "eslint-plugin-json-files@npm:4.1.0"
@@ -1111,16 +1081,6 @@ __metadata:
   peerDependencies:
     eslint: ">=5"
   checksum: 273956ce07d03df683d9104c92d509f18e880df2d753a741ac30525842bb8321fadfe097f5a177da216b21e99e8b9ef50ded03407b0be10d1de1a06e5c0d8d87
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-tsdoc@npm:^0.2.17":
-  version: 0.2.17
-  resolution: "eslint-plugin-tsdoc@npm:0.2.17"
-  dependencies:
-    "@microsoft/tsdoc": "npm:0.14.2"
-    "@microsoft/tsdoc-config": "npm:0.16.2"
-  checksum: 26cad40b22f3dc0adfb06b1ea12f7d3c9cb257ac8bb56ad6a023e3b3bdfc6144d95a8b01323563e75283cca90baaf4d68816f5cea6994c6cd660a642e820847a
   languageName: node
   linkType: hard
 
@@ -1418,13 +1378,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"function-bind@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "function-bind@npm:1.1.1"
-  checksum: 60b74b2407e1942e1ed7f8c284f8ef714d0689dcfce5319985a5b7da3fc727f40b4a59ec72dc55aa83365ad7b8fa4fac3a30d93c850a2b452f29ae03dbc10a1e
-  languageName: node
-  linkType: hard
-
 "gauge@npm:^4.0.3":
   version: 4.0.4
   resolution: "gauge@npm:4.0.4"
@@ -1569,15 +1522,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"has@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "has@npm:1.0.3"
-  dependencies:
-    function-bind: "npm:^1.1.1"
-  checksum: e1da0d2bd109f116b632f27782cf23182b42f14972ca9540e4c5aa7e52647407a0a4a76937334fddcb56befe94a3494825ec22b19b51f5e5507c3153fd1a5e1b
-  languageName: node
-  linkType: hard
-
 "hasha@npm:^6.0.0":
   version: 6.0.0
   resolution: "hasha@npm:6.0.0"
@@ -1696,15 +1640,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-core-module@npm:^2.1.0":
-  version: 2.12.1
-  resolution: "is-core-module@npm:2.12.1"
-  dependencies:
-    has: "npm:^1.0.3"
-  checksum: ff1d0dfc0b7851310d289398e416eb92ae8a9ac7ea8b8b9737fa8c0725f5a78c5f3db6edd4dff38c9ed731f3aaa1f6410a320233fcb52a2c8f1cf58eebf10a4b
-  languageName: node
-  linkType: hard
-
 "is-extglob@npm:^2.1.1":
   version: 2.1.1
   resolution: "is-extglob@npm:2.1.1"
@@ -1780,13 +1715,6 @@ __metadata:
     "@pkgjs/parseargs":
       optional: true
   checksum: 70b286206a2729f6a2ba8470f68d4d130f7154f6a767fccabf107b9f6b3871395e89018437c2676c849450b258711cb557a4be6d7b2f889f1fa4d8b364533225
-  languageName: node
-  linkType: hard
-
-"jju@npm:~1.4.0":
-  version: 1.4.0
-  resolution: "jju@npm:1.4.0"
-  checksum: f3f444557e4364cfc06b1abf8331bf3778b26c0c8552ca54429bc0092652172fdea26cbffe33e1017b303d5aa506f7ede8571857400efe459cb7439180e2acad
   languageName: node
   linkType: hard
 
@@ -2225,13 +2153,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-parse@npm:^1.0.6":
-  version: 1.0.7
-  resolution: "path-parse@npm:1.0.7"
-  checksum: 11ce261f9d294cc7a58d6a574b7f1b935842355ec66fba3c3fd79e0f036462eaf07d0aa95bb74ff432f9afef97ce1926c720988c6a7451d8a584930ae7de86e1
-  languageName: node
-  linkType: hard
-
 "path-scurry@npm:^1.10.1":
   version: 1.10.1
   resolution: "path-scurry@npm:1.10.1"
@@ -2335,26 +2256,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:~1.19.0":
-  version: 1.19.0
-  resolution: "resolve@npm:1.19.0"
-  dependencies:
-    is-core-module: "npm:^2.1.0"
-    path-parse: "npm:^1.0.6"
-  checksum: 1c8afdfb88c9adab0a19b6f16756d47f5917f64047bf5a38c17aa543aae5ccca2a0631671b19ce8460a7a3e65ead98ee70e046d3056ec173d3377a27487848a8
-  languageName: node
-  linkType: hard
-
-"resolve@patch:resolve@npm%3A~1.19.0#optional!builtin<compat/resolve>":
-  version: 1.19.0
-  resolution: "resolve@patch:resolve@npm%3A1.19.0#optional!builtin<compat/resolve>::version=1.19.0&hash=c3c19d"
-  dependencies:
-    is-core-module: "npm:^2.1.0"
-    path-parse: "npm:^1.0.6"
-  checksum: 254980f60dd9fdb28b34a511e70df6e3027d9627efce86a40757eea9b87252d172829c84517554560c4541ebfe207868270c19a0f086997b41209367aa8ef74f
-  languageName: node
-  linkType: hard
-
 "retry@npm:^0.12.0":
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
@@ -2392,9 +2293,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.0.1"
     "@vercel/ncc": "npm:^0.38.1"
     eslint: "npm:^8.56.0"
-    eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-json-files: "npm:^4.1.0"
-    eslint-plugin-tsdoc: "npm:^0.2.17"
     hasha: "npm:^6.0.0"
     prettier: "npm:^3.2.5"
     typescript: "npm:^5.3.3"
