@@ -48,13 +48,7 @@ async function main() {
   }
 
   await core.group("Disabling global cache", async () => {
-    return exec.exec("corepack", [
-      "yarn",
-      "config",
-      "set",
-      "enableGlobalCache",
-      "false",
-    ]);
+    return yarn.disableGlobalCache();
   });
 
   await core.group("Installing dependencies", async () => {
