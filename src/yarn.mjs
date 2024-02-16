@@ -15,7 +15,7 @@ async function enable() {
 }
 
 async function install() {
-  const env = process.env as { [key: string]: string };
+  const env = process.env;
 
   // Prevent `yarn install` from outputting group log messages.
   env["GITHUB_ACTIONS"] = "";

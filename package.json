@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && ncc build src/index.mjs",
+    "build": "ncc build src/index.mjs",
     "format": "prettier --write --cache . !dist",
     "lint": "eslint --ignore-path .gitignore ."
   },
@@ -13,7 +13,6 @@
     "hasha": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
     "@typescript-eslint/parser": "^7.0.1",
     "@vercel/ncc": "^0.38.1",
