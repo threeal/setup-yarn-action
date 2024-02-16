@@ -4,5 +4,3 @@
 !.yarnrc.yml
 
 node_modules/
-
-src/**/*.mjs

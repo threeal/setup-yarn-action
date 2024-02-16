@@ -4,10 +4,6 @@
   "extends": ["eslint:recommended"],
   "overrides": [
     {
-      "files": ["**/*.?([cm])ts"],
-      "extends": ["plugin:@typescript-eslint/recommended"]
-    },
-    {
       "files": ["package.json"],
       "plugins": ["json-files"],
       "rules": {

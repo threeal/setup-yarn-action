@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && ncc build src/index.mjs",
+    "build": "ncc build src/index.mjs",
     "format": "prettier --write --cache . !dist",
     "lint": "eslint --ignore-path .gitignore ."
   },
@@ -13,14 +13,10 @@
     "hasha": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.19",
-    "@typescript-eslint/eslint-plugin": "^7.0.1",
-    "@typescript-eslint/parser": "^7.0.1",
     "@vercel/ncc": "^0.38.1",
     "eslint": "^8.56.0",
     "eslint-plugin-json-files": "^4.1.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "prettier": "^3.2.5"
   },
   "packageManager": "yarn@4.0.2"
 }

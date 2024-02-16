@@ -81507,49 +81507,62 @@ hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (awa
 
 
 
+
 async function main() {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
-        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].enable */ .Z.enable();
+  await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].enable */ .Z.enable();
+  });
+
+  const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(
+    "Calculating lock file hash",
+    async () => {
+      if (!fs__WEBPACK_IMPORTED_MODULE_2__.existsSync("yarn.lock")) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
+        return undefined;
+      }
+      const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+      _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
+      return hash;
+    },
+  );
+
+  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+  const cacheKey =
+    lockFileHash !== undefined
+      ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`
+      : undefined;
+
+  if (cacheKey !== undefined) {
+    const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
+      const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
+      if (cacheId === undefined) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+        return false;
+      }
+      return true;
     });
-    const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
-        if (!fs__WEBPACK_IMPORTED_MODULE_2__.existsSync("yarn.lock")) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
-            return undefined;
-        }
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
-        return hash;
-    });
-    const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
-    const cacheKey = lockFileHash !== undefined
-        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${lockFileHash}`
-        : undefined;
-    if (cacheKey !== undefined) {
-        const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
-            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
-            if (cacheId === undefined) {
-                _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
-                return false;
-            }
-            return true;
-        });
-        if (cacheFound) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
-            return;
-        }
+
+    if (cacheFound) {
+      _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+      return;
     }
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
-        return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].disableGlobalCache */ .Z.disableGlobalCache();
+  }
+
+  await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
+    return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].disableGlobalCache */ .Z.disableGlobalCache();
+  });
+
+  await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
+    return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].install */ .Z.install();
+  });
+
+  if (cacheKey !== undefined) {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
+      return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
     });
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-        return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].install */ .Z.install();
-    });
-    if (cacheKey !== undefined) {
-        await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
-            return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
-        });
-    }
+  }
 }
+
 main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err));
 
 __webpack_async_result__();
@@ -81565,27 +81578,34 @@ __webpack_async_result__();
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
 
+
 async function disableGlobalCache() {
-    return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", [
-        "yarn",
-        "config",
-        "set",
-        "enableGlobalCache",
-        "false",
-    ]);
+  return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", [
+    "yarn",
+    "config",
+    "set",
+    "enableGlobalCache",
+    "false",
+  ]);
 }
+
 async function enable() {
-    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
+  await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
+
 async function install() {
-    const env = process.env;
-    // Prevent `yarn install` from outputting group log messages.
-    env["GITHUB_ACTIONS"] = "";
-    env["FORCE_COLOR"] = "true";
-    // Prevent no lock file causing errors.
-    env["CI"] = "";
-    return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
+  const env = process.env;
+
+  // Prevent `yarn install` from outputting group log messages.
+  env["GITHUB_ACTIONS"] = "";
+  env["FORCE_COLOR"] = "true";
+
+  // Prevent no lock file causing errors.
+  env["CI"] = "";
+
+  return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, install });
 
 
