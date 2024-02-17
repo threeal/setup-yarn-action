@@ -1,4 +1,4 @@
-import { exec } from "@actions/exec";
+import { exec, getExecOutput } from "@actions/exec";
 
 async function disableGlobalCache() {
   return exec("corepack", [
@@ -27,4 +27,9 @@ async function install() {
   return exec("corepack", ["yarn", "install"], { env });
 }
 
-export default { disableGlobalCache, enable, install };
+async function version() {
+  const res = await getExecOutput("corepack", ["yarn", "--version"]);
+  return res.stdout.trim();
+}
+
+export default { disableGlobalCache, enable, install, version };
