@@ -4,7 +4,8 @@
   "scripts": {
     "build": "ncc build src/index.mjs",
     "format": "prettier --write --cache . !dist",
-    "lint": "eslint --ignore-path .gitignore ."
+    "lint": "eslint --ignore-path .gitignore .",
+    "test": "jest"
   },
   "dependencies": {
     "@actions/cache": "^3.2.4",
@@ -15,6 +16,7 @@
   "devDependencies": {
     "@vercel/ncc": "^0.38.1",
     "eslint": "^8.56.0",
+    "jest": "^29.7.0",
     "prettier": "^3.2.5"
   },
   "packageManager": "yarn@4.1.0"
