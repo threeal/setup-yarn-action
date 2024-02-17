@@ -10,6 +10,12 @@ async function main() {
     await yarn.enable();
   });
 
+  const version = await core.group("Getting Yarn version", async () => {
+    const version = await yarn.version();
+    core.info(`Yarn version: ${version}`);
+    return version;
+  });
+
   const lockFileHash = await core.group(
     "Calculating lock file hash",
     async () => {
@@ -26,7 +32,7 @@ async function main() {
   const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
   const cacheKey =
     lockFileHash !== undefined
-      ? `yarn-install-action-${os.type()}-${lockFileHash}`
+      ? `yarn-install-action-${os.type()}-${version}-${lockFileHash}`
       : undefined;
 
   if (cacheKey !== undefined) {
