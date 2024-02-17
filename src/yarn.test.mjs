@@ -2,6 +2,7 @@ import { jest } from "@jest/globals";
 
 jest.unstable_mockModule("@actions/exec", () => ({
   exec: jest.fn(),
+  getExecOutput: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -49,4 +50,18 @@ it("should install package using Yarn", async () => {
       CI: "",
     },
   });
+});
+
+it("should get Yarn version", async () => {
+  const { getExecOutput } = await import("@actions/exec");
+  const yarn = (await import("./yarn.mjs")).default;
+
+  getExecOutput.mockResolvedValue({ stdout: "1.2.3" });
+
+  const version = await yarn.version();
+
+  expect(getExecOutput).toHaveBeenCalledTimes(1);
+  expect(getExecOutput).toHaveBeenCalledWith("corepack", ["yarn", "--version"]);
+
+  expect(version).toEqual("1.2.3");
 });
