@@ -12,6 +12,12 @@
       "env": {
         "node": true
       }
+    },
+    {
+      "files": ["**/*.test.*"],
+      "env": {
+        "jest": true
+      }
     }
   ]
 }
