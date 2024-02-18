@@ -1,8 +1,6 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
-import { hashFile } from "hasha";
-import fs from "fs";
-import os from "os";
+import { getCacheInformation } from "./cache.js";
 import yarn from "./yarn.js";
 
 async function main(): Promise<void> {
@@ -10,45 +8,17 @@ async function main(): Promise<void> {
     await yarn.enable();
   });
 
-  const version = await core.group("Getting Yarn version", async () => {
-    const version = await yarn.version();
-    core.info(`Yarn version: ${version}`);
-    return version;
-  });
-
-  const lockFileHash = await core.group(
-    "Calculating lock file hash",
-    async () => {
-      if (!fs.existsSync("yarn.lock")) {
-        core.warning(`Lock file not found, skipping cache`);
-        return undefined;
-      }
-      const hash = await hashFile("yarn.lock", { algorithm: "md5" });
-      core.info(`Hash: ${hash}`);
-      return hash;
-    },
+  const cacheInfo = await core.group(
+    "Getting cache information",
+    getCacheInformation,
   );
 
-  const cachePaths = [
-    await yarn.getConfig("cacheFolder"),
-    await yarn.getConfig("deferredVersionFolder"),
-    await yarn.getConfig("installStatePath"),
-    await yarn.getConfig("patchFolder"),
-    await yarn.getConfig("pnpUnpluggedFolder"),
-    await yarn.getConfig("virtualFolder"),
-    ".yarn",
-    ".pnp.cjs",
-    ".pnp.loader.mjs",
-  ];
-
-  const cacheKey =
-    lockFileHash !== undefined
-      ? `yarn-install-action-${os.type()}-${version}-${lockFileHash}`
-      : undefined;
-
-  if (cacheKey !== undefined) {
+  if (cacheInfo !== undefined) {
     const cacheFound = await core.group("Restoring cache", async () => {
-      const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
+      const cacheId = await cache.restoreCache(
+        cacheInfo.paths.slice(),
+        cacheInfo.key,
+      );
       if (cacheId === undefined) {
         core.warning("Cache not found");
         return false;
@@ -70,9 +40,9 @@ async function main(): Promise<void> {
     return yarn.install();
   });
 
-  if (cacheKey !== undefined) {
+  if (cacheInfo !== undefined) {
     await core.group("Saving cache", async () => {
-      return cache.saveCache(cachePaths.slice(), cacheKey);
+      return cache.saveCache(cacheInfo.paths.slice(), cacheInfo.key);
     });
   }
 }
