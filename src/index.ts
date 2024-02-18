@@ -1,6 +1,6 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
-import { getCacheInformation } from "./cache.js";
+import { getCacheKey, getCachePaths } from "./cache.js";
 import yarn from "./yarn.js";
 
 async function main(): Promise<void> {
@@ -8,17 +8,16 @@ async function main(): Promise<void> {
     await yarn.enable();
   });
 
-  const cacheInfo = await core.group(
-    "Getting cache information",
-    getCacheInformation,
-  );
+  const cacheKey = await core.group("Getting cache key", getCacheKey);
 
-  if (cacheInfo !== undefined) {
+  let cachePaths: string[] = [];
+  if (cacheKey !== undefined) {
+    cachePaths = await core.group("Getting cache paths", getCachePaths);
+  }
+
+  if (cacheKey !== undefined) {
     const cacheFound = await core.group("Restoring cache", async () => {
-      const cacheId = await cache.restoreCache(
-        cacheInfo.paths.slice(),
-        cacheInfo.key,
-      );
+      const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
       if (cacheId === undefined) {
         core.warning("Cache not found");
         return false;
@@ -36,9 +35,9 @@ async function main(): Promise<void> {
     return yarn.install();
   });
 
-  if (cacheInfo !== undefined) {
+  if (cacheKey !== undefined) {
     await core.group("Saving cache", async () => {
-      return cache.saveCache(cacheInfo.paths.slice(), cacheInfo.key);
+      return cache.saveCache(cachePaths.slice(), cacheKey);
     });
   }
 }
