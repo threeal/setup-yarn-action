@@ -81611,12 +81611,13 @@ async function enable() {
 }
 
 async function getConfig(name) {
-  const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", [
-    "yarn",
-    "config",
-    name,
-    "--json",
-  ]);
+  const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)(
+    "corepack",
+    ["yarn", "config", name, "--json"],
+    {
+      silent: true,
+    },
+  );
   const jsonData = (await prom).stdout;
   return JSON.parse(jsonData).effective;
 }

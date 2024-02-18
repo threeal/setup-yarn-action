@@ -15,12 +15,13 @@ async function enable() {
 }
 
 async function getConfig(name) {
-  const prom = await getExecOutput("corepack", [
-    "yarn",
-    "config",
-    name,
-    "--json",
-  ]);
+  const prom = await getExecOutput(
+    "corepack",
+    ["yarn", "config", name, "--json"],
+    {
+      silent: true,
+    },
+  );
   const jsonData = (await prom).stdout;
   return JSON.parse(jsonData).effective;
 }

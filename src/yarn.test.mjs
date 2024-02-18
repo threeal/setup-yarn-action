@@ -46,12 +46,13 @@ it("should get Yarn config", async () => {
   const value = await yarn.getConfig("globalFolder");
 
   expect(getExecOutput).toHaveBeenCalledTimes(1);
-  expect(getExecOutput).toHaveBeenCalledWith("corepack", [
-    "yarn",
-    "config",
-    "globalFolder",
-    "--json",
-  ]);
+  expect(getExecOutput).toHaveBeenCalledWith(
+    "corepack",
+    ["yarn", "config", "globalFolder", "--json"],
+    {
+      silent: true,
+    },
+  );
 
   expect(value).toEqual("/.yarn/berry");
 });
