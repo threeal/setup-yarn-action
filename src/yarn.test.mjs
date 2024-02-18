@@ -35,6 +35,28 @@ it("should enable Yarn", async () => {
   expect(exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"]);
 });
 
+it("should get Yarn config", async () => {
+  const { getExecOutput } = await import("@actions/exec");
+  const yarn = (await import("./yarn.mjs")).default;
+
+  getExecOutput.mockResolvedValue({
+    stdout: `{"key":"globalFolder","effective":"/.yarn/berry","source":"<default>","description":"Folder where all system-global files are stored","type":"ABSOLUTE_PATH","default":"/.yarn/berry"}\n`,
+  });
+
+  const value = await yarn.getConfig("globalFolder");
+
+  expect(getExecOutput).toHaveBeenCalledTimes(1);
+  expect(getExecOutput).toHaveBeenCalledWith(
+    "corepack",
+    ["yarn", "config", "globalFolder", "--json"],
+    {
+      silent: true,
+    },
+  );
+
+  expect(value).toEqual("/.yarn/berry");
+});
+
 it("should install package using Yarn", async () => {
   const { exec } = await import("@actions/exec");
   const yarn = (await import("./yarn.mjs")).default;

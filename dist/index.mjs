@@ -81532,7 +81532,18 @@ async function main() {
     },
   );
 
-  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+  const cachePaths = [
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("installStatePath"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("patchFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("virtualFolder"),
+    ".yarn",
+    ".pnp.cjs",
+    ".pnp.loader.mjs",
+  ];
+
   const cacheKey =
     lockFileHash !== undefined
       ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${version}-${lockFileHash}`
@@ -81599,6 +81610,18 @@ async function enable() {
   await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
 
+async function getConfig(name) {
+  const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)(
+    "corepack",
+    ["yarn", "config", name, "--json"],
+    {
+      silent: true,
+    },
+  );
+  const jsonData = (await prom).stdout;
+  return JSON.parse(jsonData).effective;
+}
+
 async function install() {
   const env = process.env;
 
@@ -81617,7 +81640,7 @@ async function version() {
   return res.stdout.trim();
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, install, version });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, getConfig, install, version });
 
 
 /***/ }),
