@@ -29,7 +29,18 @@ async function main() {
     },
   );
 
-  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+  const cachePaths = [
+    await yarn.getConfig("cacheFolder"),
+    await yarn.getConfig("deferredVersionFolder"),
+    await yarn.getConfig("installStatePath"),
+    await yarn.getConfig("patchFolder"),
+    await yarn.getConfig("pnpUnpluggedFolder"),
+    await yarn.getConfig("virtualFolder"),
+    ".yarn",
+    ".pnp.cjs",
+    ".pnp.loader.mjs",
+  ];
+
   const cacheKey =
     lockFileHash !== undefined
       ? `yarn-install-action-${os.type()}-${version}-${lockFileHash}`

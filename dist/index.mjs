@@ -81532,7 +81532,18 @@ async function main() {
     },
   );
 
-  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+  const cachePaths = [
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("installStatePath"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("patchFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder"),
+    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("virtualFolder"),
+    ".yarn",
+    ".pnp.cjs",
+    ".pnp.loader.mjs",
+  ];
+
   const cacheKey =
     lockFileHash !== undefined
       ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${version}-${lockFileHash}`
