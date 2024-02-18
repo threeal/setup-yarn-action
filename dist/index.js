@@ -79593,15 +79593,6 @@ __webpack_async_result__();
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
 
-async function disableGlobalCache() {
-    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", [
-        "yarn",
-        "config",
-        "set",
-        "enableGlobalCache",
-        "false",
-    ]);
-}
 async function enable() {
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
@@ -79627,7 +79618,7 @@ async function version() {
     });
     return res.stdout.trim();
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, getConfig, install, version });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ enable, getConfig, install, version });
 
 
 /***/ }),

@@ -1,15 +1,5 @@
 import { exec, getExecOutput } from "@actions/exec";
 
-async function disableGlobalCache(): Promise<void> {
-  await exec("corepack", [
-    "yarn",
-    "config",
-    "set",
-    "enableGlobalCache",
-    "false",
-  ]);
-}
-
 async function enable(): Promise<void> {
   await exec("corepack", ["enable", "yarn"]);
 }
@@ -46,4 +36,4 @@ async function version() {
   return res.stdout.trim();
 }
 
-export default { disableGlobalCache, enable, getConfig, install, version };
+export default { enable, getConfig, install, version };
