@@ -79564,7 +79564,7 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 async function main() {
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].enable */ .Z.enable();
+        await (0,_yarn_js__WEBPACK_IMPORTED_MODULE_3__/* .enableYarn */ .W)();
     });
     const cacheKey = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache key", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a);
     let cachePaths = [];
@@ -79605,12 +79605,13 @@ __webpack_async_result__();
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "W": () => (/* binding */ enableYarn),
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
 
-async function enable() {
+async function enableYarn() {
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
 async function getConfig(name) {
@@ -79635,7 +79636,7 @@ async function version() {
     });
     return res.stdout.trim();
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ enable, getConfig, install, version });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ getConfig, install, version });
 
 
 /***/ }),

@@ -16,9 +16,9 @@ beforeEach(() => {
 });
 
 it("should enable Yarn", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { enableYarn } = await import("./yarn.js");
 
-  await yarn.enable();
+  await enableYarn();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
   expect(mock.exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"]);

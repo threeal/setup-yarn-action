@@ -1,6 +1,6 @@
 import { exec, getExecOutput } from "@actions/exec";
 
-async function enable(): Promise<void> {
+export async function enableYarn(): Promise<void> {
   await exec("corepack", ["enable", "yarn"]);
 }
 
@@ -36,4 +36,4 @@ async function version() {
   return res.stdout.trim();
 }
 
-export default { enable, getConfig, install, version };
+export default { getConfig, install, version };
