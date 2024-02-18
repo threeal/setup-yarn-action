@@ -1,5 +1,5 @@
-import cache from "@actions/cache";
-import core from "@actions/core";
+import * as cache from "@actions/cache";
+import * as core from "@actions/core";
 import { hashFile } from "hasha";
 import fs from "fs";
 import os from "os";
