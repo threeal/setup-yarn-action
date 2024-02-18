@@ -14,6 +14,17 @@ async function enable() {
   await exec("corepack", ["enable", "yarn"]);
 }
 
+async function getConfig(name) {
+  const prom = await getExecOutput("corepack", [
+    "yarn",
+    "config",
+    name,
+    "--json",
+  ]);
+  const jsonData = (await prom).stdout;
+  return JSON.parse(jsonData).effective;
+}
+
 async function install() {
   const env = process.env;
 
@@ -32,4 +43,4 @@ async function version() {
   return res.stdout.trim();
 }
 
-export default { disableGlobalCache, enable, install, version };
+export default { disableGlobalCache, enable, getConfig, install, version };

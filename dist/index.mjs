@@ -81599,6 +81599,17 @@ async function enable() {
   await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
 
+async function getConfig(name) {
+  const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", [
+    "yarn",
+    "config",
+    name,
+    "--json",
+  ]);
+  const jsonData = (await prom).stdout;
+  return JSON.parse(jsonData).effective;
+}
+
 async function install() {
   const env = process.env;
 
@@ -81617,7 +81628,7 @@ async function version() {
   return res.stdout.trim();
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, install, version });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, getConfig, install, version });
 
 
 /***/ }),
