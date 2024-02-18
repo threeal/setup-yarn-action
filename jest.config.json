@@ -8,5 +8,8 @@
       "statements": 100
     }
   },
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.mjs$": "<rootDir>/lib/$1.mjs"
+  },
   "testMatch": ["**/*.test.*"]
 }

@@ -5,7 +5,7 @@
     "build": "tsc && ncc build lib/index.mjs",
     "format": "prettier --write --cache . !dist",
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules yarn jest"
+    "test": "tsc && cross-env NODE_OPTIONS=--experimental-vm-modules yarn jest"
   },
   "dependencies": {
     "@actions/cache": "^3.2.4",
