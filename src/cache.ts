@@ -7,7 +7,6 @@ import yarn from "./yarn.js";
 export async function getCacheKey(): Promise<string | undefined> {
   core.info("Getting Yarn version...");
   const version = await yarn.version();
-  core.info(`Yarn version: ${version}`);
 
   core.info("Calculating lock file hash...");
   if (!fs.existsSync("yarn.lock")) {
@@ -15,7 +14,6 @@ export async function getCacheKey(): Promise<string | undefined> {
     return undefined;
   }
   const lockFileHash = await hashFile("yarn.lock", { algorithm: "md5" });
-  core.info(`Lock file hash: ${lockFileHash}`);
 
   const cacheKey = `yarn-install-action-${os.type()}-${version}-${lockFileHash}`;
   core.info(`Using cache key: ${cacheKey}`);
@@ -24,13 +22,33 @@ export async function getCacheKey(): Promise<string | undefined> {
 }
 
 export async function getCachePaths(): Promise<string[]> {
+  core.info("Getting Yarn cache folder...");
+  const yarnCacheFolder = await yarn.getConfig("cacheFolder");
+
+  core.info("Getting Yarn deferred version folder...");
+  const yarnDefferedVersionFolder = await yarn.getConfig(
+    "deferredVersionFolder",
+  );
+
+  core.info("Getting Yarn install state path...");
+  const yarnInstallStatePath = await yarn.getConfig("installStatePath");
+
+  core.info("Getting Yarn patch folder...");
+  const yarnPatchFolder = await yarn.getConfig("patchFolder");
+
+  core.info("Getting Yarn PnP unplugged folder...");
+  const yarnPnpUnpluggedFolder = await yarn.getConfig("pnpUnpluggedFolder");
+
+  core.info("Getting Yarn virtual folder...");
+  const yarnVirtualFolder = await yarn.getConfig("virtualFolder");
+
   const cachePaths = [
-    await yarn.getConfig("cacheFolder"),
-    await yarn.getConfig("deferredVersionFolder"),
-    await yarn.getConfig("installStatePath"),
-    await yarn.getConfig("patchFolder"),
-    await yarn.getConfig("pnpUnpluggedFolder"),
-    await yarn.getConfig("virtualFolder"),
+    yarnCacheFolder,
+    yarnDefferedVersionFolder,
+    yarnInstallStatePath,
+    yarnPatchFolder,
+    yarnPnpUnpluggedFolder,
+    yarnVirtualFolder,
     ".yarn",
     ".pnp.cjs",
     ".pnp.loader.mjs",

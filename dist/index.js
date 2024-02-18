@@ -79503,26 +79503,36 @@ hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (awa
 async function getCacheKey() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
     const version = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].version */ .Z.version();
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Yarn version: ${version}`);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
     if (!node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file not found, skipping cache`);
         return undefined;
     }
     const lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Lock file hash: ${lockFileHash}`);
     const cacheKey = `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}-${lockFileHash}`;
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
     return cacheKey;
 }
 async function getCachePaths() {
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn cache folder...");
+    const yarnCacheFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("cacheFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn deferred version folder...");
+    const yarnDefferedVersionFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn install state path...");
+    const yarnInstallStatePath = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("installStatePath");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn patch folder...");
+    const yarnPatchFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("patchFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn PnP unplugged folder...");
+    const yarnPnpUnpluggedFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn virtual folder...");
+    const yarnVirtualFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("virtualFolder");
     const cachePaths = [
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder"),
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("installStatePath"),
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("patchFolder"),
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder"),
-        await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("virtualFolder"),
+        yarnCacheFolder,
+        yarnDefferedVersionFolder,
+        yarnInstallStatePath,
+        yarnPatchFolder,
+        yarnPnpUnpluggedFolder,
+        yarnVirtualFolder,
         ".yarn",
         ".pnp.cjs",
         ".pnp.loader.mjs",
