@@ -4,16 +4,6 @@
   "extends": ["eslint:recommended"],
   "overrides": [
     {
-      "files": ["**/*.mjs"],
-      "parserOptions": {
-        "ecmaVersion": "2023",
-        "sourceType": "module"
-      },
-      "env": {
-        "node": true
-      }
-    },
-    {
       "files": ["**/*.?([cm])ts"],
       "extends": ["plugin:@typescript-eslint/recommended"]
     }
