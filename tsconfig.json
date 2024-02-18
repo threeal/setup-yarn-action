@@ -1,0 +1,11 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "exactOptionalPropertyTypes": true,
+    "strict": true,
+    "module": "node16",
+    "outDir": "lib",
+    "target": "es2022",
+    "skipLibCheck": true
+  }
+}

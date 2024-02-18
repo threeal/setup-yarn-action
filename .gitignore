@@ -4,4 +4,5 @@
 !.yarnrc.yml
 
 coverage/
+lib/
 node_modules/

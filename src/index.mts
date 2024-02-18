@@ -5,7 +5,7 @@ import fs from "fs";
 import os from "os";
 import yarn from "./yarn.mjs";
 
-async function main() {
+async function main(): Promise<void> {
   await core.group("Enabling Yarn", async () => {
     await yarn.enable();
   });

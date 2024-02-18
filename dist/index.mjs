@@ -81489,7 +81489,7 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 6603:
+/***/ 8073:
 /***/ ((__webpack_module__, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
@@ -81498,7 +81498,7 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(7219);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7147);
 /* harmony import */ var os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2037);
-/* harmony import */ var _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6177);
+/* harmony import */ var _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(9954);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_5__]);
 hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
@@ -81507,79 +81507,64 @@ hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (awa
 
 
 
-
 async function main() {
-  await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].enable */ .Z.enable();
-  });
-
-  const version = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting Yarn version", async () => {
-    const version = await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].version */ .Z.version();
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Yarn version: ${version}`);
-    return version;
-  });
-
-  const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(
-    "Calculating lock file hash",
-    async () => {
-      if (!fs__WEBPACK_IMPORTED_MODULE_2__.existsSync("yarn.lock")) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
-        return undefined;
-      }
-      const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-      _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
-      return hash;
-    },
-  );
-
-  const cachePaths = [
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder"),
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("installStatePath"),
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("patchFolder"),
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder"),
-    await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("virtualFolder"),
-    ".yarn",
-    ".pnp.cjs",
-    ".pnp.loader.mjs",
-  ];
-
-  const cacheKey =
-    lockFileHash !== undefined
-      ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${version}-${lockFileHash}`
-      : undefined;
-
-  if (cacheKey !== undefined) {
-    const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
-      const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
-      if (cacheId === undefined) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
-        return false;
-      }
-      return true;
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].enable */ .Z.enable();
     });
-
-    if (cacheFound) {
-      _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
-      return;
+    const version = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting Yarn version", async () => {
+        const version = await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].version */ .Z.version();
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Yarn version: ${version}`);
+        return version;
+    });
+    const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Calculating lock file hash", async () => {
+        if (!fs__WEBPACK_IMPORTED_MODULE_2__.existsSync("yarn.lock")) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning(`Lock file not found, skipping cache`);
+            return undefined;
+        }
+        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Hash: ${hash}`);
+        return hash;
+    });
+    const cachePaths = [
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder"),
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("installStatePath"),
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("patchFolder"),
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder"),
+        await _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].getConfig */ .Z.getConfig("virtualFolder"),
+        ".yarn",
+        ".pnp.cjs",
+        ".pnp.loader.mjs",
+    ];
+    const cacheKey = lockFileHash !== undefined
+        ? `yarn-install-action-${os__WEBPACK_IMPORTED_MODULE_3__.type()}-${version}-${lockFileHash}`
+        : undefined;
+    if (cacheKey !== undefined) {
+        const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
+            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
+            if (cacheId === undefined) {
+                _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+                return false;
+            }
+            return true;
+        });
+        if (cacheFound) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+            return;
+        }
     }
-  }
-
-  await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
-    return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].disableGlobalCache */ .Z.disableGlobalCache();
-  });
-
-  await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-    return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].install */ .Z.install();
-  });
-
-  if (cacheKey !== undefined) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
-      return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
+        return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].disableGlobalCache */ .Z.disableGlobalCache();
     });
-  }
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
+        return _yarn_mjs__WEBPACK_IMPORTED_MODULE_4__/* ["default"].install */ .Z.install();
+    });
+    if (cacheKey !== undefined) {
+        await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
+            return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+        });
+    }
 }
-
 main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err));
 
 __webpack_async_result__();
@@ -81587,7 +81572,7 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 6177:
+/***/ 9954:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
@@ -81595,51 +81580,38 @@ __webpack_async_result__();
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
 
-
 async function disableGlobalCache() {
-  return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", [
-    "yarn",
-    "config",
-    "set",
-    "enableGlobalCache",
-    "false",
-  ]);
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", [
+        "yarn",
+        "config",
+        "set",
+        "enableGlobalCache",
+        "false",
+    ]);
 }
-
 async function enable() {
-  await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
-
 async function getConfig(name) {
-  const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)(
-    "corepack",
-    ["yarn", "config", name, "--json"],
-    {
-      silent: true,
-    },
-  );
-  const jsonData = (await prom).stdout;
-  return JSON.parse(jsonData).effective;
+    const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
+        silent: true,
+    });
+    const jsonData = (await prom).stdout;
+    return JSON.parse(jsonData).effective;
 }
-
 async function install() {
-  const env = process.env;
-
-  // Prevent `yarn install` from outputting group log messages.
-  env["GITHUB_ACTIONS"] = "";
-  env["FORCE_COLOR"] = "true";
-
-  // Prevent no lock file causing errors.
-  env["CI"] = "";
-
-  return (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
+    const env = process.env;
+    // Prevent `yarn install` from outputting group log messages.
+    env["GITHUB_ACTIONS"] = "";
+    env["FORCE_COLOR"] = "true";
+    // Prevent no lock file causing errors.
+    env["CI"] = "";
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
 }
-
 async function version() {
-  const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"]);
-  return res.stdout.trim();
+    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"]);
+    return res.stdout.trim();
 }
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, getConfig, install, version });
 
 
@@ -81828,6 +81800,6 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ // startup
 /******/ // Load entry module and return exports
 /******/ // This entry module used 'module' so it can't be inlined
-/******/ var __webpack_exports__ = __nccwpck_require__(6603);
+/******/ var __webpack_exports__ = __nccwpck_require__(8073);
 /******/ __webpack_exports__ = await __webpack_exports__;
 /******/ 
