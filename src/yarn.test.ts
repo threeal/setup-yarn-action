@@ -17,7 +17,7 @@ beforeEach(() => {
 
 it("should disable Yarn global cache", async () => {
   const { exec } = await import("@actions/exec");
-  const yarn = (await import("./yarn.mjs")).default;
+  const yarn = (await import("./yarn.js")).default;
 
   await yarn.disableGlobalCache();
 
@@ -32,7 +32,7 @@ it("should disable Yarn global cache", async () => {
 });
 
 it("should enable Yarn", async () => {
-  const yarn = (await import("./yarn.mjs")).default;
+  const yarn = (await import("./yarn.js")).default;
 
   await yarn.enable();
 
@@ -41,7 +41,7 @@ it("should enable Yarn", async () => {
 });
 
 it("should get Yarn config", async () => {
-  const yarn = (await import("./yarn.mjs")).default;
+  const yarn = (await import("./yarn.js")).default;
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
@@ -64,7 +64,7 @@ it("should get Yarn config", async () => {
 });
 
 it("should install package using Yarn", async () => {
-  const yarn = (await import("./yarn.mjs")).default;
+  const yarn = (await import("./yarn.js")).default;
 
   await yarn.install();
 
@@ -80,7 +80,7 @@ it("should install package using Yarn", async () => {
 });
 
 it("should get Yarn version", async () => {
-  const yarn = (await import("./yarn.mjs")).default;
+  const yarn = (await import("./yarn.js")).default;
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
