@@ -79482,7 +79482,8 @@ module.exports.implForWrapper = function (wrapper) {
 
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "A": () => (/* binding */ getCacheInformation)
+/* harmony export */   "N": () => (/* binding */ getCachePaths),
+/* harmony export */   "a": () => (/* binding */ getCacheKey)
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
@@ -79499,33 +79500,45 @@ hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (awa
 
 
 
-async function getCacheInformation() {
+async function getCacheKey() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
     const version = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].version */ .Z.version();
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Yarn version: ${version}`);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
     if (!node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file not found, skipping cache`);
         return undefined;
     }
     const lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Lock file hash: ${lockFileHash}`);
-    const cacheInfo = {
-        key: `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}-${lockFileHash}`,
-        paths: [
-            await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
-            await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder"),
-            await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("installStatePath"),
-            await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("patchFolder"),
-            await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder"),
-            await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("virtualFolder"),
-            ".yarn",
-            ".pnp.cjs",
-            ".pnp.loader.mjs",
-        ],
-    };
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache information: ${JSON.stringify(cacheInfo, null, 4)}`);
-    return cacheInfo;
+    const cacheKey = `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}-${lockFileHash}`;
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
+    return cacheKey;
+}
+async function getCachePaths() {
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn cache folder...");
+    const yarnCacheFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("cacheFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn deferred version folder...");
+    const yarnDefferedVersionFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("deferredVersionFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn install state path...");
+    const yarnInstallStatePath = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("installStatePath");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn patch folder...");
+    const yarnPatchFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("patchFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn PnP unplugged folder...");
+    const yarnPnpUnpluggedFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("pnpUnpluggedFolder");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn virtual folder...");
+    const yarnVirtualFolder = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("virtualFolder");
+    const cachePaths = [
+        yarnCacheFolder,
+        yarnDefferedVersionFolder,
+        yarnInstallStatePath,
+        yarnPatchFolder,
+        yarnPnpUnpluggedFolder,
+        yarnVirtualFolder,
+        ".yarn",
+        ".pnp.cjs",
+        ".pnp.loader.mjs",
+    ];
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
+    return cachePaths;
 }
 
 __webpack_async_result__();
@@ -79553,10 +79566,14 @@ async function main() {
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
         await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].enable */ .Z.enable();
     });
-    const cacheInfo = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache information", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheInformation */ .A);
-    if (cacheInfo !== undefined) {
+    const cacheKey = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache key", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a);
+    let cachePaths = [];
+    if (cacheKey !== undefined) {
+        cachePaths = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache paths", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N);
+    }
+    if (cacheKey !== undefined) {
         const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
-            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cacheInfo.paths.slice(), cacheInfo.key);
+            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
             if (cacheId === undefined) {
                 _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
                 return false;
@@ -79571,9 +79588,9 @@ async function main() {
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
         return _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].install */ .Z.install();
     });
-    if (cacheInfo !== undefined) {
+    if (cacheKey !== undefined) {
         await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
-            return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cacheInfo.paths.slice(), cacheInfo.key);
+            return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
         });
     }
 }
