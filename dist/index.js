@@ -79510,7 +79510,7 @@ async function getCacheInformation() {
     }
     const lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Lock file hash: ${lockFileHash}`);
-    return {
+    const cacheInfo = {
         key: `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}-${lockFileHash}`,
         paths: [
             await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].getConfig */ .Z.getConfig("cacheFolder"),
@@ -79524,6 +79524,8 @@ async function getCacheInformation() {
             ".pnp.loader.mjs",
         ],
     };
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache information: ${JSON.stringify(cacheInfo, null, 4)}`);
+    return cacheInfo;
 }
 
 __webpack_async_result__();

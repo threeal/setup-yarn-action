@@ -24,7 +24,7 @@ export async function getCacheInformation(): Promise<
   const lockFileHash = await hashFile("yarn.lock", { algorithm: "md5" });
   core.info(`Lock file hash: ${lockFileHash}`);
 
-  return {
+  const cacheInfo = {
     key: `yarn-install-action-${os.type()}-${version}-${lockFileHash}`,
     paths: [
       await yarn.getConfig("cacheFolder"),
@@ -38,4 +38,7 @@ export async function getCacheInformation(): Promise<
       ".pnp.loader.mjs",
     ],
   };
+  core.info(`Using cache information: ${JSON.stringify(cacheInfo, null, 4)}`);
+
+  return cacheInfo;
 }
