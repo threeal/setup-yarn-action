@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && ncc build lib/index.js",
+    "build": "ncc build src/index.ts",
     "format": "prettier --write --cache . !dist",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules yarn jest"
