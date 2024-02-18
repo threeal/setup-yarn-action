@@ -2,10 +2,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "ncc build src/index.mjs",
+    "build": "tsc && ncc build lib/index.mjs",
     "format": "prettier --write --cache . !dist",
     "lint": "eslint --ignore-path .gitignore .",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules yarn jest"
+    "test": "tsc && cross-env NODE_OPTIONS=--experimental-vm-modules yarn jest"
   },
   "dependencies": {
     "@actions/cache": "^3.2.4",
@@ -14,11 +14,15 @@
     "hasha": "^6.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
     "@vercel/ncc": "^0.38.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   },
   "packageManager": "yarn@4.1.0"
 }

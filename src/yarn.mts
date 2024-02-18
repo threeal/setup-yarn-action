@@ -1,7 +1,7 @@
 import { exec, getExecOutput } from "@actions/exec";
 
-async function disableGlobalCache() {
-  return exec("corepack", [
+async function disableGlobalCache(): Promise<void> {
+  await exec("corepack", [
     "yarn",
     "config",
     "set",
@@ -10,11 +10,11 @@ async function disableGlobalCache() {
   ]);
 }
 
-async function enable() {
+async function enable(): Promise<void> {
   await exec("corepack", ["enable", "yarn"]);
 }
 
-async function getConfig(name) {
+async function getConfig(name: string): Promise<string> {
   const prom = await getExecOutput(
     "corepack",
     ["yarn", "config", name, "--json"],
@@ -26,8 +26,8 @@ async function getConfig(name) {
   return JSON.parse(jsonData).effective;
 }
 
-async function install() {
-  const env = process.env;
+async function install(): Promise<void> {
+  const env = process.env as { [key: string]: string };
 
   // Prevent `yarn install` from outputting group log messages.
   env["GITHUB_ACTIONS"] = "";
@@ -36,7 +36,7 @@ async function install() {
   // Prevent no lock file causing errors.
   env["CI"] = "";
 
-  return exec("corepack", ["yarn", "install"], { env });
+  await exec("corepack", ["yarn", "install"], { env });
 }
 
 async function version() {
