@@ -32,10 +32,6 @@ async function main(): Promise<void> {
     }
   }
 
-  await core.group("Disabling global cache", async () => {
-    return yarn.disableGlobalCache();
-  });
-
   await core.group("Installing dependencies", async () => {
     return yarn.install();
   });
