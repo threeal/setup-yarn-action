@@ -79568,9 +79568,6 @@ async function main() {
             return;
         }
     }
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Disabling global cache", async () => {
-        return _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].disableGlobalCache */ .Z.disableGlobalCache();
-    });
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
         return _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].install */ .Z.install();
     });
