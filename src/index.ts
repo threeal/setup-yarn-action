@@ -1,9 +1,9 @@
-import cache from "@actions/cache";
-import core from "@actions/core";
+import * as cache from "@actions/cache";
+import * as core from "@actions/core";
 import { hashFile } from "hasha";
 import fs from "fs";
 import os from "os";
-import yarn from "./yarn.mjs";
+import yarn from "./yarn.js";
 
 async function main(): Promise<void> {
   await core.group("Enabling Yarn", async () => {

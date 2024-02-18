@@ -9,10 +9,10 @@
     }
   },
   "moduleNameMapper": {
-    "^(\\.{1,2}/.*)\\.mjs$": "$1.mts"
+    "^(\\.{1,2}/.*)\\.js$": "$1"
   },
   "preset": "ts-jest/presets/default-esm",
   "transform": {
-    "^.+\\.m?ts$": ["ts-jest", { "useESM": true }]
+    "^.+\\.ts$": ["ts-jest", { "useESM": true }]
   }
 }
