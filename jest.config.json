@@ -9,7 +9,10 @@
     }
   },
   "moduleNameMapper": {
-    "^(\\.{1,2}/.*)\\.mjs$": "<rootDir>/lib/$1.mjs"
+    "^(\\.{1,2}/.*)\\.mjs$": "$1.mts"
   },
-  "testMatch": ["**/*.test.*"]
+  "preset": "ts-jest/presets/default-esm",
+  "transform": {
+    "^.+\\.m?ts$": ["ts-jest", { "useESM": true }]
+  }
 }
