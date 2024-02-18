@@ -79625,7 +79625,9 @@ async function install() {
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
 }
 async function version() {
-    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"]);
+    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"], {
+        silent: true,
+    });
     return res.stdout.trim();
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ disableGlobalCache, enable, getConfig, install, version });

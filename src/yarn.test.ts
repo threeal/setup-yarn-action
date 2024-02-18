@@ -91,10 +91,13 @@ it("should get Yarn version", async () => {
   const version = await yarn.version();
 
   expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
-  expect(mock.getExecOutput).toHaveBeenCalledWith("corepack", [
-    "yarn",
-    "--version",
-  ]);
+  expect(mock.getExecOutput).toHaveBeenCalledWith(
+    "corepack",
+    ["yarn", "--version"],
+    {
+      silent: true,
+    },
+  );
 
   expect(version).toEqual("1.2.3");
 });

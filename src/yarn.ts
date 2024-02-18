@@ -40,7 +40,9 @@ async function install(): Promise<void> {
 }
 
 async function version() {
-  const res = await getExecOutput("corepack", ["yarn", "--version"]);
+  const res = await getExecOutput("corepack", ["yarn", "--version"], {
+    silent: true,
+  });
   return res.stdout.trim();
 }
 
