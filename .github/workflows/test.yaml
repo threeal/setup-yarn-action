@@ -74,6 +74,35 @@ jobs:
       - name: Build Package
         run: corepack yarn pack
 
+  test-action-with-yarn-local-cache:
+    name: Test Action With Yarn Local Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Package
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: threeal/nodejs-starter
+
+      - name: Checkout Action
+        uses: actions/checkout@v4.1.1
+        with:
+          path: yarn-install-action
+          sparse-checkout: |
+            action.yaml
+            dist
+          sparse-checkout-cone-mode: false
+
+      - name: Disable Yarn Global Cache
+        run: |
+          corepack enable yarn
+          corepack yarn config set enableGlobalCache false
+
+      - name: Install Dependencies
+        uses: ./yarn-install-action
+
+      - name: Build Package
+        run: corepack yarn pack
+
   test-action-without-lock-file:
     name: Test Action Without Lock File
     runs-on: ubuntu-latest
