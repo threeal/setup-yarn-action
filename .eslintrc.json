@@ -16,12 +16,6 @@
     {
       "files": ["**/*.?([cm])ts"],
       "extends": ["plugin:@typescript-eslint/recommended"]
-    },
-    {
-      "files": ["**/*.test.*"],
-      "env": {
-        "jest": true
-      }
     }
   ]
 }
