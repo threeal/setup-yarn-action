@@ -8,7 +8,10 @@ async function main(): Promise<void> {
     await yarn.enable();
   });
 
-  const cacheInfo = await getCacheInformation();
+  const cacheInfo = await core.group(
+    "Getting cache information",
+    getCacheInformation,
+  );
 
   if (cacheInfo !== undefined) {
     const cacheFound = await core.group("Restoring cache", async () => {

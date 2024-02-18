@@ -12,28 +12,17 @@ interface CacheInformation {
 export async function getCacheInformation(): Promise<
   CacheInformation | undefined
 > {
-  const version = await core.group("Getting Yarn version", async () => {
-    const version = await yarn.version();
-    core.info(`Yarn version: ${version}`);
-    return version;
-  });
+  core.info("Getting Yarn version...");
+  const version = await yarn.version();
+  core.info(`Yarn version: ${version}`);
 
-  const lockFileHash = await core.group(
-    "Calculating lock file hash",
-    async () => {
-      if (!fs.existsSync("yarn.lock")) {
-        core.warning(`Lock file not found, skipping cache`);
-        return undefined;
-      }
-      const hash = await hashFile("yarn.lock", { algorithm: "md5" });
-      core.info(`Hash: ${hash}`);
-      return hash;
-    },
-  );
-
-  if (lockFileHash == undefined) {
+  core.info("Calculating lock file hash...");
+  if (!fs.existsSync("yarn.lock")) {
+    core.warning(`Lock file not found, skipping cache`);
     return undefined;
   }
+  const lockFileHash = await hashFile("yarn.lock", { algorithm: "md5" });
+  core.info(`Lock file hash: ${lockFileHash}`);
 
   return {
     key: `yarn-install-action-${os.type()}-${version}-${lockFileHash}`,

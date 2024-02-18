@@ -79500,23 +79500,16 @@ hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (awa
 
 
 async function getCacheInformation() {
-    const version = await _actions_core__WEBPACK_IMPORTED_MODULE_0__.group("Getting Yarn version", async () => {
-        const version = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].version */ .Z.version();
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Yarn version: ${version}`);
-        return version;
-    });
-    const lockFileHash = await _actions_core__WEBPACK_IMPORTED_MODULE_0__.group("Calculating lock file hash", async () => {
-        if (!node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file not found, skipping cache`);
-            return undefined;
-        }
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Hash: ${hash}`);
-        return hash;
-    });
-    if (lockFileHash == undefined) {
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
+    const version = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].version */ .Z.version();
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Yarn version: ${version}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
+    if (!node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file not found, skipping cache`);
         return undefined;
     }
+    const lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Lock file hash: ${lockFileHash}`);
     return {
         key: `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}-${lockFileHash}`,
         paths: [
@@ -79558,7 +79551,7 @@ async function main() {
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
         await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].enable */ .Z.enable();
     });
-    const cacheInfo = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheInformation */ .A)();
+    const cacheInfo = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache information", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheInformation */ .A);
     if (cacheInfo !== undefined) {
         const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
             const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cacheInfo.paths.slice(), cacheInfo.key);
