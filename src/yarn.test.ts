@@ -1,8 +1,14 @@
+import { exec, getExecOutput } from "@actions/exec";
 import { jest } from "@jest/globals";
 
+const mock = {
+  exec: jest.fn<typeof exec>(),
+  getExecOutput: jest.fn<typeof getExecOutput>(),
+};
+
 jest.unstable_mockModule("@actions/exec", () => ({
-  exec: jest.fn(),
-  getExecOutput: jest.fn(),
+  exec: mock.exec,
+  getExecOutput: mock.getExecOutput,
 }));
 
 beforeEach(() => {
@@ -26,27 +32,27 @@ it("should disable Yarn global cache", async () => {
 });
 
 it("should enable Yarn", async () => {
-  const { exec } = await import("@actions/exec");
   const yarn = (await import("./yarn.mjs")).default;
 
   await yarn.enable();
 
-  expect(exec).toHaveBeenCalledTimes(1);
-  expect(exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"]);
+  expect(mock.exec).toHaveBeenCalledTimes(1);
+  expect(mock.exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"]);
 });
 
 it("should get Yarn config", async () => {
-  const { getExecOutput } = await import("@actions/exec");
   const yarn = (await import("./yarn.mjs")).default;
 
-  getExecOutput.mockResolvedValue({
+  mock.getExecOutput.mockResolvedValueOnce({
+    exitCode: 0,
     stdout: `{"key":"globalFolder","effective":"/.yarn/berry","source":"<default>","description":"Folder where all system-global files are stored","type":"ABSOLUTE_PATH","default":"/.yarn/berry"}\n`,
+    stderr: "",
   });
 
   const value = await yarn.getConfig("globalFolder");
 
-  expect(getExecOutput).toHaveBeenCalledTimes(1);
-  expect(getExecOutput).toHaveBeenCalledWith(
+  expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
+  expect(mock.getExecOutput).toHaveBeenCalledWith(
     "corepack",
     ["yarn", "config", "globalFolder", "--json"],
     {
@@ -58,13 +64,12 @@ it("should get Yarn config", async () => {
 });
 
 it("should install package using Yarn", async () => {
-  const { exec } = await import("@actions/exec");
   const yarn = (await import("./yarn.mjs")).default;
 
   await yarn.install();
 
-  expect(exec).toHaveBeenCalledTimes(1);
-  expect(exec).toHaveBeenCalledWith("corepack", ["yarn", "install"], {
+  expect(mock.exec).toHaveBeenCalledTimes(1);
+  expect(mock.exec).toHaveBeenCalledWith("corepack", ["yarn", "install"], {
     env: {
       ...process.env,
       GITHUB_ACTIONS: "",
@@ -75,15 +80,21 @@ it("should install package using Yarn", async () => {
 });
 
 it("should get Yarn version", async () => {
-  const { getExecOutput } = await import("@actions/exec");
   const yarn = (await import("./yarn.mjs")).default;
 
-  getExecOutput.mockResolvedValue({ stdout: "1.2.3" });
+  mock.getExecOutput.mockResolvedValueOnce({
+    exitCode: 0,
+    stdout: "1.2.3",
+    stderr: "",
+  });
 
   const version = await yarn.version();
 
-  expect(getExecOutput).toHaveBeenCalledTimes(1);
-  expect(getExecOutput).toHaveBeenCalledWith("corepack", ["yarn", "--version"]);
+  expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
+  expect(mock.getExecOutput).toHaveBeenCalledWith("corepack", [
+    "yarn",
+    "--version",
+  ]);
 
   expect(version).toEqual("1.2.3");
 });
