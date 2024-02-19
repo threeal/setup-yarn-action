@@ -89,7 +89,6 @@ it("should get the cache paths", async () => {
   const cachePaths = await getCachePaths();
 
   expect(cachePaths).toStrictEqual([
-    ".yarn",
     ".pnp.cjs",
     ".pnp.loader.mjs",
     ".yarn/cache",

@@ -79527,7 +79527,7 @@ async function getCachePaths() {
         { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
         { name: "Yarn virtual folder", config: "virtualFolder" },
     ];
-    const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+    const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
     for (const { name, config } of yarnConfigs) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Getting ${name}...`);
         cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));

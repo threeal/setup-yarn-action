@@ -35,7 +35,7 @@ export async function getCachePaths(): Promise<string[]> {
     { name: "Yarn virtual folder", config: "virtualFolder" },
   ];
 
-  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+  const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
   for (const { name, config } of yarnConfigs) {
     core.info(`Getting ${name}...`);
     cachePaths.push(await getYarnConfig(config));
