@@ -79629,7 +79629,7 @@ async function yarnInstall() {
     env["FORCE_COLOR"] = "true";
     // Prevent no lock file causing errors.
     env["CI"] = "";
-    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install", "--json"], { env });
 }
 async function getYarnVersion() {
     const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"], {

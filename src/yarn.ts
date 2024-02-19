@@ -25,7 +25,7 @@ export async function yarnInstall(): Promise<void> {
   // Prevent no lock file causing errors.
   env["CI"] = "";
 
-  await exec("corepack", ["yarn", "install"], { env });
+  await exec("corepack", ["yarn", "install", "--json"], { env });
 }
 
 export async function getYarnVersion() {
