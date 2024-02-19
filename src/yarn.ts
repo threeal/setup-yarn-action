@@ -16,6 +16,13 @@ export async function getYarnConfig(name: string): Promise<string> {
   return JSON.parse(res.stdout).effective;
 }
 
+export interface YarnInstallOutput {
+  type: "info" | "warning" | "error";
+  displayName: string;
+  indent: string;
+  data: string;
+}
+
 export async function yarnInstall(): Promise<void> {
   const env = process.env as { [key: string]: string };
 
@@ -31,7 +38,7 @@ export async function yarnInstall(): Promise<void> {
     silent: true,
     listeners: {
       stdline: (data) => {
-        const info = JSON.parse(data);
+        const info = JSON.parse(data) as YarnInstallOutput;
         switch (info.type) {
           case "info":
             core.info(`${info.displayName}: ${info.indent}${info.data}`);
