@@ -30,10 +30,12 @@ beforeEach(() => {
 });
 
 describe("Getting the cache key", () => {
+  beforeEach(() => {
+    mock.getYarnVersion.mockResolvedValue("1.2.3");
+  });
+
   it("should get the cache key", async () => {
     const { getCacheKey } = await import("./cache.js");
-
-    mock.getYarnVersion.mockResolvedValue("1.2.3");
 
     mock.fs.existsSync.mockImplementation((path) => {
       if (path == "yarn.lock") return true;
@@ -50,6 +52,16 @@ describe("Getting the cache key", () => {
     expect(cacheKey).toBe(
       `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
     );
+  });
+
+  it("should not get the cache key if there is no lock file", async () => {
+    const { getCacheKey } = await import("./cache.js");
+
+    mock.fs.existsSync.mockReturnValue(false);
+
+    const cacheKey = await getCacheKey();
+
+    expect(cacheKey).toBeUndefined();
   });
 });
 
