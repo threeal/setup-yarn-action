@@ -79617,11 +79617,10 @@ async function enableYarn() {
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
 }
 async function getYarnConfig(name) {
-    const prom = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
+    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
         silent: true,
     });
-    const jsonData = (await prom).stdout;
-    return JSON.parse(jsonData).effective;
+    return JSON.parse(res.stdout).effective;
 }
 async function yarnInstall() {
     const env = process.env;

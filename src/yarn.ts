@@ -5,15 +5,14 @@ export async function enableYarn(): Promise<void> {
 }
 
 export async function getYarnConfig(name: string): Promise<string> {
-  const prom = await getExecOutput(
+  const res = await getExecOutput(
     "corepack",
     ["yarn", "config", name, "--json"],
     {
       silent: true,
     },
   );
-  const jsonData = (await prom).stdout;
-  return JSON.parse(jsonData).effective;
+  return JSON.parse(res.stdout).effective;
 }
 
 export async function yarnInstall(): Promise<void> {
