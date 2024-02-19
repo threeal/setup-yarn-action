@@ -25,7 +25,7 @@ it("should enable Yarn", async () => {
 });
 
 it("should get Yarn config", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { getYarnConfig } = await import("./yarn.js");
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
@@ -33,7 +33,7 @@ it("should get Yarn config", async () => {
     stderr: "",
   });
 
-  const value = await yarn.getConfig("globalFolder");
+  const value = await getYarnConfig("globalFolder");
 
   expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
   expect(mock.getExecOutput).toHaveBeenCalledWith(

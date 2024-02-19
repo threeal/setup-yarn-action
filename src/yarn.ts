@@ -4,7 +4,7 @@ export async function enableYarn(): Promise<void> {
   await exec("corepack", ["enable", "yarn"]);
 }
 
-async function getConfig(name: string): Promise<string> {
+export async function getYarnConfig(name: string): Promise<string> {
   const prom = await getExecOutput(
     "corepack",
     ["yarn", "config", name, "--json"],
@@ -36,4 +36,4 @@ async function version() {
   return res.stdout.trim();
 }
 
-export default { getConfig, install, version };
+export default { install, version };
