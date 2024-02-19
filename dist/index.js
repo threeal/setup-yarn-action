@@ -79632,12 +79632,7 @@ function printYarnInstallOutput(output) {
     }
 }
 async function yarnInstall() {
-    const env = process.env;
-    // Prevent `yarn install` from outputting group log messages.
-    env["GITHUB_ACTIONS"] = "";
-    env["FORCE_COLOR"] = "true";
     await (0,exec.exec)("corepack", ["yarn", "install", "--json"], {
-        env,
         silent: true,
         listeners: {
             stdline: (data) => {
