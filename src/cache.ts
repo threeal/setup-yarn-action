@@ -4,18 +4,22 @@ import fs from "node:fs";
 import os from "node:os";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
-export async function getCacheKey(): Promise<string | undefined> {
+export async function getCacheKey(): Promise<string> {
   core.info("Getting Yarn version...");
   const version = await getYarnVersion();
 
   core.info("Calculating lock file hash...");
-  if (!fs.existsSync("yarn.lock")) {
-    core.warning(`Lock file not found, skipping cache`);
-    return undefined;
+  let lockFileHash: string | undefined = undefined;
+  if (fs.existsSync("yarn.lock")) {
+    lockFileHash = await hashFile("yarn.lock", { algorithm: "md5" });
+  } else {
+    core.warning(`Lock file could not be found, using empty hash`);
   }
-  const lockFileHash = await hashFile("yarn.lock", { algorithm: "md5" });
 
-  const cacheKey = `yarn-install-action-${os.type()}-${version}-${lockFileHash}`;
+  let cacheKey = `yarn-install-action-${os.type()}-${version}`;
+  if (lockFileHash !== undefined) {
+    cacheKey += `-${lockFileHash}`;
+  }
   core.info(`Using cache key: ${cacheKey}`);
 
   return cacheKey;

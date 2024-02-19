@@ -54,14 +54,14 @@ describe("Getting the cache key", () => {
     );
   });
 
-  it("should not get the cache key if there is no lock file", async () => {
+  it("should get the cache key if there is no lock file", async () => {
     const { getCacheKey } = await import("./cache.js");
 
     mock.fs.existsSync.mockReturnValue(false);
 
     const cacheKey = await getCacheKey();
 
-    expect(cacheKey).toBeUndefined();
+    expect(cacheKey).toBe(`yarn-install-action-${os.type()}-1.2.3`);
   });
 });
 

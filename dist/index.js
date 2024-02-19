@@ -79504,12 +79504,17 @@ async function getCacheKey() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
     const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)();
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
-    if (!node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file not found, skipping cache`);
-        return undefined;
+    let lockFileHash = undefined;
+    if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
+        lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
     }
-    const lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-    const cacheKey = `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}-${lockFileHash}`;
+    else {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
+    }
+    let cacheKey = `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}`;
+    if (lockFileHash !== undefined) {
+        cacheKey += `-${lockFileHash}`;
+    }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
     return cacheKey;
 }
@@ -79567,32 +79572,25 @@ async function main() {
         await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .enableYarn */ .Wd)();
     });
     const cacheKey = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache key", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a);
-    let cachePaths = [];
-    if (cacheKey !== undefined) {
-        cachePaths = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache paths", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N);
-    }
-    if (cacheKey !== undefined) {
-        const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
-            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
-            if (cacheId === undefined) {
-                _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
-                return false;
-            }
-            return true;
-        });
-        if (cacheFound) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
-            return;
+    const cachePaths = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache paths", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N);
+    const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
+        const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
+        if (cacheId === undefined) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+            return false;
         }
+        return true;
+    });
+    if (cacheFound) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+        return;
     }
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
         return (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .yarnInstall */ .Or)();
     });
-    if (cacheKey !== undefined) {
-        await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
-            return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
-        });
-    }
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
+        return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+    });
 }
 main().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(err));
 
@@ -79638,8 +79636,6 @@ async function yarnInstall() {
     // Prevent `yarn install` from outputting group log messages.
     env["GITHUB_ACTIONS"] = "";
     env["FORCE_COLOR"] = "true";
-    // Prevent no lock file causing errors.
-    env["CI"] = "";
     await (0,exec.exec)("corepack", ["yarn", "install", "--json"], {
         env,
         silent: true,
