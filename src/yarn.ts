@@ -16,7 +16,7 @@ export async function getYarnConfig(name: string): Promise<string> {
   return JSON.parse(jsonData).effective;
 }
 
-async function install(): Promise<void> {
+export async function yarnInstall(): Promise<void> {
   const env = process.env as { [key: string]: string };
 
   // Prevent `yarn install` from outputting group log messages.
@@ -36,4 +36,4 @@ async function version() {
   return res.stdout.trim();
 }
 
-export default { install, version };
+export default { version };

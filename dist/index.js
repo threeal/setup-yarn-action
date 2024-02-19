@@ -79586,7 +79586,7 @@ async function main() {
         }
     }
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-        return _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].install */ .ZP.install();
+        return (0,_yarn_js__WEBPACK_IMPORTED_MODULE_3__/* .yarnInstall */ .Or)();
     });
     if (cacheKey !== undefined) {
         await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
@@ -79605,6 +79605,7 @@ __webpack_async_result__();
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "Or": () => (/* binding */ yarnInstall),
 /* harmony export */   "Wd": () => (/* binding */ enableYarn),
 /* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "io": () => (/* binding */ getYarnConfig)
@@ -79622,7 +79623,7 @@ async function getYarnConfig(name) {
     const jsonData = (await prom).stdout;
     return JSON.parse(jsonData).effective;
 }
-async function install() {
+async function yarnInstall() {
     const env = process.env;
     // Prevent `yarn install` from outputting group log messages.
     env["GITHUB_ACTIONS"] = "";
@@ -79637,7 +79638,7 @@ async function version() {
     });
     return res.stdout.trim();
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ install, version });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ version });
 
 
 /***/ }),

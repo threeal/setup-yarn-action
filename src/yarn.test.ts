@@ -48,9 +48,9 @@ it("should get Yarn config", async () => {
 });
 
 it("should install package using Yarn", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { yarnInstall } = await import("./yarn.js");
 
-  await yarn.install();
+  await yarnInstall();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
   expect(mock.exec).toHaveBeenCalledWith("corepack", ["yarn", "install"], {
