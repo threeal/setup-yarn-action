@@ -120,18 +120,16 @@ it("should install package using Yarn", async () => {
   await yarnInstall();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
-  expect(mock.exec).toHaveBeenCalledWith(
-    "corepack",
-    ["yarn", "install", "--json"],
-    {
-      env: {
-        ...process.env,
-        GITHUB_ACTIONS: "",
-        FORCE_COLOR: "true",
-        CI: "",
-      },
-    },
-  );
+  expect(mock.exec.mock.calls[0]).toHaveLength(3);
+  expect(mock.exec.mock.calls[0][0]).toBe("corepack");
+  expect(mock.exec.mock.calls[0][1]).toEqual(["yarn", "install", "--json"]);
+  expect(mock.exec.mock.calls[0][2]).toHaveProperty("env");
+  expect(mock.exec.mock.calls[0][2].env).toEqual({
+    ...process.env,
+    GITHUB_ACTIONS: "",
+    FORCE_COLOR: "true",
+    CI: "",
+  });
 });
 
 it("should get Yarn version", async () => {
