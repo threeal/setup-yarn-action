@@ -52,3 +52,39 @@ describe("Getting the cache key", () => {
     );
   });
 });
+
+it("should get the cache paths", async () => {
+  const { getCachePaths } = await import("./cache.js");
+
+  mock.getYarnConfig.mockImplementation(async (name) => {
+    switch (name) {
+      case "cacheFolder":
+        return ".yarn/cache";
+      case "deferredVersionFolder":
+        return ".yarn/versions";
+      case "installStatePath":
+        return ".yarn/install-state.gz";
+      case "patchFolder":
+        return ".yarn/patches";
+      case "pnpUnpluggedFolder":
+        return ".yarn/unplugged";
+      case "virtualFolder":
+        return ".yarn/__virtual__";
+    }
+    throw new Error(`unknown config: ${name}`);
+  });
+
+  const cachePaths = await getCachePaths();
+
+  expect(cachePaths).toStrictEqual([
+    ".yarn/cache",
+    ".yarn/versions",
+    ".yarn/install-state.gz",
+    ".yarn/patches",
+    ".yarn/unplugged",
+    ".yarn/__virtual__",
+    ".yarn",
+    ".pnp.cjs",
+    ".pnp.loader.mjs",
+  ]);
+});
