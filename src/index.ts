@@ -1,7 +1,7 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import { getCacheKey, getCachePaths } from "./cache.js";
-import { enableYarn, yarnInstall } from "./yarn.js";
+import { enableYarn, yarnInstall } from "./yarn/index.js";
 
 async function main(): Promise<void> {
   await core.group("Enabling Yarn", async () => {

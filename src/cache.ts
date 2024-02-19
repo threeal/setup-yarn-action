@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import { hashFile } from "hasha";
 import fs from "node:fs";
 import os from "node:os";
-import { getYarnConfig, getYarnVersion } from "./yarn.js";
+import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
 export async function getCacheKey(): Promise<string | undefined> {
   core.info("Getting Yarn version...");
