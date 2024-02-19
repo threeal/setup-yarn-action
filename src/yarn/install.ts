@@ -23,14 +23,7 @@ export function printYarnInstallOutput(output: YarnInstallOutput): void {
 }
 
 export async function yarnInstall(): Promise<void> {
-  const env = process.env as { [key: string]: string };
-
-  // Prevent `yarn install` from outputting group log messages.
-  env["GITHUB_ACTIONS"] = "";
-  env["FORCE_COLOR"] = "true";
-
   await exec("corepack", ["yarn", "install", "--json"], {
-    env,
     silent: true,
     listeners: {
       stdline: (data) => {
