@@ -79610,17 +79610,34 @@ __webpack_async_result__();
 /* harmony export */   "Wd": () => (/* binding */ enableYarn),
 /* harmony export */   "io": () => (/* binding */ getYarnConfig)
 /* harmony export */ });
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
+/* unused harmony export printYarnInstallOutput */
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4278);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(8434);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_1__);
+
 
 async function enableYarn() {
-    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"]);
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)("corepack", ["enable", "yarn"]);
 }
 async function getYarnConfig(name) {
-    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
+    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
         silent: true,
     });
     return JSON.parse(res.stdout).effective;
+}
+function printYarnInstallOutput(output) {
+    switch (output.type) {
+        case "info":
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`${output.displayName}: ${output.indent}${output.data}`);
+            break;
+        case "warning":
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`${output.data} (${output.displayName})`);
+            break;
+        case "error":
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.error(`${output.data} (${output.displayName})`);
+            break;
+    }
 }
 async function yarnInstall() {
     const env = process.env;
@@ -79629,10 +79646,19 @@ async function yarnInstall() {
     env["FORCE_COLOR"] = "true";
     // Prevent no lock file causing errors.
     env["CI"] = "";
-    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)("corepack", ["yarn", "install", "--json"], {
+        env,
+        silent: true,
+        listeners: {
+            stdline: (data) => {
+                const output = JSON.parse(data);
+                printYarnInstallOutput(output);
+            },
+        },
+    });
 }
 async function getYarnVersion() {
-    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"], {
+    const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.getExecOutput)("corepack", ["yarn", "--version"], {
         silent: true,
     });
     return res.stdout.trim();
