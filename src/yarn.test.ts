@@ -16,16 +16,16 @@ beforeEach(() => {
 });
 
 it("should enable Yarn", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { enableYarn } = await import("./yarn.js");
 
-  await yarn.enable();
+  await enableYarn();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
   expect(mock.exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"]);
 });
 
 it("should get Yarn config", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { getYarnConfig } = await import("./yarn.js");
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
@@ -33,7 +33,7 @@ it("should get Yarn config", async () => {
     stderr: "",
   });
 
-  const value = await yarn.getConfig("globalFolder");
+  const value = await getYarnConfig("globalFolder");
 
   expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
   expect(mock.getExecOutput).toHaveBeenCalledWith(
@@ -48,9 +48,9 @@ it("should get Yarn config", async () => {
 });
 
 it("should install package using Yarn", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { yarnInstall } = await import("./yarn.js");
 
-  await yarn.install();
+  await yarnInstall();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
   expect(mock.exec).toHaveBeenCalledWith("corepack", ["yarn", "install"], {
@@ -64,7 +64,7 @@ it("should install package using Yarn", async () => {
 });
 
 it("should get Yarn version", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { getYarnVersion } = await import("./yarn.js");
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
@@ -72,7 +72,7 @@ it("should get Yarn version", async () => {
     stderr: "",
   });
 
-  const version = await yarn.version();
+  const version = await getYarnVersion();
 
   expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
   expect(mock.getExecOutput).toHaveBeenCalledWith(

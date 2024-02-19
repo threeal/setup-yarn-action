@@ -2,11 +2,11 @@ import * as core from "@actions/core";
 import { hashFile } from "hasha";
 import fs from "node:fs";
 import os from "node:os";
-import yarn from "./yarn.js";
+import { getYarnConfig, getYarnVersion } from "./yarn.js";
 
 export async function getCacheKey(): Promise<string | undefined> {
   core.info("Getting Yarn version...");
-  const version = await yarn.version();
+  const version = await getYarnVersion();
 
   core.info("Calculating lock file hash...");
   if (!fs.existsSync("yarn.lock")) {
@@ -23,24 +23,24 @@ export async function getCacheKey(): Promise<string | undefined> {
 
 export async function getCachePaths(): Promise<string[]> {
   core.info("Getting Yarn cache folder...");
-  const yarnCacheFolder = await yarn.getConfig("cacheFolder");
+  const yarnCacheFolder = await getYarnConfig("cacheFolder");
 
   core.info("Getting Yarn deferred version folder...");
-  const yarnDefferedVersionFolder = await yarn.getConfig(
+  const yarnDefferedVersionFolder = await getYarnConfig(
     "deferredVersionFolder",
   );
 
   core.info("Getting Yarn install state path...");
-  const yarnInstallStatePath = await yarn.getConfig("installStatePath");
+  const yarnInstallStatePath = await getYarnConfig("installStatePath");
 
   core.info("Getting Yarn patch folder...");
-  const yarnPatchFolder = await yarn.getConfig("patchFolder");
+  const yarnPatchFolder = await getYarnConfig("patchFolder");
 
   core.info("Getting Yarn PnP unplugged folder...");
-  const yarnPnpUnpluggedFolder = await yarn.getConfig("pnpUnpluggedFolder");
+  const yarnPnpUnpluggedFolder = await getYarnConfig("pnpUnpluggedFolder");
 
   core.info("Getting Yarn virtual folder...");
-  const yarnVirtualFolder = await yarn.getConfig("virtualFolder");
+  const yarnVirtualFolder = await getYarnConfig("virtualFolder");
 
   const cachePaths = [
     yarnCacheFolder,

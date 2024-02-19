@@ -1,22 +1,21 @@
 import { exec, getExecOutput } from "@actions/exec";
 
-async function enable(): Promise<void> {
+export async function enableYarn(): Promise<void> {
   await exec("corepack", ["enable", "yarn"]);
 }
 
-async function getConfig(name: string): Promise<string> {
-  const prom = await getExecOutput(
+export async function getYarnConfig(name: string): Promise<string> {
+  const res = await getExecOutput(
     "corepack",
     ["yarn", "config", name, "--json"],
     {
       silent: true,
     },
   );
-  const jsonData = (await prom).stdout;
-  return JSON.parse(jsonData).effective;
+  return JSON.parse(res.stdout).effective;
 }
 
-async function install(): Promise<void> {
+export async function yarnInstall(): Promise<void> {
   const env = process.env as { [key: string]: string };
 
   // Prevent `yarn install` from outputting group log messages.
@@ -29,11 +28,9 @@ async function install(): Promise<void> {
   await exec("corepack", ["yarn", "install"], { env });
 }
 
-async function version() {
+export async function getYarnVersion() {
   const res = await getExecOutput("corepack", ["yarn", "--version"], {
     silent: true,
   });
   return res.stdout.trim();
 }
-
-export default { enable, getConfig, install, version };
