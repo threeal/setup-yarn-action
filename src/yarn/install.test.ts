@@ -101,7 +101,6 @@ it("should install package using Yarn", async () => {
     ...process.env,
     GITHUB_ACTIONS: "",
     FORCE_COLOR: "true",
-    CI: "",
   });
 
   expect(mock.core.info).toHaveBeenCalledTimes(1);

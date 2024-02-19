@@ -29,9 +29,6 @@ export async function yarnInstall(): Promise<void> {
   env["GITHUB_ACTIONS"] = "";
   env["FORCE_COLOR"] = "true";
 
-  // Prevent no lock file causing errors.
-  env["CI"] = "";
-
   await exec("corepack", ["yarn", "install", "--json"], {
     env,
     silent: true,

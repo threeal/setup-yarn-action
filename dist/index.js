@@ -79638,8 +79638,6 @@ async function yarnInstall() {
     // Prevent `yarn install` from outputting group log messages.
     env["GITHUB_ACTIONS"] = "";
     env["FORCE_COLOR"] = "true";
-    // Prevent no lock file causing errors.
-    env["CI"] = "";
     await (0,exec.exec)("corepack", ["yarn", "install", "--json"], {
         env,
         silent: true,
