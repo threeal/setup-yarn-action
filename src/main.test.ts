@@ -41,7 +41,7 @@ describe("install Yarn dependencies", () => {
   it("should install Yarn dependencies and save to cache", async () => {
     const { main } = await import("./main.js");
 
-    mock.restoreCache.mockReturnValue(undefined);
+    mock.restoreCache.mockResolvedValue(undefined);
 
     await main();
 
@@ -56,5 +56,23 @@ describe("install Yarn dependencies", () => {
 
     expect(mock.saveCache).toHaveBeenCalledTimes(1);
     expect(mock.saveCache).toHaveBeenCalledWith(cachePaths, cacheKey);
+  });
+
+  it("should restore Yarn dependencies cache without install and save", async () => {
+    const { main } = await import("./main.js");
+
+    mock.restoreCache.mockResolvedValue(cacheKey);
+
+    await main();
+
+    expect(mock.enableYarn).toHaveBeenCalledTimes(1);
+    expect(mock.getCacheKey).toHaveBeenCalledTimes(1);
+    expect(mock.getCachePaths).toHaveBeenCalledTimes(1);
+
+    expect(mock.restoreCache).toHaveBeenCalledTimes(1);
+    expect(mock.restoreCache).toHaveBeenCalledWith(cachePaths, cacheKey);
+
+    expect(mock.yarnInstall).toHaveBeenCalledTimes(0);
+    expect(mock.saveCache).toHaveBeenCalledTimes(0);
   });
 });
