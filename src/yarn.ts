@@ -1,3 +1,4 @@
+import * as core from "@actions/core";
 import { exec, getExecOutput } from "@actions/exec";
 
 export async function enableYarn(): Promise<void> {
@@ -25,7 +26,26 @@ export async function yarnInstall(): Promise<void> {
   // Prevent no lock file causing errors.
   env["CI"] = "";
 
-  await exec("corepack", ["yarn", "install", "--json"], { env });
+  await exec("corepack", ["yarn", "install", "--json"], {
+    env,
+    silent: true,
+    listeners: {
+      stdline: (data) => {
+        const info = JSON.parse(data);
+        switch (info.type) {
+          case "info":
+            core.info(`${info.displayName}: ${info.indent}${info.data}`);
+            break;
+          case "warning":
+            core.warning(`${info.data} (${info.displayName})`);
+            break;
+          case "error":
+            core.error(`${info.data} (${info.displayName})`);
+            break;
+        }
+      },
+    },
+  });
 }
 
 export async function getYarnVersion() {
