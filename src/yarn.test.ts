@@ -117,6 +117,13 @@ describe("print Yarn install package output", () => {
 it("should install package using Yarn", async () => {
   const { yarnInstall } = await import("./yarn.js");
 
+  mock.exec.mockImplementation(async (commandLine, args, options) => {
+    options?.listeners?.stdline(
+      `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
+    );
+    return 0;
+  });
+
   await yarnInstall();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
@@ -130,6 +137,9 @@ it("should install package using Yarn", async () => {
     FORCE_COLOR: "true",
     CI: "",
   });
+
+  expect(mock.core.info).toHaveBeenCalledTimes(1);
+  expect(mock.core.info).toHaveBeenCalledWith("YN0000: └ Completed");
 });
 
 it("should get Yarn version", async () => {
