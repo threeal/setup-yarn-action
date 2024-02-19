@@ -23,6 +23,20 @@ export interface YarnInstallOutput {
   data: string;
 }
 
+export function printYarnInstallOutput(output: YarnInstallOutput): void {
+  switch (output.type) {
+    case "info":
+      core.info(`${output.displayName}: ${output.indent}${output.data}`);
+      break;
+    case "warning":
+      core.warning(`${output.data} (${output.displayName})`);
+      break;
+    case "error":
+      core.error(`${output.data} (${output.displayName})`);
+      break;
+  }
+}
+
 export async function yarnInstall(): Promise<void> {
   const env = process.env as { [key: string]: string };
 
@@ -38,18 +52,8 @@ export async function yarnInstall(): Promise<void> {
     silent: true,
     listeners: {
       stdline: (data) => {
-        const info = JSON.parse(data) as YarnInstallOutput;
-        switch (info.type) {
-          case "info":
-            core.info(`${info.displayName}: ${info.indent}${info.data}`);
-            break;
-          case "warning":
-            core.warning(`${info.data} (${info.displayName})`);
-            break;
-          case "error":
-            core.error(`${info.data} (${info.displayName})`);
-            break;
-        }
+        const output = JSON.parse(data) as YarnInstallOutput;
+        printYarnInstallOutput(output);
       },
     },
   });

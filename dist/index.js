@@ -79610,6 +79610,7 @@ __webpack_async_result__();
 /* harmony export */   "Wd": () => (/* binding */ enableYarn),
 /* harmony export */   "io": () => (/* binding */ getYarnConfig)
 /* harmony export */ });
+/* unused harmony export printYarnInstallOutput */
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(8434);
@@ -79625,6 +79626,19 @@ async function getYarnConfig(name) {
     });
     return JSON.parse(res.stdout).effective;
 }
+function printYarnInstallOutput(output) {
+    switch (output.type) {
+        case "info":
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`${output.displayName}: ${output.indent}${output.data}`);
+            break;
+        case "warning":
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`${output.data} (${output.displayName})`);
+            break;
+        case "error":
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.error(`${output.data} (${output.displayName})`);
+            break;
+    }
+}
 async function yarnInstall() {
     const env = process.env;
     // Prevent `yarn install` from outputting group log messages.
@@ -79637,18 +79651,8 @@ async function yarnInstall() {
         silent: true,
         listeners: {
             stdline: (data) => {
-                const info = JSON.parse(data);
-                switch (info.type) {
-                    case "info":
-                        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`${info.displayName}: ${info.indent}${info.data}`);
-                        break;
-                    case "warning":
-                        _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`${info.data} (${info.displayName})`);
-                        break;
-                    case "error":
-                        _actions_core__WEBPACK_IMPORTED_MODULE_0__.error(`${info.data} (${info.displayName})`);
-                        break;
-                }
+                const output = JSON.parse(data);
+                printYarnInstallOutput(output);
             },
         },
     });
