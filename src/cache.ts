@@ -26,37 +26,20 @@ export async function getCacheKey(): Promise<string> {
 }
 
 export async function getCachePaths(): Promise<string[]> {
-  core.info("Getting Yarn cache folder...");
-  const yarnCacheFolder = await getYarnConfig("cacheFolder");
-
-  core.info("Getting Yarn deferred version folder...");
-  const yarnDefferedVersionFolder = await getYarnConfig(
-    "deferredVersionFolder",
-  );
-
-  core.info("Getting Yarn install state path...");
-  const yarnInstallStatePath = await getYarnConfig("installStatePath");
-
-  core.info("Getting Yarn patch folder...");
-  const yarnPatchFolder = await getYarnConfig("patchFolder");
-
-  core.info("Getting Yarn PnP unplugged folder...");
-  const yarnPnpUnpluggedFolder = await getYarnConfig("pnpUnpluggedFolder");
-
-  core.info("Getting Yarn virtual folder...");
-  const yarnVirtualFolder = await getYarnConfig("virtualFolder");
-
-  const cachePaths = [
-    yarnCacheFolder,
-    yarnDefferedVersionFolder,
-    yarnInstallStatePath,
-    yarnPatchFolder,
-    yarnPnpUnpluggedFolder,
-    yarnVirtualFolder,
-    ".yarn",
-    ".pnp.cjs",
-    ".pnp.loader.mjs",
+  const yarnConfigs = [
+    { name: "Yarn cache folder", config: "cacheFolder" },
+    { name: "Yarn deferred version folder", config: "deferredVersionFolder" },
+    { name: "Yarn install state path", config: "installStatePath" },
+    { name: "Yarn patch folder", config: "patchFolder" },
+    { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
+    { name: "Yarn virtual folder", config: "virtualFolder" },
   ];
+
+  const cachePaths = [".yarn", ".pnp.cjs", ".pnp.loader.mjs"];
+  for (const { name, config } of yarnConfigs) {
+    core.info(`Getting ${name}...`);
+    cachePaths.push(await getYarnConfig(config));
+  }
   core.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
 
   return cachePaths;
