@@ -79519,29 +79519,19 @@ async function getCacheKey() {
     return cacheKey;
 }
 async function getCachePaths() {
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn cache folder...");
-    const yarnCacheFolder = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)("cacheFolder");
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn deferred version folder...");
-    const yarnDefferedVersionFolder = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)("deferredVersionFolder");
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn install state path...");
-    const yarnInstallStatePath = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)("installStatePath");
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn patch folder...");
-    const yarnPatchFolder = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)("patchFolder");
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn PnP unplugged folder...");
-    const yarnPnpUnpluggedFolder = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)("pnpUnpluggedFolder");
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn virtual folder...");
-    const yarnVirtualFolder = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)("virtualFolder");
-    const cachePaths = [
-        yarnCacheFolder,
-        yarnDefferedVersionFolder,
-        yarnInstallStatePath,
-        yarnPatchFolder,
-        yarnPnpUnpluggedFolder,
-        yarnVirtualFolder,
-        ".yarn",
-        ".pnp.cjs",
-        ".pnp.loader.mjs",
+    const yarnConfigs = [
+        { name: "Yarn cache folder", config: "cacheFolder" },
+        { name: "Yarn deferred version folder", config: "deferredVersionFolder" },
+        { name: "Yarn install state path", config: "installStatePath" },
+        { name: "Yarn patch folder", config: "patchFolder" },
+        { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
+        { name: "Yarn virtual folder", config: "virtualFolder" },
     ];
+    const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
+    for (const { name, config } of yarnConfigs) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Getting ${name}...`);
+        cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
+    }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
     return cachePaths;
 }
