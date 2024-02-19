@@ -24,7 +24,7 @@ beforeEach(() => {
 });
 
 it("should enable Yarn", async () => {
-  const { enableYarn } = await import("./yarn.js");
+  const { enableYarn } = await import("./index.js");
 
   await enableYarn();
 
@@ -33,7 +33,7 @@ it("should enable Yarn", async () => {
 });
 
 it("should get Yarn config", async () => {
-  const { getYarnConfig } = await import("./yarn.js");
+  const { getYarnConfig } = await import("./index.js");
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
@@ -57,7 +57,7 @@ it("should get Yarn config", async () => {
 
 describe("print Yarn install package output", () => {
   it("should print info output", async () => {
-    const { printYarnInstallOutput } = await import("./yarn.js");
+    const { printYarnInstallOutput } = await import("./index.js");
 
     printYarnInstallOutput({
       type: "info",
@@ -76,7 +76,7 @@ describe("print Yarn install package output", () => {
   });
 
   it("should print warning output", async () => {
-    const { printYarnInstallOutput } = await import("./yarn.js");
+    const { printYarnInstallOutput } = await import("./index.js");
 
     printYarnInstallOutput({
       type: "warning",
@@ -95,7 +95,7 @@ describe("print Yarn install package output", () => {
   });
 
   it("should print error output", async () => {
-    const { printYarnInstallOutput } = await import("./yarn.js");
+    const { printYarnInstallOutput } = await import("./index.js");
 
     printYarnInstallOutput({
       type: "error",
@@ -115,7 +115,7 @@ describe("print Yarn install package output", () => {
 });
 
 it("should install package using Yarn", async () => {
-  const { yarnInstall } = await import("./yarn.js");
+  const { yarnInstall } = await import("./index.js");
 
   mock.exec.mockImplementation(async (commandLine, args, options) => {
     options?.listeners?.stdline(
@@ -143,7 +143,7 @@ it("should install package using Yarn", async () => {
 });
 
 it("should get Yarn version", async () => {
-  const { getYarnVersion } = await import("./yarn.js");
+  const { getYarnVersion } = await import("./index.js");
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,

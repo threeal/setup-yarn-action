@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import fs from "node:fs";
 import os from "node:os";
-import { getYarnConfig, getYarnVersion } from "./yarn.js";
+import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
 const mock = {
   fs: {
