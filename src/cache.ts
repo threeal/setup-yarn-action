@@ -2,11 +2,11 @@ import * as core from "@actions/core";
 import { hashFile } from "hasha";
 import fs from "node:fs";
 import os from "node:os";
-import yarn, { getYarnConfig } from "./yarn.js";
+import { getYarnConfig, getYarnVersion } from "./yarn.js";
 
 export async function getCacheKey(): Promise<string | undefined> {
   core.info("Getting Yarn version...");
-  const version = await yarn.version();
+  const version = await getYarnVersion();
 
   core.info("Calculating lock file hash...");
   if (!fs.existsSync("yarn.lock")) {

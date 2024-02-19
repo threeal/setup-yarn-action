@@ -79502,7 +79502,7 @@ hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (awa
 
 async function getCacheKey() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
-    const version = await _yarn_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].version */ .ZP.version();
+    const version = await (0,_yarn_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)();
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
     if (!node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file not found, skipping cache`);
@@ -79606,8 +79606,8 @@ __webpack_async_result__();
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   "Or": () => (/* binding */ yarnInstall),
+/* harmony export */   "Vh": () => (/* binding */ getYarnVersion),
 /* harmony export */   "Wd": () => (/* binding */ enableYarn),
-/* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "io": () => (/* binding */ getYarnConfig)
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
@@ -79632,13 +79632,12 @@ async function yarnInstall() {
     env["CI"] = "";
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["yarn", "install"], { env });
 }
-async function version() {
+async function getYarnVersion() {
     const res = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.getExecOutput)("corepack", ["yarn", "--version"], {
         silent: true,
     });
     return res.stdout.trim();
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ version });
 
 
 /***/ }),

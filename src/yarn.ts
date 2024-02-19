@@ -29,11 +29,9 @@ export async function yarnInstall(): Promise<void> {
   await exec("corepack", ["yarn", "install"], { env });
 }
 
-async function version() {
+export async function getYarnVersion() {
   const res = await getExecOutput("corepack", ["yarn", "--version"], {
     silent: true,
   });
   return res.stdout.trim();
 }
-
-export default { version };

@@ -64,7 +64,7 @@ it("should install package using Yarn", async () => {
 });
 
 it("should get Yarn version", async () => {
-  const yarn = (await import("./yarn.js")).default;
+  const { getYarnVersion } = await import("./yarn.js");
 
   mock.getExecOutput.mockResolvedValueOnce({
     exitCode: 0,
@@ -72,7 +72,7 @@ it("should get Yarn version", async () => {
     stderr: "",
   });
 
-  const version = await yarn.version();
+  const version = await getYarnVersion();
 
   expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
   expect(mock.getExecOutput).toHaveBeenCalledWith(
