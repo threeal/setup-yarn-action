@@ -2,7 +2,7 @@ import { exec, getExecOutput } from "@actions/exec";
 export { yarnInstall } from "./install.js";
 
 export async function enableYarn(): Promise<void> {
-  await exec("corepack", ["enable", "yarn"]);
+  await exec("corepack", ["enable", "yarn"], { silent: true });
 }
 
 export async function getYarnConfig(name: string): Promise<string> {

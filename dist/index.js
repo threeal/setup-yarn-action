@@ -79657,7 +79657,7 @@ async function yarnInstall() {
 
 
 async function enableYarn() {
-    await (0,exec.exec)("corepack", ["enable", "yarn"]);
+    await (0,exec.exec)("corepack", ["enable", "yarn"], { silent: true });
 }
 async function getYarnConfig(name) {
     const res = await (0,exec.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
