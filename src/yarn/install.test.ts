@@ -81,20 +81,18 @@ it("should install package using Yarn", async () => {
   const { exec } = await import("@actions/exec");
   const { yarnInstall } = await import("./install.js");
 
-  (exec as jest.Mock<typeof exec>).mockImplementation(
-    async (commandLine, args, options) => {
-      options?.listeners?.stdline(
-        `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
-      );
-      return 0;
-    },
-  );
+  jest.mocked(exec).mockImplementation(async (commandLine, args, options) => {
+    options?.listeners?.stdline(
+      `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
+    );
+    return 0;
+  });
 
   await yarnInstall();
 
   expect(exec).toHaveBeenCalledTimes(1);
 
-  const execCall = (exec as jest.Mock<typeof exec>).mock.calls[0];
+  const execCall = jest.mocked(exec).mock.calls[0];
   expect(execCall).toHaveLength(3);
   expect(execCall[0]).toBe("corepack");
   expect(execCall[1]).toEqual(["yarn", "install", "--json"]);
