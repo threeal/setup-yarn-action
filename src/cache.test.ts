@@ -62,15 +62,14 @@ describe("Getting the cache key", () => {
     });
 
     const cacheKey = await getCacheKey();
+    const expectedCacheKey = `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
 
     expect(logs).toStrictEqual([
       "Getting Yarn version...",
       "Calculating lock file hash...",
-      `Using cache key: yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
+      `Using cache key: ${expectedCacheKey}`,
     ]);
-    expect(cacheKey).toBe(
-      `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
-    );
+    expect(cacheKey).toBe(expectedCacheKey);
   });
 
   it("should get the cache key if there is no lock file", async () => {
@@ -79,14 +78,15 @@ describe("Getting the cache key", () => {
     mock.fs.existsSync.mockReturnValue(false);
 
     const cacheKey = await getCacheKey();
+    const expectedCacheKey = `yarn-install-action-${os.type()}-1.2.3`;
 
     expect(logs).toStrictEqual([
       "Getting Yarn version...",
       "Calculating lock file hash...",
       "Lock file could not be found, using empty hash",
-      `Using cache key: yarn-install-action-${os.type()}-1.2.3`,
+      `Using cache key: ${expectedCacheKey}`,
     ]);
-    expect(cacheKey).toBe(`yarn-install-action-${os.type()}-1.2.3`);
+    expect(cacheKey).toBe(expectedCacheKey);
   });
 });
 
@@ -112,7 +112,6 @@ it("should get the cache paths", async () => {
   });
 
   const cachePaths = await getCachePaths();
-
   const expectedCachePaths = [
     ".pnp.cjs",
     ".pnp.loader.mjs",
