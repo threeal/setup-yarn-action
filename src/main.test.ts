@@ -5,6 +5,12 @@ jest.unstable_mockModule("@actions/cache", () => ({
   saveCache: jest.fn(),
 }));
 
+jest.unstable_mockModule("@actions/core", () => ({
+  group: jest.fn(),
+  info: jest.fn(),
+  warning: jest.fn(),
+}));
+
 jest.unstable_mockModule("./yarn/index.js", () => ({
   enableYarn: jest.fn(),
   yarnInstall: jest.fn(),
@@ -23,8 +29,25 @@ describe("install Yarn dependencies", () => {
   const cacheKey = "a-cache-key";
   const cachePaths = ["a/cahe/paths", "another/cache/paths"];
 
+  let logs: (string | Error)[] = [];
+
   beforeEach(async () => {
+    const core = await import("@actions/core");
     const { getCacheKey, getCachePaths } = await import("./cache.js");
+
+    logs = [];
+    jest.mocked(core.group).mockImplementation(async (name, fn) => {
+      logs.push(`::group::${name}`);
+      const res = await fn();
+      logs.push(`::endgroup::`);
+      return res;
+    });
+    jest.mocked(core.info).mockImplementation((message) => {
+      logs.push(message);
+    });
+    jest.mocked(core.warning).mockImplementation((message) => {
+      logs.push(message);
+    });
 
     jest.mocked(getCacheKey).mockResolvedValue(cacheKey);
     jest.mocked(getCachePaths).mockResolvedValue(cachePaths);
@@ -39,6 +62,21 @@ describe("install Yarn dependencies", () => {
     jest.mocked(restoreCache).mockResolvedValue(undefined);
 
     await main();
+
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "Cache not found",
+      "::endgroup::",
+      "::group::Installing dependencies",
+      "::endgroup::",
+      "::group::Saving cache",
+      "::endgroup::",
+    ]);
 
     expect(enableYarn).toHaveBeenCalledTimes(1);
     expect(getCacheKey).toHaveBeenCalledTimes(1);
@@ -62,6 +100,17 @@ describe("install Yarn dependencies", () => {
     jest.mocked(restoreCache).mockResolvedValue(cacheKey);
 
     await main();
+
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "::endgroup::",
+      "Cache restored successfully",
+    ]);
 
     expect(enableYarn).toHaveBeenCalledTimes(1);
     expect(getCacheKey).toHaveBeenCalledTimes(1);
