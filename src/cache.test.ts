@@ -29,22 +29,22 @@ jest.unstable_mockModule("./yarn.js", () => ({
   getYarnVersion: mock.getYarnVersion,
 }));
 
+let logs: (string | Error)[] = [];
+
 beforeEach(() => {
   jest.clearAllMocks();
+
+  logs = [];
+  mock.core.info.mockImplementation((message) => {
+    logs.push(message);
+  });
+  mock.core.warning.mockImplementation((message) => {
+    logs.push(message);
+  });
 });
 
 describe("Getting the cache key", () => {
-  let logs: (string | Error)[] = [];
-
   beforeEach(() => {
-    logs = [];
-    mock.core.info.mockImplementation((message) => {
-      logs.push(message);
-    });
-    mock.core.warning.mockImplementation((message) => {
-      logs.push(message);
-    });
-
     mock.getYarnVersion.mockResolvedValue("1.2.3");
   });
 
@@ -113,7 +113,7 @@ it("should get the cache paths", async () => {
 
   const cachePaths = await getCachePaths();
 
-  expect(cachePaths).toStrictEqual([
+  const expectedCachePaths = [
     ".pnp.cjs",
     ".pnp.loader.mjs",
     ".yarn/cache",
@@ -122,5 +122,16 @@ it("should get the cache paths", async () => {
     ".yarn/patches",
     ".yarn/unplugged",
     ".yarn/__virtual__",
+  ];
+
+  expect(logs).toStrictEqual([
+    "Getting Yarn cache folder...",
+    "Getting Yarn deferred version folder...",
+    "Getting Yarn install state path...",
+    "Getting Yarn patch folder...",
+    "Getting Yarn PnP unplugged folder...",
+    "Getting Yarn virtual folder...",
+    `Using cache paths: ${JSON.stringify(expectedCachePaths, null, 4)}`,
   ]);
+  expect(cachePaths).toStrictEqual(expectedCachePaths);
 });
