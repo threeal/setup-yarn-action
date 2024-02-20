@@ -4,9 +4,8 @@ import { getCacheKey, getCachePaths } from "./cache.js";
 import { enableYarn, yarnInstall } from "./yarn/index.js";
 
 export async function main(): Promise<void> {
-  await core.group("Enabling Yarn", async () => {
-    await enableYarn();
-  });
+  core.info("Enabling Yarn...");
+  await enableYarn();
 
   const cacheKey = await core.group("Getting cache key", getCacheKey);
   const cachePaths = await core.group("Getting cache paths", getCachePaths);

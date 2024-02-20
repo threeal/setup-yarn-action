@@ -79579,9 +79579,8 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 
 async function main() {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Enabling Yarn", async () => {
-        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .enableYarn */ .Wd)();
-    });
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
+    await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .enableYarn */ .Wd)();
     const cacheKey = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache key", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a);
     const cachePaths = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache paths", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N);
     const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
