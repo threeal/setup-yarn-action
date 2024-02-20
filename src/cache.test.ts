@@ -60,7 +60,7 @@ describe("Getting the cache key", () => {
     });
 
     const cacheKey = await getCacheKey();
-    const expectedCacheKey = `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
+    const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
 
     expect(logs).toStrictEqual([
       "Getting Yarn version...",
@@ -77,7 +77,7 @@ describe("Getting the cache key", () => {
     jest.mocked(fs.existsSync).mockReturnValue(false);
 
     const cacheKey = await getCacheKey();
-    const expectedCacheKey = `yarn-install-action-${os.type()}-1.2.3`;
+    const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3`;
 
     expect(logs).toStrictEqual([
       "Getting Yarn version...",

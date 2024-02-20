@@ -8,7 +8,7 @@ export async function getCacheKey(): Promise<string> {
   core.info("Getting Yarn version...");
   const version = await getYarnVersion();
 
-  let cacheKey = `yarn-install-action-${os.type()}-${version}`;
+  let cacheKey = `setup-yarn-action-${os.type()}-${version}`;
 
   core.info("Calculating lock file hash...");
   if (fs.existsSync("yarn.lock")) {
