@@ -1,14 +1,8 @@
-import { exec, getExecOutput } from "@actions/exec";
 import { jest } from "@jest/globals";
 
-const mock = {
-  exec: jest.fn<typeof exec>(),
-  getExecOutput: jest.fn<typeof getExecOutput>(),
-};
-
 jest.unstable_mockModule("@actions/exec", () => ({
-  exec: mock.exec,
-  getExecOutput: mock.getExecOutput,
+  exec: jest.fn(),
+  getExecOutput: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -16,20 +10,22 @@ beforeEach(() => {
 });
 
 it("should enable Yarn", async () => {
+  const { exec } = await import("@actions/exec");
   const { enableYarn } = await import("./index.js");
 
   await enableYarn();
 
-  expect(mock.exec).toHaveBeenCalledTimes(1);
-  expect(mock.exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"], {
+  expect(exec).toHaveBeenCalledTimes(1);
+  expect(exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"], {
     silent: true,
   });
 });
 
 it("should get Yarn config", async () => {
+  const { getExecOutput } = await import("@actions/exec");
   const { getYarnConfig } = await import("./index.js");
 
-  mock.getExecOutput.mockResolvedValueOnce({
+  (getExecOutput as jest.Mock<typeof getExecOutput>).mockResolvedValueOnce({
     exitCode: 0,
     stdout: `{"key":"globalFolder","effective":"/.yarn/berry","source":"<default>","description":"Folder where all system-global files are stored","type":"ABSOLUTE_PATH","default":"/.yarn/berry"}\n`,
     stderr: "",
@@ -37,8 +33,8 @@ it("should get Yarn config", async () => {
 
   const value = await getYarnConfig("globalFolder");
 
-  expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
-  expect(mock.getExecOutput).toHaveBeenCalledWith(
+  expect(getExecOutput).toHaveBeenCalledTimes(1);
+  expect(getExecOutput).toHaveBeenCalledWith(
     "corepack",
     ["yarn", "config", "globalFolder", "--json"],
     {
@@ -50,9 +46,10 @@ it("should get Yarn config", async () => {
 });
 
 it("should get Yarn version", async () => {
+  const { getExecOutput } = await import("@actions/exec");
   const { getYarnVersion } = await import("./index.js");
 
-  mock.getExecOutput.mockResolvedValueOnce({
+  (getExecOutput as jest.Mock<typeof getExecOutput>).mockResolvedValueOnce({
     exitCode: 0,
     stdout: "1.2.3",
     stderr: "",
@@ -60,8 +57,8 @@ it("should get Yarn version", async () => {
 
   const version = await getYarnVersion();
 
-  expect(mock.getExecOutput).toHaveBeenCalledTimes(1);
-  expect(mock.getExecOutput).toHaveBeenCalledWith(
+  expect(getExecOutput).toHaveBeenCalledTimes(1);
+  expect(getExecOutput).toHaveBeenCalledWith(
     "corepack",
     ["yarn", "--version"],
     {
