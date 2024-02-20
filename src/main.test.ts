@@ -26,10 +26,8 @@ describe("install Yarn dependencies", () => {
   beforeEach(async () => {
     const { getCacheKey, getCachePaths } = await import("./cache.js");
 
-    (getCacheKey as jest.Mock<typeof getCacheKey>).mockResolvedValue(cacheKey);
-    (getCachePaths as jest.Mock<typeof getCachePaths>).mockResolvedValue(
-      cachePaths,
-    );
+    jest.mocked(getCacheKey).mockResolvedValue(cacheKey);
+    jest.mocked(getCachePaths).mockResolvedValue(cachePaths);
   });
 
   it("should install Yarn dependencies and save to cache", async () => {
@@ -38,9 +36,7 @@ describe("install Yarn dependencies", () => {
     const { getCacheKey, getCachePaths } = await import("./cache.js");
     const { main } = await import("./main.js");
 
-    (restoreCache as jest.Mock<typeof restoreCache>).mockResolvedValue(
-      undefined,
-    );
+    jest.mocked(restoreCache).mockResolvedValue(undefined);
 
     await main();
 
@@ -63,9 +59,7 @@ describe("install Yarn dependencies", () => {
     const { getCacheKey, getCachePaths } = await import("./cache.js");
     const { main } = await import("./main.js");
 
-    (restoreCache as jest.Mock<typeof restoreCache>).mockResolvedValue(
-      cacheKey,
-    );
+    jest.mocked(restoreCache).mockResolvedValue(cacheKey);
 
     await main();
 

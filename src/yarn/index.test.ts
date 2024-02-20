@@ -25,7 +25,7 @@ it("should get Yarn config", async () => {
   const { getExecOutput } = await import("@actions/exec");
   const { getYarnConfig } = await import("./index.js");
 
-  (getExecOutput as jest.Mock<typeof getExecOutput>).mockResolvedValueOnce({
+  jest.mocked(getExecOutput).mockResolvedValueOnce({
     exitCode: 0,
     stdout: `{"key":"globalFolder","effective":"/.yarn/berry","source":"<default>","description":"Folder where all system-global files are stored","type":"ABSOLUTE_PATH","default":"/.yarn/berry"}\n`,
     stderr: "",
@@ -49,7 +49,7 @@ it("should get Yarn version", async () => {
   const { getExecOutput } = await import("@actions/exec");
   const { getYarnVersion } = await import("./index.js");
 
-  (getExecOutput as jest.Mock<typeof getExecOutput>).mockResolvedValueOnce({
+  jest.mocked(getExecOutput).mockResolvedValueOnce({
     exitCode: 0,
     stdout: "1.2.3",
     stderr: "",
