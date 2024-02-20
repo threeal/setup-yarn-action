@@ -26,45 +26,72 @@ beforeEach(() => {
 });
 
 describe("install Yarn dependencies", () => {
-  const cacheKey = "a-cache-key";
-  const cachePaths = ["a/cahe/paths", "another/cache/paths"];
-
   let logs: (string | Error)[] = [];
 
   beforeEach(async () => {
+    const { restoreCache, saveCache } = await import("@actions/cache");
     const core = await import("@actions/core");
-    const { getCacheKey, getCachePaths } = await import("./cache.js");
+    const { enableYarn, yarnInstall } = await import("./yarn/index.js");
+    const { getCachePaths } = await import("./cache.js");
 
     logs = [];
+
+    jest.mocked(restoreCache).mockImplementation(async (paths, primaryKey) => {
+      if (primaryKey == "some-key") {
+        for (const path of paths) {
+          core.info(`Extracting ${path}...`);
+        }
+        core.info(`Cache ${primaryKey} restored`);
+        return primaryKey;
+      }
+      return undefined;
+    });
+
+    jest.mocked(saveCache).mockImplementation(async (paths, key) => {
+      for (const path of paths) {
+        core.info(`Compressing ${path}...`);
+      }
+      core.info(`Cache ${key} saved`);
+      return 0;
+    });
+
     jest.mocked(core.group).mockImplementation(async (name, fn) => {
       logs.push(`::group::${name}`);
       const res = await fn();
       logs.push(`::endgroup::`);
       return res;
     });
+
     jest.mocked(core.info).mockImplementation((message) => {
       logs.push(message);
     });
+
     jest.mocked(core.warning).mockImplementation((message) => {
       logs.push(message);
     });
 
-    jest.mocked(getCacheKey).mockResolvedValue(cacheKey);
-    jest.mocked(getCachePaths).mockResolvedValue(cachePaths);
+    jest.mocked(enableYarn).mockImplementation(async () => {
+      core.info("Yarn enabled");
+    });
+
+    jest.mocked(yarnInstall).mockImplementation(async () => {
+      core.info("Dependencies installed");
+    });
+
+    jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
   });
 
   it("should install Yarn dependencies and save to cache", async () => {
-    const { restoreCache, saveCache } = await import("@actions/cache");
-    const { enableYarn, yarnInstall } = await import("./yarn/index.js");
-    const { getCacheKey, getCachePaths } = await import("./cache.js");
+    const { getCacheKey } = await import("./cache.js");
     const { main } = await import("./main.js");
 
-    jest.mocked(restoreCache).mockResolvedValue(undefined);
+    jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
 
     await main();
 
     expect(logs).toStrictEqual([
       "Enabling Yarn...",
+      "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
       "::group::Getting cache paths",
@@ -73,53 +100,37 @@ describe("install Yarn dependencies", () => {
       "Cache not found",
       "::endgroup::",
       "::group::Installing dependencies",
+      "Dependencies installed",
       "::endgroup::",
       "::group::Saving cache",
+      "Compressing some/path...",
+      "Compressing another/path...",
+      "Cache unavailable-key saved",
       "::endgroup::",
     ]);
-
-    expect(enableYarn).toHaveBeenCalledTimes(1);
-    expect(getCacheKey).toHaveBeenCalledTimes(1);
-    expect(getCachePaths).toHaveBeenCalledTimes(1);
-
-    expect(restoreCache).toHaveBeenCalledTimes(1);
-    expect(restoreCache).toHaveBeenCalledWith(cachePaths, cacheKey);
-
-    expect(yarnInstall).toHaveBeenCalledTimes(1);
-
-    expect(saveCache).toHaveBeenCalledTimes(1);
-    expect(saveCache).toHaveBeenCalledWith(cachePaths, cacheKey);
   });
 
   it("should restore Yarn dependencies cache without install and save", async () => {
-    const { restoreCache, saveCache } = await import("@actions/cache");
-    const { enableYarn, yarnInstall } = await import("./yarn/index.js");
-    const { getCacheKey, getCachePaths } = await import("./cache.js");
+    const { getCacheKey } = await import("./cache.js");
     const { main } = await import("./main.js");
 
-    jest.mocked(restoreCache).mockResolvedValue(cacheKey);
+    jest.mocked(getCacheKey).mockResolvedValue("some-key");
 
     await main();
 
     expect(logs).toStrictEqual([
       "Enabling Yarn...",
+      "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
       "::group::Getting cache paths",
       "::endgroup::",
       "::group::Restoring cache",
+      "Extracting some/path...",
+      "Extracting another/path...",
+      "Cache some-key restored",
       "::endgroup::",
       "Cache restored successfully",
     ]);
-
-    expect(enableYarn).toHaveBeenCalledTimes(1);
-    expect(getCacheKey).toHaveBeenCalledTimes(1);
-    expect(getCachePaths).toHaveBeenCalledTimes(1);
-
-    expect(restoreCache).toHaveBeenCalledTimes(1);
-    expect(restoreCache).toHaveBeenCalledWith(cachePaths, cacheKey);
-
-    expect(yarnInstall).toHaveBeenCalledTimes(0);
-    expect(saveCache).toHaveBeenCalledTimes(0);
   });
 });
