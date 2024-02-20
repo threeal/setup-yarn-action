@@ -1,9 +1,9 @@
 # Setup Yarn Berry Action
 
-[![version](https://img.shields.io/github/v/release/threeal/yarn-install-action?style=flat-square)](https://github.com/threeal/yarn-install-action/releases)
-[![license](https://img.shields.io/github/license/threeal/yarn-install-action?style=flat-square)](./LICENSE)
-[![build status](https://img.shields.io/github/actions/workflow/status/threeal/yarn-install-action/build.yaml?branch=main&label=build&style=flat-square)](https://github.com/threeal/yarn-install-action/actions/workflows/build.yaml)
-[![test status](https://img.shields.io/github/actions/workflow/status/threeal/yarn-install-action/test.yaml?branch=main&label=test&style=flat-square)](https://github.com/threeal/yarn-install-action/actions/workflows/test.yaml)
+[![version](https://img.shields.io/github/v/release/threeal/setup-yarn-action?style=flat-square)](https://github.com/threeal/setup-yarn-action/releases)
+[![license](https://img.shields.io/github/license/threeal/setup-yarn-action?style=flat-square)](./LICENSE)
+[![build status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/build.yaml?branch=main&label=build&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/build.yaml)
+[![test status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/test.yaml?branch=main&label=test&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/test.yaml)
 
 The Setup Yarn Berry Action is a [GitHub Action](https://github.com/features/actions) crafted for effortless installation of dependencies in a [Node.js](https://nodejs.org/en) package utilizing the [Yarn](https://yarnpkg.com/) package manager.
 Yarn is a fast, reliable, and secure dependency management tool for Node.js projects, offering features such as deterministic dependency resolution and offline capabilities.
@@ -39,8 +39,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
-      - name: Install Dependencies
-        uses: threeal/yarn-install-action@v1.0.0
+      - name: Setup Yarn
+        uses: threeal/setup-yarn-action@v1.0.0
 
       # Add more steps as needed for your workflow
 ```

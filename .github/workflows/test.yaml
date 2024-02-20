@@ -17,8 +17,8 @@ jobs:
         with:
           node-version: latest
 
-      - name: Install Dependencies
-        uses: threeal/yarn-install-action@main
+      - name: Setup Yarn
+        uses: threeal/setup-yarn-action@main
 
       - name: Check Format
         run: |
@@ -40,8 +40,8 @@ jobs:
         with:
           node-version: latest
 
-      - name: Install Dependencies
-        uses: threeal/yarn-install-action@v1.0.0
+      - name: Setup Yarn
+        uses: threeal/setup-yarn-action@v1.0.0
 
       - name: Test Package
         run: corepack yarn test
@@ -62,14 +62,14 @@ jobs:
       - name: Checkout Action
         uses: actions/checkout@v4.1.1
         with:
-          path: yarn-install-action
+          path: setup-yarn-action
           sparse-checkout: |
             action.yaml
             dist
           sparse-checkout-cone-mode: false
 
-      - name: Install Dependencies
-        uses: ./yarn-install-action
+      - name: Setup Yarn
+        uses: ./setup-yarn-action
 
       - name: Build Package
         run: corepack yarn pack
@@ -86,7 +86,7 @@ jobs:
       - name: Checkout Action
         uses: actions/checkout@v4.1.1
         with:
-          path: yarn-install-action
+          path: setup-yarn-action
           sparse-checkout: |
             action.yaml
             dist
@@ -97,8 +97,8 @@ jobs:
           corepack enable yarn
           corepack yarn config set enableGlobalCache false
 
-      - name: Install Dependencies
-        uses: ./yarn-install-action
+      - name: Setup Yarn
+        uses: ./setup-yarn-action
 
       - name: Build Package
         run: corepack yarn pack
