@@ -1,9 +1,14 @@
+import * as core from "@actions/core";
 import { jest } from "@jest/globals";
 import fs from "node:fs";
 import os from "node:os";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
 const mock = {
+  core: {
+    info: jest.fn<typeof core.info>(),
+    warning: jest.fn<typeof core.warning>(),
+  },
   fs: {
     existsSync: jest.fn<typeof fs.existsSync>(),
   },
@@ -12,21 +17,30 @@ const mock = {
   getYarnVersion: jest.fn<typeof getYarnVersion>(),
 };
 
-jest.unstable_mockModule("hasha", () => ({
-  hashFile: mock.hashFile,
-}));
-
+jest.unstable_mockModule("@actions/core", () => mock.core);
 jest.unstable_mockModule("node:fs", () => ({
   default: mock.fs,
 }));
-
+jest.unstable_mockModule("hasha", () => ({
+  hashFile: mock.hashFile,
+}));
 jest.unstable_mockModule("./yarn.js", () => ({
   getYarnConfig: mock.getYarnConfig,
   getYarnVersion: mock.getYarnVersion,
 }));
 
+let logs: (string | Error)[] = [];
+
 beforeEach(() => {
   jest.clearAllMocks();
+
+  logs = [];
+  mock.core.info.mockImplementation((message) => {
+    logs.push(message);
+  });
+  mock.core.warning.mockImplementation((message) => {
+    logs.push(message);
+  });
 });
 
 describe("Getting the cache key", () => {
@@ -48,10 +62,14 @@ describe("Getting the cache key", () => {
     });
 
     const cacheKey = await getCacheKey();
+    const expectedCacheKey = `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
 
-    expect(cacheKey).toBe(
-      `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
-    );
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Calculating lock file hash...",
+      `Using cache key: ${expectedCacheKey}`,
+    ]);
+    expect(cacheKey).toBe(expectedCacheKey);
   });
 
   it("should get the cache key if there is no lock file", async () => {
@@ -60,8 +78,15 @@ describe("Getting the cache key", () => {
     mock.fs.existsSync.mockReturnValue(false);
 
     const cacheKey = await getCacheKey();
+    const expectedCacheKey = `yarn-install-action-${os.type()}-1.2.3`;
 
-    expect(cacheKey).toBe(`yarn-install-action-${os.type()}-1.2.3`);
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Calculating lock file hash...",
+      "Lock file could not be found, using empty hash",
+      `Using cache key: ${expectedCacheKey}`,
+    ]);
+    expect(cacheKey).toBe(expectedCacheKey);
   });
 });
 
@@ -87,8 +112,7 @@ it("should get the cache paths", async () => {
   });
 
   const cachePaths = await getCachePaths();
-
-  expect(cachePaths).toStrictEqual([
+  const expectedCachePaths = [
     ".pnp.cjs",
     ".pnp.loader.mjs",
     ".yarn/cache",
@@ -97,5 +121,16 @@ it("should get the cache paths", async () => {
     ".yarn/patches",
     ".yarn/unplugged",
     ".yarn/__virtual__",
+  ];
+
+  expect(logs).toStrictEqual([
+    "Getting Yarn cache folder...",
+    "Getting Yarn deferred version folder...",
+    "Getting Yarn install state path...",
+    "Getting Yarn patch folder...",
+    "Getting Yarn PnP unplugged folder...",
+    "Getting Yarn virtual folder...",
+    `Using cache paths: ${JSON.stringify(expectedCachePaths, null, 4)}`,
   ]);
+  expect(cachePaths).toStrictEqual(expectedCachePaths);
 });
