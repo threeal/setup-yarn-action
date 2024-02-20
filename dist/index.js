@@ -79503,17 +79503,14 @@ hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (awa
 async function getCacheKey() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
     const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)();
+    let cacheKey = `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}`;
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
-    let lockFileHash = undefined;
     if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
-        lockFileHash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+        cacheKey += `-${hash}`;
     }
     else {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
-    }
-    let cacheKey = `yarn-install-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}`;
-    if (lockFileHash !== undefined) {
-        cacheKey += `-${lockFileHash}`;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
     return cacheKey;
