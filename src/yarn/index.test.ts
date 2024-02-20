@@ -21,7 +21,9 @@ it("should enable Yarn", async () => {
   await enableYarn();
 
   expect(mock.exec).toHaveBeenCalledTimes(1);
-  expect(mock.exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"]);
+  expect(mock.exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"], {
+    silent: true,
+  });
 });
 
 it("should get Yarn config", async () => {
