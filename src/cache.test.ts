@@ -1,9 +1,14 @@
+import * as core from "@actions/core";
 import { jest } from "@jest/globals";
 import fs from "node:fs";
 import os from "node:os";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
 const mock = {
+  core: {
+    info: jest.fn<typeof core.info>(),
+    warning: jest.fn<typeof core.warning>(),
+  },
   fs: {
     existsSync: jest.fn<typeof fs.existsSync>(),
   },
@@ -12,14 +17,13 @@ const mock = {
   getYarnVersion: jest.fn<typeof getYarnVersion>(),
 };
 
-jest.unstable_mockModule("hasha", () => ({
-  hashFile: mock.hashFile,
-}));
-
+jest.unstable_mockModule("@actions/core", () => mock.core);
 jest.unstable_mockModule("node:fs", () => ({
   default: mock.fs,
 }));
-
+jest.unstable_mockModule("hasha", () => ({
+  hashFile: mock.hashFile,
+}));
 jest.unstable_mockModule("./yarn.js", () => ({
   getYarnConfig: mock.getYarnConfig,
   getYarnVersion: mock.getYarnVersion,
@@ -30,7 +34,17 @@ beforeEach(() => {
 });
 
 describe("Getting the cache key", () => {
+  let logs: (string | Error)[] = [];
+
   beforeEach(() => {
+    logs = [];
+    mock.core.info.mockImplementation((message) => {
+      logs.push(message);
+    });
+    mock.core.warning.mockImplementation((message) => {
+      logs.push(message);
+    });
+
     mock.getYarnVersion.mockResolvedValue("1.2.3");
   });
 
@@ -49,6 +63,11 @@ describe("Getting the cache key", () => {
 
     const cacheKey = await getCacheKey();
 
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Calculating lock file hash...",
+      `Using cache key: yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
+    ]);
     expect(cacheKey).toBe(
       `yarn-install-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
     );
@@ -61,6 +80,12 @@ describe("Getting the cache key", () => {
 
     const cacheKey = await getCacheKey();
 
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Calculating lock file hash...",
+      "Lock file could not be found, using empty hash",
+      `Using cache key: yarn-install-action-${os.type()}-1.2.3`,
+    ]);
     expect(cacheKey).toBe(`yarn-install-action-${os.type()}-1.2.3`);
   });
 });
