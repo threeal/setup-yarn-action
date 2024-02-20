@@ -5,7 +5,12 @@ import { enableYarn, yarnInstall } from "./yarn/index.js";
 
 export async function main(): Promise<void> {
   core.info("Enabling Yarn...");
-  await enableYarn();
+  try {
+    await enableYarn();
+  } catch (err) {
+    core.setFailed(`Failed to enable Yarn: ${err.message}`);
+    return;
+  }
 
   const cacheKey = await core.group("Getting cache key", getCacheKey);
   const cachePaths = await core.group("Getting cache paths", getCachePaths);

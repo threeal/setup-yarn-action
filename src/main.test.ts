@@ -8,6 +8,7 @@ jest.unstable_mockModule("@actions/cache", () => ({
 jest.unstable_mockModule("@actions/core", () => ({
   group: jest.fn(),
   info: jest.fn(),
+  setFailed: jest.fn(),
   warning: jest.fn(),
 }));
 
@@ -26,6 +27,7 @@ beforeEach(() => {
 });
 
 describe("install Yarn dependencies", () => {
+  let failed: boolean = false;
   let logs: (string | Error)[] = [];
 
   beforeEach(async () => {
@@ -34,6 +36,7 @@ describe("install Yarn dependencies", () => {
     const { enableYarn, yarnInstall } = await import("./yarn/index.js");
     const { getCachePaths } = await import("./cache.js");
 
+    failed = false;
     logs = [];
 
     jest.mocked(restoreCache).mockImplementation(async (paths, primaryKey) => {
@@ -66,6 +69,11 @@ describe("install Yarn dependencies", () => {
       logs.push(message);
     });
 
+    jest.mocked(core.setFailed).mockImplementation((message) => {
+      failed = true;
+      logs.push(message);
+    });
+
     jest.mocked(core.warning).mockImplementation((message) => {
       logs.push(message);
     });
@@ -89,6 +97,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
+    expect(failed).toBe(false);
     expect(logs).toStrictEqual([
       "Enabling Yarn...",
       "Yarn enabled",
@@ -118,6 +127,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
+    expect(failed).toBe(false);
     expect(logs).toStrictEqual([
       "Enabling Yarn...",
       "Yarn enabled",
@@ -131,6 +141,21 @@ describe("install Yarn dependencies", () => {
       "Cache some-key restored",
       "::endgroup::",
       "Cache restored successfully",
+    ]);
+  });
+
+  it("should failed to enable Yarn", async () => {
+    const { enableYarn } = await import("./yarn/index.js");
+    const { main } = await import("./main.js");
+
+    jest.mocked(enableYarn).mockRejectedValue(new Error("some error"));
+
+    await main();
+
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Failed to enable Yarn: some error",
     ]);
   });
 });
