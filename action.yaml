@@ -1,4 +1,4 @@
-name: Yarn Install Action
+name: Setup Yarn Berry
 author: Alfi Maulana
 description: Install Node.js dependencies using Yarn with cache support
 branding:
