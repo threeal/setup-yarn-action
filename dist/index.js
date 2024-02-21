@@ -79625,9 +79625,16 @@ async function main() {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
         return;
     }
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Installing dependencies", async () => {
-        return (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .yarnInstall */ .Or)();
-    });
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Installing dependencies");
+    try {
+        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .yarnInstall */ .Or)();
+    }
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to install dependencies: ${err.message}`);
+        return;
+    }
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
     await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
         return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
     });

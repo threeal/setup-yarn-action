@@ -54,9 +54,15 @@ export async function main(): Promise<void> {
     return;
   }
 
-  await core.group("Installing dependencies", async () => {
-    return yarnInstall();
-  });
+  core.startGroup("Installing dependencies");
+  try {
+    await yarnInstall();
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to install dependencies: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 
   await core.group("Saving cache", async () => {
     return cache.saveCache(cachePaths.slice(), cacheKey);
