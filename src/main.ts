@@ -23,7 +23,16 @@ export async function main(): Promise<void> {
   }
   core.endGroup();
 
-  const cachePaths = await core.group("Getting cache paths", getCachePaths);
+  core.startGroup("Getting cache paths");
+  let cachePaths: string[];
+  try {
+    cachePaths = await getCachePaths();
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to get cache paths: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 
   const cacheFound = await core.group("Restoring cache", async () => {
     const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);

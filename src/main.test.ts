@@ -36,7 +36,7 @@ describe("install Yarn dependencies", () => {
     const { restoreCache, saveCache } = await import("@actions/cache");
     const core = await import("@actions/core");
     const { enableYarn, yarnInstall } = await import("./yarn/index.js");
-    const { getCachePaths } = await import("./cache.js");
+    const { getCacheKey, getCachePaths } = await import("./cache.js");
 
     failed = false;
     logs = [];
@@ -96,14 +96,12 @@ describe("install Yarn dependencies", () => {
       core.info("Dependencies installed");
     });
 
+    jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
     jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
   });
 
   it("should install Yarn dependencies and save to cache", async () => {
-    const { getCacheKey } = await import("./cache.js");
     const { main } = await import("./main.js");
-
-    jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
 
     await main();
 
@@ -184,6 +182,26 @@ describe("install Yarn dependencies", () => {
       "::group::Getting cache key",
       "::endgroup::",
       "Failed to get cache key: some error",
+    ]);
+  });
+
+  it("should failed to get cache paths", async () => {
+    const { getCachePaths } = await import("./cache.js");
+    const { main } = await import("./main.js");
+
+    jest.mocked(getCachePaths).mockRejectedValue(new Error("some error"));
+
+    await main();
+
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "Failed to get cache paths: some error",
     ]);
   });
 });
