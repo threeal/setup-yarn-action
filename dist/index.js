@@ -79606,14 +79606,21 @@ async function main() {
         return;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-    const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Restoring cache");
+    let cacheFound;
+    try {
         const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
-        if (cacheId === undefined) {
+        cacheFound = cacheId != undefined;
+        if (!cacheFound) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
-            return false;
         }
-        return true;
-    });
+    }
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to restore cache: ${err.message}`);
+        return;
+    }
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
     if (cacheFound) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
         return;

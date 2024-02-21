@@ -204,4 +204,26 @@ describe("install Yarn dependencies", () => {
       "Failed to get cache paths: some error",
     ]);
   });
+
+  it("should failed to restore cache", async () => {
+    const { restoreCache } = await import("@actions/cache");
+    const { main } = await import("./main.js");
+
+    jest.mocked(restoreCache).mockRejectedValue(new Error("some error"));
+
+    await main();
+
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "::endgroup::",
+      "Failed to restore cache: some error",
+    ]);
+  });
 });

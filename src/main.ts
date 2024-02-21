@@ -34,14 +34,20 @@ export async function main(): Promise<void> {
   }
   core.endGroup();
 
-  const cacheFound = await core.group("Restoring cache", async () => {
+  core.startGroup("Restoring cache");
+  let cacheFound: boolean;
+  try {
     const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-    if (cacheId === undefined) {
+    cacheFound = cacheId != undefined;
+    if (!cacheFound) {
       core.warning("Cache not found");
-      return false;
     }
-    return true;
-  });
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to restore cache: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 
   if (cacheFound) {
     core.info("Cache restored successfully");
