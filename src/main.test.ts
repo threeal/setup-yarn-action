@@ -251,4 +251,32 @@ describe("install Yarn dependencies", () => {
       "Failed to install dependencies: some error",
     ]);
   });
+
+  it("should failed to save cache", async () => {
+    const { saveCache } = await import("@actions/cache");
+    const { main } = await import("./main.js");
+
+    jest.mocked(saveCache).mockRejectedValue(new Error("some error"));
+
+    await main();
+
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "Cache not found",
+      "::endgroup::",
+      "::group::Installing dependencies",
+      "Dependencies installed",
+      "::endgroup::",
+      "::group::Saving cache",
+      "::endgroup::",
+      "Failed to save cache: some error",
+    ]);
+  });
 });

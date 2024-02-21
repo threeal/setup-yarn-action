@@ -64,7 +64,13 @@ export async function main(): Promise<void> {
   }
   core.endGroup();
 
-  await core.group("Saving cache", async () => {
-    return cache.saveCache(cachePaths.slice(), cacheKey);
-  });
+  core.startGroup("Saving cache");
+  try {
+    await cache.saveCache(cachePaths.slice(), cacheKey);
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to save cache: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 }

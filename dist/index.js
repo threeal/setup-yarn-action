@@ -79635,9 +79635,16 @@ async function main() {
         return;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Saving cache", async () => {
-        return _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
-    });
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Saving cache");
+    try {
+        await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+    }
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to save cache: ${err.message}`);
+        return;
+    }
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
 }
 
 __webpack_async_result__();
