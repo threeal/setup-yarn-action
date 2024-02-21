@@ -6,9 +6,11 @@ jest.unstable_mockModule("@actions/cache", () => ({
 }));
 
 jest.unstable_mockModule("@actions/core", () => ({
+  endGroup: jest.fn(),
   group: jest.fn(),
   info: jest.fn(),
   setFailed: jest.fn(),
+  startGroup: jest.fn(),
   warning: jest.fn(),
 }));
 
@@ -58,10 +60,14 @@ describe("install Yarn dependencies", () => {
       return 0;
     });
 
+    jest.mocked(core.endGroup).mockImplementation(() => {
+      logs.push("::endgroup::");
+    });
+
     jest.mocked(core.group).mockImplementation(async (name, fn) => {
       logs.push(`::group::${name}`);
       const res = await fn();
-      logs.push(`::endgroup::`);
+      logs.push("::endgroup::");
       return res;
     });
 
@@ -72,6 +78,10 @@ describe("install Yarn dependencies", () => {
     jest.mocked(core.setFailed).mockImplementation((message) => {
       failed = true;
       logs.push(message);
+    });
+
+    jest.mocked(core.startGroup).mockImplementation((name) => {
+      logs.push(`::group::${name}`);
     });
 
     jest.mocked(core.warning).mockImplementation((message) => {
@@ -156,6 +166,24 @@ describe("install Yarn dependencies", () => {
     expect(logs).toStrictEqual([
       "Enabling Yarn...",
       "Failed to enable Yarn: some error",
+    ]);
+  });
+
+  it("should failed to get cache key", async () => {
+    const { getCacheKey } = await import("./cache.js");
+    const { main } = await import("./main.js");
+
+    jest.mocked(getCacheKey).mockRejectedValue(new Error("some error"));
+
+    await main();
+
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "Failed to get cache key: some error",
     ]);
   });
 });

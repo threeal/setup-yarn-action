@@ -12,7 +12,17 @@ export async function main(): Promise<void> {
     return;
   }
 
-  const cacheKey = await core.group("Getting cache key", getCacheKey);
+  core.startGroup("Getting cache key");
+  let cacheKey: string;
+  try {
+    cacheKey = await getCacheKey();
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to get cache key: ${err.message}`);
+    return;
+  }
+  core.endGroup();
+
   const cachePaths = await core.group("Getting cache paths", getCachePaths);
 
   const cacheFound = await core.group("Restoring cache", async () => {

@@ -79584,7 +79584,17 @@ async function main() {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${err.message}`);
         return;
     }
-    const cacheKey = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache key", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache key");
+    let cacheKey;
+    try {
+        cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a)();
+    }
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache key: ${err.message}`);
+        return;
+    }
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
     const cachePaths = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Getting cache paths", _cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N);
     const cacheFound = await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("Restoring cache", async () => {
         const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
