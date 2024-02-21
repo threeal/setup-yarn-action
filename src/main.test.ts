@@ -7,7 +7,6 @@ jest.unstable_mockModule("@actions/cache", () => ({
 
 jest.unstable_mockModule("@actions/core", () => ({
   endGroup: jest.fn(),
-  group: jest.fn(),
   info: jest.fn(),
   setFailed: jest.fn(),
   startGroup: jest.fn(),
@@ -64,13 +63,6 @@ describe("install Yarn dependencies", () => {
       logs.push("::endgroup::");
     });
 
-    jest.mocked(core.group).mockImplementation(async (name, fn) => {
-      logs.push(`::group::${name}`);
-      const res = await fn();
-      logs.push("::endgroup::");
-      return res;
-    });
-
     jest.mocked(core.info).mockImplementation((message) => {
       logs.push(message);
     });
@@ -98,58 +90,6 @@ describe("install Yarn dependencies", () => {
 
     jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
     jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
-  });
-
-  it("should install Yarn dependencies and save to cache", async () => {
-    const { main } = await import("./main.js");
-
-    await main();
-
-    expect(failed).toBe(false);
-    expect(logs).toStrictEqual([
-      "Enabling Yarn...",
-      "Yarn enabled",
-      "::group::Getting cache key",
-      "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
-      "::group::Restoring cache",
-      "Cache not found",
-      "::endgroup::",
-      "::group::Installing dependencies",
-      "Dependencies installed",
-      "::endgroup::",
-      "::group::Saving cache",
-      "Compressing some/path...",
-      "Compressing another/path...",
-      "Cache unavailable-key saved",
-      "::endgroup::",
-    ]);
-  });
-
-  it("should restore Yarn dependencies cache without install and save", async () => {
-    const { getCacheKey } = await import("./cache.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(getCacheKey).mockResolvedValue("some-key");
-
-    await main();
-
-    expect(failed).toBe(false);
-    expect(logs).toStrictEqual([
-      "Enabling Yarn...",
-      "Yarn enabled",
-      "::group::Getting cache key",
-      "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
-      "::group::Restoring cache",
-      "Extracting some/path...",
-      "Extracting another/path...",
-      "Cache some-key restored",
-      "::endgroup::",
-      "Cache restored successfully",
-    ]);
   });
 
   it("should failed to enable Yarn", async () => {
@@ -227,6 +167,31 @@ describe("install Yarn dependencies", () => {
     ]);
   });
 
+  it("should successfully restore cache without install and save", async () => {
+    const { getCacheKey } = await import("./cache.js");
+    const { main } = await import("./main.js");
+
+    jest.mocked(getCacheKey).mockResolvedValue("some-key");
+
+    await main();
+
+    expect(failed).toBe(false);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "Extracting some/path...",
+      "Extracting another/path...",
+      "Cache some-key restored",
+      "::endgroup::",
+      "Cache restored successfully",
+    ]);
+  });
+
   it("should failed to install dependencies", async () => {
     const { yarnInstall } = await import("./yarn/index.js");
     const { main } = await import("./main.js");
@@ -277,6 +242,33 @@ describe("install Yarn dependencies", () => {
       "::group::Saving cache",
       "::endgroup::",
       "Failed to save cache: some error",
+    ]);
+  });
+
+  it("should successfully install dependencies and save cache", async () => {
+    const { main } = await import("./main.js");
+
+    await main();
+
+    expect(failed).toBe(false);
+    expect(logs).toStrictEqual([
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "Cache not found",
+      "::endgroup::",
+      "::group::Installing dependencies",
+      "Dependencies installed",
+      "::endgroup::",
+      "::group::Saving cache",
+      "Compressing some/path...",
+      "Compressing another/path...",
+      "Cache unavailable-key saved",
+      "::endgroup::",
     ]);
   });
 });
