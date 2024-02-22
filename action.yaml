@@ -4,6 +4,10 @@ description: Install Node.js dependencies using Yarn with cache support
 branding:
   icon: chevrons-right
   color: black
+inputs:
+  cache:
+    description: Use caching during Yarn installation
+    default: true
 runs:
   using: node20
   main: dist/index.js
