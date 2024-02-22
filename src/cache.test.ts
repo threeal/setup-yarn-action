@@ -78,6 +78,23 @@ describe("get cache key", () => {
     ]);
   });
 
+  it("should failed to calculate lock file hash", async () => {
+    const { hashFile } = await import("hasha");
+    const { getCacheKey } = await import("./cache.js");
+
+    jest.mocked(hashFile).mockRejectedValue(new Error("some error"));
+
+    const prom = getCacheKey();
+
+    await expect(prom).rejects.toThrow("Failed to calculate lock file hash");
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Calculating lock file hash...",
+      "Failed to calculate lock file hash: some error",
+    ]);
+  });
+
   it("should get the cache key", async () => {
     const { getCacheKey } = await import("./cache.js");
 

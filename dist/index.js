@@ -79512,12 +79512,18 @@ async function getCacheKey() {
         throw new Error("Failed to get Yarn version");
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
-    if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-        cacheKey += `-${hash}`;
+    try {
+        if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
+            const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+            cacheKey += `-${hash}`;
+        }
+        else {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
+        }
     }
-    else {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to calculate lock file hash: ${err.message}`);
+        throw new Error("Failed to calculate lock file hash");
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
     return cacheKey;

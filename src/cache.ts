@@ -17,11 +17,16 @@ export async function getCacheKey(): Promise<string> {
   }
 
   core.info("Calculating lock file hash...");
-  if (fs.existsSync("yarn.lock")) {
-    const hash = await hashFile("yarn.lock", { algorithm: "md5" });
-    cacheKey += `-${hash}`;
-  } else {
-    core.warning(`Lock file could not be found, using empty hash`);
+  try {
+    if (fs.existsSync("yarn.lock")) {
+      const hash = await hashFile("yarn.lock", { algorithm: "md5" });
+      cacheKey += `-${hash}`;
+    } else {
+      core.warning(`Lock file could not be found, using empty hash`);
+    }
+  } catch (err) {
+    core.setFailed(`Failed to calculate lock file hash: ${err.message}`);
+    throw new Error("Failed to calculate lock file hash");
   }
 
   core.info(`Using cache key: ${cacheKey}`);
