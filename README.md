@@ -53,6 +53,17 @@ jobs:
       # Add more steps as needed for your workflow
 ```
 
+#### Disabling Caching
+
+By default, caching is enabled. To disable caching, set the `cache` input parameter to `false` as shown below:
+
+```yaml
+- name: Setup Yarn Without Caching
+  uses: threeal/setup-yarn-action@v1.0.0
+  with:
+    cache: false
+```
+
 ## License
 
 This project is licensed under the terms of the [MIT License](./LICENSE).
