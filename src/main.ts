@@ -5,30 +5,72 @@ import { enableYarn, yarnInstall } from "./yarn/index.js";
 
 export async function main(): Promise<void> {
   core.info("Enabling Yarn...");
-  await enableYarn();
+  try {
+    await enableYarn();
+  } catch (err) {
+    core.setFailed(`Failed to enable Yarn: ${err.message}`);
+    return;
+  }
 
-  const cacheKey = await core.group("Getting cache key", getCacheKey);
-  const cachePaths = await core.group("Getting cache paths", getCachePaths);
+  core.startGroup("Getting cache key");
+  let cacheKey: string;
+  try {
+    cacheKey = await getCacheKey();
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to get cache key: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 
-  const cacheFound = await core.group("Restoring cache", async () => {
+  core.startGroup("Getting cache paths");
+  let cachePaths: string[];
+  try {
+    cachePaths = await getCachePaths();
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to get cache paths: ${err.message}`);
+    return;
+  }
+  core.endGroup();
+
+  core.startGroup("Restoring cache");
+  let cacheFound: boolean;
+  try {
     const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-    if (cacheId === undefined) {
+    cacheFound = cacheId != undefined;
+    if (!cacheFound) {
       core.warning("Cache not found");
-      return false;
     }
-    return true;
-  });
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to restore cache: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 
   if (cacheFound) {
     core.info("Cache restored successfully");
     return;
   }
 
-  await core.group("Installing dependencies", async () => {
-    return yarnInstall();
-  });
+  core.startGroup("Installing dependencies");
+  try {
+    await yarnInstall();
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to install dependencies: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 
-  await core.group("Saving cache", async () => {
-    return cache.saveCache(cachePaths.slice(), cacheKey);
-  });
+  core.startGroup("Saving cache");
+  try {
+    await cache.saveCache(cachePaths.slice(), cacheKey);
+  } catch (err) {
+    core.endGroup();
+    core.setFailed(`Failed to save cache: ${err.message}`);
+    return;
+  }
+  core.endGroup();
 }
