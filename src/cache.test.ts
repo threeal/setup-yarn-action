@@ -26,8 +26,6 @@ let logs: (string | Error)[] = [];
 beforeEach(async () => {
   const core = await import("@actions/core");
 
-  jest.clearAllMocks();
-
   logs = [];
   jest.mocked(core.info).mockImplementation((message) => {
     logs.push(message);
@@ -39,25 +37,25 @@ beforeEach(async () => {
 
 describe("get cache key", () => {
   beforeEach(async () => {
-    const { getYarnVersion } = await import("./yarn/index.js");
-
-    jest.mocked(getYarnVersion).mockResolvedValue("1.2.3");
-  });
-
-  it("should get the cache key", async () => {
     const { hashFile } = await import("hasha");
     const fs = (await import("node:fs")).default;
-    const { getCacheKey } = await import("./cache.js");
+    const { getYarnVersion } = await import("./yarn/index.js");
+
+    (hashFile as jest.Mock).mockImplementation(async (filePath) => {
+      if (filePath == "yarn.lock") return "b1484caea0bbcbfa9a3a32591e3cad5d";
+      throw new Error(`file not found: ${filePath}`);
+    });
 
     jest.mocked(fs.existsSync).mockImplementation((path) => {
       if (path == "yarn.lock") return true;
       return false;
     });
 
-    (hashFile as jest.Mock).mockImplementation(async (filePath) => {
-      if (filePath == "yarn.lock") return "b1484caea0bbcbfa9a3a32591e3cad5d";
-      throw new Error(`file not found: ${filePath}`);
-    });
+    jest.mocked(getYarnVersion).mockResolvedValue("1.2.3");
+  });
+
+  it("should get the cache key", async () => {
+    const { getCacheKey } = await import("./cache.js");
 
     const cacheKey = await getCacheKey();
     const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
@@ -71,11 +69,14 @@ describe("get cache key", () => {
   });
 
   describe("without existing lock file", () => {
-    it("should get the cache key", async () => {
+    beforeEach(async () => {
       const fs = (await import("node:fs")).default;
-      const { getCacheKey } = await import("./cache.js");
 
       jest.mocked(fs.existsSync).mockReturnValue(false);
+    });
+
+    it("should get the cache key", async () => {
+      const { getCacheKey } = await import("./cache.js");
 
       const cacheKey = await getCacheKey();
       const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3`;
@@ -92,9 +93,8 @@ describe("get cache key", () => {
 });
 
 describe("get cache paths", () => {
-  it("should get the cache paths", async () => {
+  beforeEach(async () => {
     const { getYarnConfig } = await import("./yarn/index.js");
-    const { getCachePaths } = await import("./cache.js");
 
     jest.mocked(getYarnConfig).mockImplementation(async (name) => {
       switch (name) {
@@ -113,6 +113,10 @@ describe("get cache paths", () => {
       }
       throw new Error(`unknown config: ${name}`);
     });
+  });
+
+  it("should get the cache paths", async () => {
+    const { getCachePaths } = await import("./cache.js");
 
     const cachePaths = await getCachePaths();
     const expectedCachePaths = [
