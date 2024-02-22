@@ -5,10 +5,16 @@ import os from "node:os";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
 export async function getCacheKey(): Promise<string> {
-  core.info("Getting Yarn version...");
-  const version = await getYarnVersion();
+  let cacheKey = `setup-yarn-action-${os.type()}`;
 
-  let cacheKey = `setup-yarn-action-${os.type()}-${version}`;
+  core.info("Getting Yarn version...");
+  try {
+    const version = await getYarnVersion();
+    cacheKey += `-${version}`;
+  } catch (err) {
+    core.setFailed(`Failed to get Yarn version: ${err.message}`);
+    throw new Error("Failed to get Yarn version");
+  }
 
   core.info("Calculating lock file hash...");
   if (fs.existsSync("yarn.lock")) {
