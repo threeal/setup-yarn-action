@@ -23,6 +23,14 @@ The Setup Yarn Berry Action provides the following key features:
 To begin using the Setup Yarn Berry Action, refer to the [action.yaml](./action.yaml) file for detailed configuration options.
 If you are new to GitHub Actions, you can explore the [GitHub Actions guide](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) for a comprehensive overview.
 
+### Inputs
+
+Here are the available input parameters for the Setup Yarn Berry Action:
+
+| Name    | Type              | Default | Description                                                |
+| ------- | ----------------- | ------- | ---------------------------------------------------------- |
+| `cache` | `true` or `false` | `true`  | Indicates whether to use caching during Yarn installation. |
+
 ### Example
 
 Here's a basic example demonstrating how to utilize the Setup Yarn Berry Action to install dependencies for a Node.js package using Yarn in your GitHub Actions workflow:
@@ -43,6 +51,17 @@ jobs:
         uses: threeal/setup-yarn-action@v1.0.0
 
       # Add more steps as needed for your workflow
+```
+
+#### Disabling Caching
+
+By default, caching is enabled. To disable caching, set the `cache` input parameter to `false` as shown below:
+
+```yaml
+- name: Setup Yarn Without Caching
+  uses: threeal/setup-yarn-action@v1.0.0
+  with:
+    cache: false
 ```
 
 ## License

@@ -23,6 +23,10 @@ jest.unstable_mockModule("./cache.js", () => ({
   getCachePaths: jest.fn(),
 }));
 
+jest.unstable_mockModule("./inputs.js", () => ({
+  getInputs: jest.fn(),
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -36,6 +40,7 @@ describe("install Yarn dependencies", () => {
     const core = await import("@actions/core");
     const { enableYarn, yarnInstall } = await import("./yarn/index.js");
     const { getCacheKey, getCachePaths } = await import("./cache.js");
+    const { getInputs } = await import("./inputs.js");
 
     failed = false;
     logs = [];
@@ -90,6 +95,8 @@ describe("install Yarn dependencies", () => {
 
     jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
     jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
+
+    jest.mocked(getInputs).mockReturnValue({ cache: true });
   });
 
   it("should failed to enable Yarn", async () => {
@@ -102,6 +109,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(true);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Failed to enable Yarn: some error",
     ]);
@@ -117,6 +125,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(true);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -135,6 +144,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(true);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -155,6 +165,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(true);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -177,6 +188,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(false);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -202,6 +214,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(true);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -227,6 +240,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(true);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -252,6 +266,7 @@ describe("install Yarn dependencies", () => {
 
     expect(failed).toBe(false);
     expect(logs).toStrictEqual([
+      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -270,5 +285,29 @@ describe("install Yarn dependencies", () => {
       "Cache unavailable-key saved",
       "::endgroup::",
     ]);
+  });
+
+  describe("with cache disabled", () => {
+    beforeEach(async () => {
+      const { getInputs } = await import("./inputs.js");
+
+      jest.mocked(getInputs).mockReturnValue({ cache: false });
+    });
+
+    it("should successfully install dependencies", async () => {
+      const { main } = await import("./main.js");
+
+      await main();
+
+      expect(failed).toBe(false);
+      expect(logs).toStrictEqual([
+        "Getting action inputs...",
+        "Enabling Yarn...",
+        "Yarn enabled",
+        "::group::Installing dependencies",
+        "Dependencies installed",
+        "::endgroup::",
+      ]);
+    });
   });
 });

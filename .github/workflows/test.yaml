@@ -74,6 +74,36 @@ jobs:
       - name: Build Package
         run: corepack yarn pack
 
+  test-action-without-cache:
+    name: Test Action Without Cache
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows, ubuntu, macos]
+    steps:
+      - name: Checkout Package
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: threeal/nodejs-starter
+
+      - name: Checkout Action
+        uses: actions/checkout@v4.1.1
+        with:
+          path: setup-yarn-action
+          sparse-checkout: |
+            action.yaml
+            dist
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Yarn
+        uses: ./setup-yarn-action
+        with:
+          cache: false
+
+      - name: Build Package
+        run: corepack yarn pack
+
   test-action-with-yarn-local-cache:
     name: Test Action With Yarn Local Cache
     runs-on: ubuntu-latest

@@ -79556,6 +79556,24 @@ __webpack_async_result__();
 
 /***/ }),
 
+/***/ 4885:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "G": () => (/* binding */ getInputs)
+/* harmony export */ });
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4278);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+
+function getInputs() {
+    return {
+        cache: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("cache"),
+    };
+}
+
+
+/***/ }),
+
 /***/ 7181:
 /***/ ((module, __webpack_exports__, __nccwpck_require__) => {
 
@@ -79569,13 +79587,17 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7907);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1913);
+/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4885);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
 
 
 
+
 async function main() {
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Getting action inputs...");
+    const inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_4__/* .getInputs */ .G)();
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
     try {
         await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .enableYarn */ .Wd)();
@@ -79584,46 +79606,48 @@ async function main() {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${err.message}`);
         return;
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache key");
     let cacheKey;
-    try {
-        cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a)();
-    }
-    catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache key: ${err.message}`);
-        return;
-    }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache paths");
     let cachePaths;
-    try {
-        cachePaths = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N)();
-    }
-    catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache paths: ${err.message}`);
-        return;
-    }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Restoring cache");
-    let cacheFound;
-    try {
-        const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
-        cacheFound = cacheId != undefined;
-        if (!cacheFound) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+    if (inputs.cache) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache key");
+        try {
+            cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a)();
         }
-    }
-    catch (err) {
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache key: ${err.message}`);
+            return;
+        }
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to restore cache: ${err.message}`);
-        return;
-    }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-    if (cacheFound) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
-        return;
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache paths");
+        try {
+            cachePaths = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N)();
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache paths: ${err.message}`);
+            return;
+        }
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Restoring cache");
+        let cacheFound;
+        try {
+            const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
+            cacheFound = cacheId != undefined;
+            if (!cacheFound) {
+                _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+            }
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to restore cache: ${err.message}`);
+            return;
+        }
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        if (cacheFound) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+            return;
+        }
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Installing dependencies");
     try {
@@ -79635,16 +79659,18 @@ async function main() {
         return;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Saving cache");
-    try {
-        await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
-    }
-    catch (err) {
+    if (inputs.cache) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Saving cache");
+        try {
+            await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to save cache: ${err.message}`);
+            return;
+        }
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to save cache: ${err.message}`);
-        return;
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
 }
 
 __webpack_async_result__();
