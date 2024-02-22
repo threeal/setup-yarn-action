@@ -34,6 +34,8 @@ export async function getCacheKey(): Promise<string> {
 }
 
 export async function getCachePaths(): Promise<string[]> {
+  const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
+
   const yarnConfigs = [
     { name: "Yarn cache folder", config: "cacheFolder" },
     { name: "Yarn deferred version folder", config: "deferredVersionFolder" },
@@ -42,13 +44,16 @@ export async function getCachePaths(): Promise<string[]> {
     { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
     { name: "Yarn virtual folder", config: "virtualFolder" },
   ];
-
-  const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
   for (const { name, config } of yarnConfigs) {
     core.info(`Getting ${name}...`);
-    cachePaths.push(await getYarnConfig(config));
+    try {
+      cachePaths.push(await getYarnConfig(config));
+    } catch (err) {
+      core.setFailed(`Failed to get ${name}: ${err.message}`);
+      throw new Error(`Failed to get ${name}`);
+    }
   }
-  core.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
 
+  core.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
   return cachePaths;
 }

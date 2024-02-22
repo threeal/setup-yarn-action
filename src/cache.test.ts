@@ -158,6 +158,22 @@ describe("get cache paths", () => {
     });
   });
 
+  it("should failed to get Yarn config", async () => {
+    const { getYarnConfig } = await import("./yarn/index.js");
+    const { getCachePaths } = await import("./cache.js");
+
+    jest.mocked(getYarnConfig).mockRejectedValue(new Error("some error"));
+
+    const prom = getCachePaths();
+
+    await expect(prom).rejects.toThrow("Failed to get Yarn cache folder");
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Getting Yarn cache folder...",
+      "Failed to get Yarn cache folder: some error",
+    ]);
+  });
+
   it("should get the cache paths", async () => {
     const { getCachePaths } = await import("./cache.js");
 

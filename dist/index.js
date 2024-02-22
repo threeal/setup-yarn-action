@@ -79529,6 +79529,7 @@ async function getCacheKey() {
     return cacheKey;
 }
 async function getCachePaths() {
+    const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
     const yarnConfigs = [
         { name: "Yarn cache folder", config: "cacheFolder" },
         { name: "Yarn deferred version folder", config: "deferredVersionFolder" },
@@ -79537,10 +79538,15 @@ async function getCachePaths() {
         { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
         { name: "Yarn virtual folder", config: "virtualFolder" },
     ];
-    const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
     for (const { name, config } of yarnConfigs) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Getting ${name}...`);
-        cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
+        try {
+            cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get ${name}: ${err.message}`);
+            throw new Error(`Failed to get ${name}`);
+        }
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
     return cachePaths;
