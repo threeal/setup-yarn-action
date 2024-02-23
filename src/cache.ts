@@ -5,17 +5,28 @@ import os from "node:os";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
 export async function getCacheKey(): Promise<string> {
-  core.info("Getting Yarn version...");
-  const version = await getYarnVersion();
+  let cacheKey = `setup-yarn-action-${os.type()}`;
 
-  let cacheKey = `setup-yarn-action-${os.type()}-${version}`;
+  core.info("Getting Yarn version...");
+  try {
+    const version = await getYarnVersion();
+    cacheKey += `-${version}`;
+  } catch (err) {
+    core.setFailed(`Failed to get Yarn version: ${err.message}`);
+    throw new Error("Failed to get Yarn version");
+  }
 
   core.info("Calculating lock file hash...");
-  if (fs.existsSync("yarn.lock")) {
-    const hash = await hashFile("yarn.lock", { algorithm: "md5" });
-    cacheKey += `-${hash}`;
-  } else {
-    core.warning(`Lock file could not be found, using empty hash`);
+  try {
+    if (fs.existsSync("yarn.lock")) {
+      const hash = await hashFile("yarn.lock", { algorithm: "md5" });
+      cacheKey += `-${hash}`;
+    } else {
+      core.warning(`Lock file could not be found, using empty hash`);
+    }
+  } catch (err) {
+    core.setFailed(`Failed to calculate lock file hash: ${err.message}`);
+    throw new Error("Failed to calculate lock file hash");
   }
 
   core.info(`Using cache key: ${cacheKey}`);
@@ -23,6 +34,8 @@ export async function getCacheKey(): Promise<string> {
 }
 
 export async function getCachePaths(): Promise<string[]> {
+  const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
+
   const yarnConfigs = [
     { name: "Yarn cache folder", config: "cacheFolder" },
     { name: "Yarn deferred version folder", config: "deferredVersionFolder" },
@@ -31,13 +44,16 @@ export async function getCachePaths(): Promise<string[]> {
     { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
     { name: "Yarn virtual folder", config: "virtualFolder" },
   ];
-
-  const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
   for (const { name, config } of yarnConfigs) {
     core.info(`Getting ${name}...`);
-    cachePaths.push(await getYarnConfig(config));
+    try {
+      cachePaths.push(await getYarnConfig(config));
+    } catch (err) {
+      core.setFailed(`Failed to get ${name}: ${err.message}`);
+      throw new Error(`Failed to get ${name}`);
+    }
   }
-  core.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
 
+  core.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
   return cachePaths;
 }

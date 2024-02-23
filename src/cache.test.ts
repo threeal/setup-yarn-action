@@ -3,6 +3,7 @@ import os from "node:os";
 
 jest.unstable_mockModule("@actions/core", () => ({
   info: jest.fn(),
+  setFailed: jest.fn(),
   warning: jest.fn(),
 }));
 
@@ -21,13 +22,20 @@ jest.unstable_mockModule("./yarn.js", () => ({
   getYarnVersion: jest.fn(),
 }));
 
+let failed: boolean = false;
 let logs: (string | Error)[] = [];
 
 beforeEach(async () => {
   const core = await import("@actions/core");
 
+  failed = false;
   logs = [];
+
   jest.mocked(core.info).mockImplementation((message) => {
+    logs.push(message);
+  });
+  jest.mocked(core.setFailed).mockImplementation((message) => {
+    failed = true;
     logs.push(message);
   });
   jest.mocked(core.warning).mockImplementation((message) => {
@@ -54,12 +62,46 @@ describe("get cache key", () => {
     jest.mocked(getYarnVersion).mockResolvedValue("1.2.3");
   });
 
+  it("should failed to get Yarn version", async () => {
+    const { getYarnVersion } = await import("./yarn/index.js");
+    const { getCacheKey } = await import("./cache.js");
+
+    jest.mocked(getYarnVersion).mockRejectedValue(new Error("some error"));
+
+    const prom = getCacheKey();
+
+    await expect(prom).rejects.toThrow("Failed to get Yarn version");
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Failed to get Yarn version: some error",
+    ]);
+  });
+
+  it("should failed to calculate lock file hash", async () => {
+    const { hashFile } = await import("hasha");
+    const { getCacheKey } = await import("./cache.js");
+
+    jest.mocked(hashFile).mockRejectedValue(new Error("some error"));
+
+    const prom = getCacheKey();
+
+    await expect(prom).rejects.toThrow("Failed to calculate lock file hash");
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Getting Yarn version...",
+      "Calculating lock file hash...",
+      "Failed to calculate lock file hash: some error",
+    ]);
+  });
+
   it("should get the cache key", async () => {
     const { getCacheKey } = await import("./cache.js");
 
     const cacheKey = await getCacheKey();
     const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
 
+    expect(failed).toBe(false);
     expect(logs).toStrictEqual([
       "Getting Yarn version...",
       "Calculating lock file hash...",
@@ -81,6 +123,7 @@ describe("get cache key", () => {
       const cacheKey = await getCacheKey();
       const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3`;
 
+      expect(failed).toBe(false);
       expect(logs).toStrictEqual([
         "Getting Yarn version...",
         "Calculating lock file hash...",
@@ -115,6 +158,22 @@ describe("get cache paths", () => {
     });
   });
 
+  it("should failed to get Yarn config", async () => {
+    const { getYarnConfig } = await import("./yarn/index.js");
+    const { getCachePaths } = await import("./cache.js");
+
+    jest.mocked(getYarnConfig).mockRejectedValue(new Error("some error"));
+
+    const prom = getCachePaths();
+
+    await expect(prom).rejects.toThrow("Failed to get Yarn cache folder");
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Getting Yarn cache folder...",
+      "Failed to get Yarn cache folder: some error",
+    ]);
+  });
+
   it("should get the cache paths", async () => {
     const { getCachePaths } = await import("./cache.js");
 
@@ -130,6 +189,7 @@ describe("get cache paths", () => {
       ".yarn/__virtual__",
     ];
 
+    expect(failed).toBe(false);
     expect(logs).toStrictEqual([
       "Getting Yarn cache folder...",
       "Getting Yarn deferred version folder...",

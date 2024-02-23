@@ -79501,21 +79501,35 @@ hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (awa
 
 
 async function getCacheKey() {
+    let cacheKey = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}`;
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
-    const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)();
-    let cacheKey = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}-${version}`;
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
-    if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
-        const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-        cacheKey += `-${hash}`;
+    try {
+        const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)();
+        cacheKey += `-${version}`;
     }
-    else {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get Yarn version: ${err.message}`);
+        throw new Error("Failed to get Yarn version");
+    }
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
+    try {
+        if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
+            const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+            cacheKey += `-${hash}`;
+        }
+        else {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
+        }
+    }
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to calculate lock file hash: ${err.message}`);
+        throw new Error("Failed to calculate lock file hash");
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
     return cacheKey;
 }
 async function getCachePaths() {
+    const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
     const yarnConfigs = [
         { name: "Yarn cache folder", config: "cacheFolder" },
         { name: "Yarn deferred version folder", config: "deferredVersionFolder" },
@@ -79524,10 +79538,15 @@ async function getCachePaths() {
         { name: "Yarn PnP unplugged folder", config: "pnpUnpluggedFolder" },
         { name: "Yarn virtual folder", config: "virtualFolder" },
     ];
-    const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
     for (const { name, config } of yarnConfigs) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Getting ${name}...`);
-        cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
+        try {
+            cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get ${name}: ${err.message}`);
+            throw new Error(`Failed to get ${name}`);
+        }
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
     return cachePaths;
