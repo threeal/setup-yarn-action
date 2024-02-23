@@ -79492,7 +79492,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(612);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_os__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1913);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(5494);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_4__]);
 hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
@@ -79605,7 +79605,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7907);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1913);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(5494);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4885);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
@@ -79697,7 +79697,7 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 1913:
+/***/ 5494:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -79713,6 +79713,26 @@ __nccwpck_require__.d(__webpack_exports__, {
 var exec = __nccwpck_require__(8434);
 // EXTERNAL MODULE: ./.yarn/cache/@actions-core-npm-1.10.1-3cb1000b4d-7a61446697.zip/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(4278);
+;// CONCATENATED MODULE: ./src/yarn/exec.ts
+
+/**
+ * Execute a Yarn command with the given arguments.
+ *
+ * This function executes the Yarn command silently, without outputting anything to the standard output.
+ * Optionally, a callback can be provided to read the output from the command.
+ *
+ * @param args - The arguments of the Yarn command.
+ * @param stdlineCallback - A callback to be called when receiving a line from the standard output.
+ */
+async function execYarn(args, stdlineCallback) {
+    await (0,exec.exec)("corepack", ["yarn", ...args], {
+        silent: true,
+        listeners: {
+            stdline: stdlineCallback,
+        },
+    });
+}
+
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
 
 
@@ -79730,14 +79750,9 @@ function printYarnInstallOutput(output) {
     }
 }
 async function yarnInstall() {
-    await (0,exec.exec)("corepack", ["yarn", "install", "--json"], {
-        silent: true,
-        listeners: {
-            stdline: (data) => {
-                const output = JSON.parse(data);
-                printYarnInstallOutput(output);
-            },
-        },
+    await execYarn(["install", "--json"], (data) => {
+        const output = JSON.parse(data);
+        printYarnInstallOutput(output);
     });
 }
 

@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { exec } from "@actions/exec";
+import { execYarn } from "./exec.js";
 
 export interface YarnInstallOutput {
   type: "info" | "warning" | "error";
@@ -23,13 +23,8 @@ export function printYarnInstallOutput(output: YarnInstallOutput): void {
 }
 
 export async function yarnInstall(): Promise<void> {
-  await exec("corepack", ["yarn", "install", "--json"], {
-    silent: true,
-    listeners: {
-      stdline: (data) => {
-        const output = JSON.parse(data) as YarnInstallOutput;
-        printYarnInstallOutput(output);
-      },
-    },
+  await execYarn(["install", "--json"], (data) => {
+    const output = JSON.parse(data) as YarnInstallOutput;
+    printYarnInstallOutput(output);
   });
 }

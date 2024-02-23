@@ -6,8 +6,8 @@ jest.unstable_mockModule("@actions/core", () => ({
   warning: jest.fn(),
 }));
 
-jest.unstable_mockModule("@actions/exec", () => ({
-  exec: jest.fn(),
+jest.unstable_mockModule("./exec.ts", () => ({
+  execYarn: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -78,24 +78,22 @@ describe("print Yarn install package output", () => {
 
 it("should install package using Yarn", async () => {
   const core = await import("@actions/core");
-  const { exec } = await import("@actions/exec");
+  const { execYarn } = await import("./exec.js");
   const { yarnInstall } = await import("./install.js");
 
-  jest.mocked(exec).mockImplementation(async (commandLine, args, options) => {
-    options?.listeners?.stdline(
+  jest.mocked(execYarn).mockImplementation(async (args, callback) => {
+    callback(
       `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
     );
-    return 0;
   });
 
   await yarnInstall();
 
-  expect(exec).toHaveBeenCalledTimes(1);
+  expect(execYarn).toHaveBeenCalledTimes(1);
 
-  const execCall = jest.mocked(exec).mock.calls[0];
-  expect(execCall).toHaveLength(3);
-  expect(execCall[0]).toBe("corepack");
-  expect(execCall[1]).toEqual(["yarn", "install", "--json"]);
+  const execYarnCall = jest.mocked(execYarn).mock.calls[0];
+  expect(execYarnCall).toHaveLength(2);
+  expect(execYarnCall[0]).toEqual(["install", "--json"]);
 
   expect(core.info).toHaveBeenCalledTimes(1);
   expect(core.info).toHaveBeenCalledWith("YN0000: └ Completed");
