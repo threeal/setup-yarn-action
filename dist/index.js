@@ -79711,6 +79711,23 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./.yarn/cache/@actions-exec-npm-1.1.1-90973d2f96-4a09f6bdbe.zip/node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(8434);
+;// CONCATENATED MODULE: ./src/yarn/version.ts
+
+/**
+ * Get the current Yarn version.
+ *
+ * @param options.corepack - Whether to get the current Yarn version using Corepack or not.
+ * @returns A promise resolving to the current Yarn version.
+ */
+async function getYarnVersion(options) {
+    const commandLine = options?.corepack ? "corepack" : "yarn";
+    const args = options?.corepack ? ["yarn", "--version"] : ["--version"];
+    const res = await (0,exec.getExecOutput)(commandLine, args, {
+        silent: true,
+    });
+    return res.stdout.trim();
+}
+
 // EXTERNAL MODULE: ./.yarn/cache/@actions-core-npm-1.10.1-3cb1000b4d-7a61446697.zip/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(4278);
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
@@ -79741,29 +79758,19 @@ async function yarnInstall() {
     });
 }
 
-;// CONCATENATED MODULE: ./src/yarn/version.ts
-
-/**
- * Get the current Yarn version.
- *
- * @param options.corepack - Whether to get the current Yarn version using Corepack or not.
- * @returns A promise resolving to the current Yarn version.
- */
-async function getYarnVersion(options) {
-    const commandLine = options?.corepack ? "corepack" : "yarn";
-    const args = options?.corepack ? ["yarn", "--version"] : ["--version"];
-    const res = await (0,exec.getExecOutput)(commandLine, args, {
-        silent: true,
-    });
-    return res.stdout.trim();
-}
-
 ;// CONCATENATED MODULE: ./src/yarn/index.ts
+
 
 
 
 async function enableYarn() {
     await (0,exec.exec)("corepack", ["enable", "yarn"], { silent: true });
+    // Check if the `yarn` command is using the same version as the `corepack yarn` command.
+    const version = await getYarnVersion();
+    const corepackVersion = await getYarnVersion({ corepack: true });
+    if (version != corepackVersion) {
+        throw new Error(`The \`yarn\` command is using different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
+    }
 }
 async function getYarnConfig(name) {
     const res = await (0,exec.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
