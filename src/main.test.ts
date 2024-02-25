@@ -23,6 +23,7 @@ jest.unstable_mockModule("./cache.js", () => ({
 }));
 
 jest.unstable_mockModule("./corepack.js", () => ({
+  corepackAssertYarnVersion: jest.fn(),
   corepackEnableYarn: jest.fn(),
 }));
 

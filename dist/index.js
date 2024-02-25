@@ -79561,6 +79561,7 @@ __webpack_async_result__();
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "I": () => (/* binding */ corepackAssertYarnVersion),
 /* harmony export */   "_": () => (/* binding */ corepackEnableYarn)
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
@@ -79569,21 +79570,30 @@ __webpack_async_result__();
 
 
 /**
+ * Assert Yarn version enabled by Corepack.
+ *
+ * This function asserts whether Yarn is updated to the correct version set by Corepack.
+ * It asserts the Yarn version by checking if the `yarn` command is using the same version as the `corepack yarn` command.
+ *
+ * @returns A promise that resolves to nothing.
+ * @throws If the `yarn` command is using a different version of Yarn.
+ */
+async function corepackAssertYarnVersion() {
+    const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)();
+    const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)({ corepack: true });
+    if (version !== corepackVersion) {
+        throw new Error(`The \`yarn\` command is using a different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
+    }
+}
+/**
  * Enable Yarn using Corepack.
  *
  * This function makes Yarn available in the environment by using Corepack.
- * It also checks if the `yarn` command is updated to the correct version set by Corepack.
  *
  * @returns A promise that resolves to nothing.
  */
 async function corepackEnableYarn() {
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"], { silent: true });
-    // Check if the `yarn` command is using the same version as the `corepack yarn` command.
-    const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)();
-    const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)({ corepack: true });
-    if (version != corepackVersion) {
-        throw new Error(`The \`yarn\` command is using different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
-    }
 }
 
 
@@ -79654,6 +79664,7 @@ async function main() {
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
     try {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ ._)();
+        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
     }
     catch (err) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${err.message}`);

@@ -1,7 +1,7 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import { getCacheKey, getCachePaths } from "./cache.js";
-import { corepackEnableYarn } from "./corepack.js";
+import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
 import { yarnInstall } from "./yarn/index.js";
 import { getInputs } from "./inputs.js";
 
@@ -12,6 +12,7 @@ export async function main(): Promise<void> {
   core.info("Enabling Yarn...");
   try {
     await corepackEnableYarn();
+    await corepackAssertYarnVersion();
   } catch (err) {
     core.setFailed(`Failed to enable Yarn: ${err.message}`);
     return;
