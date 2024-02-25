@@ -79504,7 +79504,7 @@ async function getCacheKey() {
     let cacheKey = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}`;
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
     try {
-        const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)();
+        const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)({ corepack: true });
         cacheKey += `-${version}`;
     }
     catch (err) {
@@ -79743,8 +79743,16 @@ async function yarnInstall() {
 
 ;// CONCATENATED MODULE: ./src/yarn/version.ts
 
-async function getYarnVersion() {
-    const res = await (0,exec.getExecOutput)("corepack", ["yarn", "--version"], {
+/**
+ * Get the current Yarn version.
+ *
+ * @param options.corepack - Whether to get the current Yarn version using Corepack or not.
+ * @returns A promise resolving to the current Yarn version.
+ */
+async function getYarnVersion(options) {
+    const commandLine = options?.corepack ? "corepack" : "yarn";
+    const args = options?.corepack ? ["yarn", "--version"] : ["--version"];
+    const res = await (0,exec.getExecOutput)(commandLine, args, {
         silent: true,
     });
     return res.stdout.trim();

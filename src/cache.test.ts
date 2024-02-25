@@ -59,7 +59,10 @@ describe("get cache key", () => {
       return false;
     });
 
-    jest.mocked(getYarnVersion).mockResolvedValue("1.2.3");
+    jest.mocked(getYarnVersion).mockImplementation(async (options) => {
+      if (options.corepack) return "1.2.3";
+      throw new Error("Unable to get Yarn version");
+    });
   });
 
   it("should failed to get Yarn version", async () => {
