@@ -14,13 +14,16 @@ jest.unstable_mockModule("@actions/core", () => ({
 }));
 
 jest.unstable_mockModule("./yarn/index.js", () => ({
-  enableYarn: jest.fn(),
   yarnInstall: jest.fn(),
 }));
 
 jest.unstable_mockModule("./cache.js", () => ({
   getCacheKey: jest.fn(),
   getCachePaths: jest.fn(),
+}));
+
+jest.unstable_mockModule("./corepack.js", () => ({
+  corepackEnableYarn: jest.fn(),
 }));
 
 jest.unstable_mockModule("./inputs.js", () => ({
@@ -38,8 +41,9 @@ describe("install Yarn dependencies", () => {
   beforeEach(async () => {
     const { restoreCache, saveCache } = await import("@actions/cache");
     const core = await import("@actions/core");
-    const { enableYarn, yarnInstall } = await import("./yarn/index.js");
+    const { yarnInstall } = await import("./yarn/index.js");
     const { getCacheKey, getCachePaths } = await import("./cache.js");
+    const { corepackEnableYarn } = await import("./corepack.js");
     const { getInputs } = await import("./inputs.js");
 
     failed = false;
@@ -85,7 +89,7 @@ describe("install Yarn dependencies", () => {
       logs.push(message);
     });
 
-    jest.mocked(enableYarn).mockImplementation(async () => {
+    jest.mocked(corepackEnableYarn).mockImplementation(async () => {
       core.info("Yarn enabled");
     });
 
@@ -100,10 +104,10 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to enable Yarn", async () => {
-    const { enableYarn } = await import("./yarn/index.js");
+    const { corepackEnableYarn } = await import("./corepack.js");
     const { main } = await import("./main.js");
 
-    jest.mocked(enableYarn).mockRejectedValue(new Error("some error"));
+    jest.mocked(corepackEnableYarn).mockRejectedValue(new Error("some error"));
 
     await main();
 
