@@ -44,27 +44,3 @@ it("should get Yarn config", async () => {
 
   expect(value).toEqual("/.yarn/berry");
 });
-
-it("should get Yarn version", async () => {
-  const { getExecOutput } = await import("@actions/exec");
-  const { getYarnVersion } = await import("./index.js");
-
-  jest.mocked(getExecOutput).mockResolvedValueOnce({
-    exitCode: 0,
-    stdout: "1.2.3",
-    stderr: "",
-  });
-
-  const version = await getYarnVersion();
-
-  expect(getExecOutput).toHaveBeenCalledTimes(1);
-  expect(getExecOutput).toHaveBeenCalledWith(
-    "corepack",
-    ["yarn", "--version"],
-    {
-      silent: true,
-    },
-  );
-
-  expect(version).toEqual("1.2.3");
-});

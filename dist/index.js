@@ -79492,7 +79492,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(612);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_os__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1913);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1750);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_4__]);
 hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
@@ -79605,7 +79605,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7907);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1913);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1750);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4885);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
@@ -79697,7 +79697,7 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 1913:
+/***/ 1750:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -79705,7 +79705,7 @@ __webpack_async_result__();
 __nccwpck_require__.d(__webpack_exports__, {
   "Wd": () => (/* binding */ enableYarn),
   "io": () => (/* binding */ getYarnConfig),
-  "Vh": () => (/* binding */ getYarnVersion),
+  "Vh": () => (/* reexport */ getYarnVersion),
   "Or": () => (/* reexport */ yarnInstall)
 });
 
@@ -79741,7 +79741,17 @@ async function yarnInstall() {
     });
 }
 
+;// CONCATENATED MODULE: ./src/yarn/version.ts
+
+async function getYarnVersion() {
+    const res = await (0,exec.getExecOutput)("corepack", ["yarn", "--version"], {
+        silent: true,
+    });
+    return res.stdout.trim();
+}
+
 ;// CONCATENATED MODULE: ./src/yarn/index.ts
+
 
 
 async function enableYarn() {
@@ -79752,12 +79762,6 @@ async function getYarnConfig(name) {
         silent: true,
     });
     return JSON.parse(res.stdout).effective;
-}
-async function getYarnVersion() {
-    const res = await (0,exec.getExecOutput)("corepack", ["yarn", "--version"], {
-        silent: true,
-    });
-    return res.stdout.trim();
 }
 
 
