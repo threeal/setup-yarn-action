@@ -9,7 +9,7 @@ export async function getCacheKey(): Promise<string> {
 
   core.info("Getting Yarn version...");
   try {
-    const version = await getYarnVersion();
+    const version = await getYarnVersion({ corepack: true });
     cacheKey += `-${version}`;
   } catch (err) {
     core.setFailed(`Failed to get Yarn version: ${err.message}`);
