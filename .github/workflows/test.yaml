@@ -22,11 +22,11 @@ jobs:
 
       - name: Check Format
         run: |
-          corepack yarn format
+          yarn format
           git diff --exit-code --text HEAD
 
       - name: Check Lint
-        run: corepack yarn lint
+        run: yarn lint
 
   test-package:
     name: Test Package
@@ -44,7 +44,7 @@ jobs:
         uses: threeal/setup-yarn-action@v1.0.0
 
       - name: Test Package
-        run: corepack yarn test
+        run: yarn test
 
   test-action:
     name: Test Action
@@ -72,7 +72,7 @@ jobs:
         uses: ./setup-yarn-action
 
       - name: Build Package
-        run: corepack yarn pack
+        run: yarn pack
 
   test-action-without-cache:
     name: Test Action Without Cache
@@ -102,7 +102,7 @@ jobs:
           cache: false
 
       - name: Build Package
-        run: corepack yarn pack
+        run: yarn pack
 
   test-action-with-yarn-local-cache:
     name: Test Action With Yarn Local Cache
@@ -125,10 +125,10 @@ jobs:
       - name: Disable Yarn Global Cache
         run: |
           corepack enable yarn
-          corepack yarn config set enableGlobalCache false
+          yarn config set enableGlobalCache false
 
       - name: Setup Yarn
         uses: ./setup-yarn-action
 
       - name: Build Package
-        run: corepack yarn pack
+        run: yarn pack
