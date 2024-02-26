@@ -19,8 +19,8 @@ it("should get Yarn config", async () => {
 
   expect(getExecOutput).toHaveBeenCalledTimes(1);
   expect(getExecOutput).toHaveBeenCalledWith(
-    "corepack",
-    ["yarn", "config", "globalFolder", "--json"],
+    "yarn",
+    ["config", "globalFolder", "--json"],
     {
       silent: true,
     },

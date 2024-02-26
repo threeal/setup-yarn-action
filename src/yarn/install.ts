@@ -23,7 +23,7 @@ export function printYarnInstallOutput(output: YarnInstallOutput): void {
 }
 
 export async function yarnInstall(): Promise<void> {
-  await exec("corepack", ["yarn", "install", "--json"], {
+  await exec("yarn", ["install", "--json"], {
     silent: true,
     listeners: {
       stdline: (data) => {
