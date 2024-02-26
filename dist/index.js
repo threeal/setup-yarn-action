@@ -79557,6 +79557,48 @@ __webpack_async_result__();
 
 /***/ }),
 
+/***/ 3396:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "I": () => (/* binding */ corepackAssertYarnVersion),
+/* harmony export */   "_": () => (/* binding */ corepackEnableYarn)
+/* harmony export */ });
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(1750);
+
+
+/**
+ * Assert Yarn version enabled by Corepack.
+ *
+ * This function asserts whether Yarn is updated to the correct version set by Corepack.
+ * It asserts the Yarn version by checking if the `yarn` command is using the same version as the `corepack yarn` command.
+ *
+ * @returns A promise that resolves to nothing.
+ * @throws If the `yarn` command is using a different version of Yarn.
+ */
+async function corepackAssertYarnVersion() {
+    const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)();
+    const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)({ corepack: true });
+    if (version !== corepackVersion) {
+        throw new Error(`The \`yarn\` command is using a different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
+    }
+}
+/**
+ * Enable Yarn using Corepack.
+ *
+ * This function makes Yarn available in the environment by using Corepack.
+ *
+ * @returns A promise that resolves to nothing.
+ */
+async function corepackEnableYarn() {
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"], { silent: true });
+}
+
+
+/***/ }),
+
 /***/ 2158:
 /***/ ((module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
@@ -79605,8 +79647,9 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7907);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1750);
-/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4885);
+/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(3396);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(1750);
+/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4885);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
@@ -79614,12 +79657,14 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 
 
+
 async function main() {
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Getting action inputs...");
-    const inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_4__/* .getInputs */ .G)();
+    const inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_5__/* .getInputs */ .G)();
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
     try {
-        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .enableYarn */ .Wd)();
+        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ ._)();
+        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
     }
     catch (err) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${err.message}`);
@@ -79670,7 +79715,7 @@ async function main() {
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Installing dependencies");
     try {
-        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .yarnInstall */ .Or)();
+        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .yarnInstall */ .Or)();
     }
     catch (err) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
@@ -79703,7 +79748,6 @@ __webpack_async_result__();
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
-  "Wd": () => (/* binding */ enableYarn),
   "io": () => (/* binding */ getYarnConfig),
   "Vh": () => (/* reexport */ getYarnVersion),
   "Or": () => (/* reexport */ yarnInstall)
@@ -79711,23 +79755,6 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./.yarn/cache/@actions-exec-npm-1.1.1-90973d2f96-4a09f6bdbe.zip/node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(8434);
-;// CONCATENATED MODULE: ./src/yarn/version.ts
-
-/**
- * Get the current Yarn version.
- *
- * @param options.corepack - Whether to get the current Yarn version using Corepack or not.
- * @returns A promise resolving to the current Yarn version.
- */
-async function getYarnVersion(options) {
-    const commandLine = options?.corepack ? "corepack" : "yarn";
-    const args = options?.corepack ? ["yarn", "--version"] : ["--version"];
-    const res = await (0,exec.getExecOutput)(commandLine, args, {
-        silent: true,
-    });
-    return res.stdout.trim();
-}
-
 // EXTERNAL MODULE: ./.yarn/cache/@actions-core-npm-1.10.1-3cb1000b4d-7a61446697.zip/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(4278);
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
@@ -79758,20 +79785,27 @@ async function yarnInstall() {
     });
 }
 
+;// CONCATENATED MODULE: ./src/yarn/version.ts
+
+/**
+ * Get the current Yarn version.
+ *
+ * @param options.corepack - Whether to get the current Yarn version using Corepack or not.
+ * @returns A promise resolving to the current Yarn version.
+ */
+async function getYarnVersion(options) {
+    const commandLine = options?.corepack ? "corepack" : "yarn";
+    const args = options?.corepack ? ["yarn", "--version"] : ["--version"];
+    const res = await (0,exec.getExecOutput)(commandLine, args, {
+        silent: true,
+    });
+    return res.stdout.trim();
+}
+
 ;// CONCATENATED MODULE: ./src/yarn/index.ts
 
 
 
-
-async function enableYarn() {
-    await (0,exec.exec)("corepack", ["enable", "yarn"], { silent: true });
-    // Check if the `yarn` command is using the same version as the `corepack yarn` command.
-    const version = await getYarnVersion();
-    const corepackVersion = await getYarnVersion({ corepack: true });
-    if (version != corepackVersion) {
-        throw new Error(`The \`yarn\` command is using different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
-    }
-}
 async function getYarnConfig(name) {
     const res = await (0,exec.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
         silent: true,
