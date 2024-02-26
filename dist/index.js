@@ -79796,7 +79796,7 @@ function printYarnInstallOutput(output) {
     }
 }
 async function yarnInstall() {
-    await (0,exec.exec)("corepack", ["yarn", "install", "--json"], {
+    await (0,exec.exec)("yarn", ["install", "--json"], {
         silent: true,
         listeners: {
             stdline: (data) => {
@@ -79829,7 +79829,7 @@ async function getYarnVersion(options) {
 
 
 async function getYarnConfig(name) {
-    const res = await (0,exec.getExecOutput)("corepack", ["yarn", "config", name, "--json"], {
+    const res = await (0,exec.getExecOutput)("yarn", ["config", name, "--json"], {
         silent: true,
     });
     return JSON.parse(res.stdout).effective;

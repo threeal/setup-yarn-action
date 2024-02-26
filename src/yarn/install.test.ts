@@ -94,8 +94,8 @@ it("should install package using Yarn", async () => {
 
   const execCall = jest.mocked(exec).mock.calls[0];
   expect(execCall).toHaveLength(3);
-  expect(execCall[0]).toBe("corepack");
-  expect(execCall[1]).toEqual(["yarn", "install", "--json"]);
+  expect(execCall[0]).toBe("yarn");
+  expect(execCall[1]).toEqual(["install", "--json"]);
 
   expect(core.info).toHaveBeenCalledTimes(1);
   expect(core.info).toHaveBeenCalledWith("YN0000: └ Completed");
