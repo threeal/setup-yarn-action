@@ -1,13 +1,12 @@
 import { jest } from "@jest/globals";
 
 jest.unstable_mockModule("@actions/exec", () => ({
-  ...jest.requireActual<object>("@actions/exec"),
   getExecOutput: jest.fn(),
 }));
 
 it("should get Yarn config", async () => {
   const { getExecOutput } = await import("@actions/exec");
-  const { getYarnConfig } = await import("./index.js");
+  const { getYarnConfig } = await import("./config.js");
 
   jest.mocked(getExecOutput).mockResolvedValueOnce({
     exitCode: 0,
