@@ -1,4 +1,8 @@
+import { addPath } from "@actions/core";
 import { exec } from "@actions/exec";
+import { mkdirSync } from "node:fs";
+import { homedir } from "node:os";
+import path from "node:path";
 import { getYarnVersion } from "./yarn/index.js";
 
 /**
@@ -23,10 +27,20 @@ export async function corepackAssertYarnVersion(): Promise<void> {
 /**
  * Enable Yarn using Corepack.
  *
- * This function makes Yarn available in the environment by using Corepack.
+ * This function enables Yarn using Corepack in the `.corepack` directory.
+ * After enabling Yarn, it also adds the `.corepack` directory to the path.
  *
  * @returns A promise that resolves to nothing.
  */
 export async function corepackEnableYarn(): Promise<void> {
-  await exec("corepack", ["enable", "yarn"], { silent: true });
+  const corepackDir = path.join(homedir(), ".corepack");
+  mkdirSync(corepackDir, { recursive: true });
+
+  await exec(
+    "corepack",
+    ["enable", "--install-directory", corepackDir, "yarn"],
+    { silent: true },
+  );
+
+  addPath(corepackDir);
 }
