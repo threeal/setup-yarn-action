@@ -1,7 +1,13 @@
 import { jest } from "@jest/globals";
+import path from "node:path";
+import { homedir } from "node:os";
 
 jest.unstable_mockModule("@actions/exec", () => ({
   exec: jest.fn(),
+}));
+
+jest.unstable_mockModule("node:fs", () => ({
+  mkdirSync: jest.fn(),
 }));
 
 jest.unstable_mockModule("./yarn/index.js", () => ({
@@ -35,13 +41,22 @@ describe("assert Yarn version enabled by Corepack", () => {
 describe("enable Yarn using Corepack", () => {
   it("should enable Yarn", async () => {
     const { exec } = await import("@actions/exec");
+    const { mkdirSync } = await import("node:fs");
     const { corepackEnableYarn } = await import("./corepack.js");
 
     await expect(corepackEnableYarn()).resolves.toBeUndefined();
+    const installDir = path.join(homedir(), ".corepack");
+
+    expect(mkdirSync).toHaveBeenCalledTimes(1);
+    expect(mkdirSync).toHaveBeenCalledWith(installDir, { recursive: true });
 
     expect(exec).toHaveBeenCalledTimes(1);
-    expect(exec).toHaveBeenCalledWith("corepack", ["enable", "yarn"], {
-      silent: true,
-    });
+    expect(exec).toHaveBeenCalledWith(
+      "corepack",
+      ["enable", "--install-directory", installDir, "yarn"],
+      {
+        silent: true,
+      },
+    );
   });
 });

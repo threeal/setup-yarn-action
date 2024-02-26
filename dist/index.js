@@ -79557,16 +79557,34 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 3396:
+/***/ 6254:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "I": () => (/* binding */ corepackAssertYarnVersion),
-/* harmony export */   "_": () => (/* binding */ corepackEnableYarn)
-/* harmony export */ });
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8434);
-/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(1750);
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "I": () => (/* binding */ corepackAssertYarnVersion),
+  "_": () => (/* binding */ corepackEnableYarn)
+});
+
+// EXTERNAL MODULE: ./.yarn/cache/@actions-core-npm-1.10.1-3cb1000b4d-7a61446697.zip/node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(4278);
+// EXTERNAL MODULE: ./.yarn/cache/@actions-exec-npm-1.1.1-90973d2f96-4a09f6bdbe.zip/node_modules/@actions/exec/lib/exec.js
+var exec = __nccwpck_require__(8434);
+// EXTERNAL MODULE: external "node:fs"
+var external_node_fs_ = __nccwpck_require__(7561);
+// EXTERNAL MODULE: external "node:os"
+var external_node_os_ = __nccwpck_require__(612);
+;// CONCATENATED MODULE: external "node:path"
+const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
+var external_node_path_default = /*#__PURE__*/__nccwpck_require__.n(external_node_path_namespaceObject);
+// EXTERNAL MODULE: ./src/yarn/index.ts + 2 modules
+var yarn = __nccwpck_require__(1750);
+;// CONCATENATED MODULE: ./src/corepack.ts
+
+
+
+
 
 
 /**
@@ -79579,8 +79597,8 @@ __webpack_async_result__();
  * @throws If the `yarn` command is using a different version of Yarn.
  */
 async function corepackAssertYarnVersion() {
-    const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)();
-    const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_1__/* .getYarnVersion */ .Vh)({ corepack: true });
+    const version = await (0,yarn/* getYarnVersion */.Vh)();
+    const corepackVersion = await (0,yarn/* getYarnVersion */.Vh)({ corepack: true });
     if (version !== corepackVersion) {
         throw new Error(`The \`yarn\` command is using a different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
     }
@@ -79588,12 +79606,16 @@ async function corepackAssertYarnVersion() {
 /**
  * Enable Yarn using Corepack.
  *
- * This function makes Yarn available in the environment by using Corepack.
+ * This function enables Yarn using Corepack in the `.corepack` directory.
+ * After enabling Yarn, it also adds the `.corepack` directory to the path.
  *
  * @returns A promise that resolves to nothing.
  */
 async function corepackEnableYarn() {
-    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "yarn"], { silent: true });
+    const corepackDir = external_node_path_default().join((0,external_node_os_.homedir)(), ".corepack");
+    (0,external_node_fs_.mkdirSync)(corepackDir, { recursive: true });
+    await (0,exec.exec)("corepack", ["enable", "--install-directory", corepackDir, "yarn"], { silent: true });
+    (0,core.addPath)(corepackDir);
 }
 
 
@@ -79647,7 +79669,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4278);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7907);
-/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(3396);
+/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6254);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(1750);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4885);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
