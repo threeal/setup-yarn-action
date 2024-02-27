@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import "jest-extended";
 
 jest.unstable_mockModule("@actions/exec", () => ({
   getExecOutput: jest.fn(),
@@ -14,16 +15,14 @@ it("should get Yarn config", async () => {
     stderr: "",
   });
 
-  const value = await getYarnConfig("globalFolder");
+  const prom = getYarnConfig("globalFolder");
+  await expect(prom).resolves.toEqual("/.yarn/berry");
 
-  expect(getExecOutput).toHaveBeenCalledTimes(1);
-  expect(getExecOutput).toHaveBeenCalledWith(
+  expect(getExecOutput).toHaveBeenCalledExactlyOnceWith(
     "yarn",
     ["config", "globalFolder", "--json"],
     {
       silent: true,
     },
   );
-
-  expect(value).toEqual("/.yarn/berry");
 });

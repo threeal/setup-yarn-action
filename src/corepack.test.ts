@@ -1,6 +1,7 @@
 import { jest } from "@jest/globals";
 import path from "node:path";
 import { homedir } from "node:os";
+import "jest-extended";
 
 jest.unstable_mockModule("@actions/exec", () => ({
   exec: jest.fn(),
@@ -47,11 +48,11 @@ describe("enable Yarn using Corepack", () => {
     await expect(corepackEnableYarn()).resolves.toBeUndefined();
     const installDir = path.join(homedir(), ".corepack");
 
-    expect(mkdirSync).toHaveBeenCalledTimes(1);
-    expect(mkdirSync).toHaveBeenCalledWith(installDir, { recursive: true });
-
-    expect(exec).toHaveBeenCalledTimes(1);
-    expect(exec).toHaveBeenCalledWith(
+    expect(mkdirSync).toHaveBeenCalledExactlyOnceWith(installDir, {
+      recursive: true,
+    });
+    expect(exec).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
+    expect(exec).toHaveBeenCalledExactlyOnceWith(
       "corepack",
       ["enable", "--install-directory", installDir, "yarn"],
       {

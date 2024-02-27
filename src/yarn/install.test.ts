@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import "jest-extended";
 
 jest.unstable_mockModule("@actions/core", () => ({
   error: jest.fn(),
@@ -26,8 +27,7 @@ describe("print Yarn install package output", () => {
       data: "\u001b[1mYarn 4.1.0\u001b[22m",
     });
 
-    expect(core.info).toHaveBeenCalledTimes(1);
-    expect(core.info).toHaveBeenCalledWith(
+    expect(core.info).toHaveBeenCalledExactlyOnceWith(
       "YN0000: . \u001b[1mYarn 4.1.0\u001b[22m",
     );
 
@@ -46,8 +46,7 @@ describe("print Yarn install package output", () => {
       data: "ESM support for PnP uses the experimental loader API and is therefore experimental",
     });
 
-    expect(core.warning).toHaveBeenCalledTimes(1);
-    expect(core.warning).toHaveBeenCalledWith(
+    expect(core.warning).toHaveBeenCalledExactlyOnceWith(
       "ESM support for PnP uses the experimental loader API and is therefore experimental (YN0000)",
     );
 
@@ -66,8 +65,7 @@ describe("print Yarn install package output", () => {
       data: "The lockfile would have been created by this install, which is explicitly forbidden.",
     });
 
-    expect(core.error).toHaveBeenCalledTimes(1);
-    expect(core.error).toHaveBeenCalledWith(
+    expect(core.error).toHaveBeenCalledExactlyOnceWith(
       "The lockfile would have been created by this install, which is explicitly forbidden. (YN0028)",
     );
 
@@ -97,6 +95,5 @@ it("should install package using Yarn", async () => {
   expect(execCall[0]).toBe("yarn");
   expect(execCall[1]).toEqual(["install", "--json"]);
 
-  expect(core.info).toHaveBeenCalledTimes(1);
-  expect(core.info).toHaveBeenCalledWith("YN0000: └ Completed");
+  expect(core.info).toHaveBeenCalledExactlyOnceWith("YN0000: └ Completed");
 });
