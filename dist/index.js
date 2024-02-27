@@ -79492,7 +79492,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(612);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_os__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1750);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(5551);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_4__]);
 hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
@@ -79578,8 +79578,8 @@ var external_node_os_ = __nccwpck_require__(612);
 ;// CONCATENATED MODULE: external "node:path"
 const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 var external_node_path_default = /*#__PURE__*/__nccwpck_require__.n(external_node_path_namespaceObject);
-// EXTERNAL MODULE: ./src/yarn/index.ts + 2 modules
-var yarn = __nccwpck_require__(1750);
+// EXTERNAL MODULE: ./src/yarn/index.ts + 3 modules
+var yarn = __nccwpck_require__(5551);
 ;// CONCATENATED MODULE: ./src/corepack.ts
 
 
@@ -79670,7 +79670,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7907);
 /* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6254);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(1750);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(5551);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4885);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
@@ -79764,19 +79764,34 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 1750:
+/***/ 5551:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
-  "io": () => (/* binding */ getYarnConfig),
+  "io": () => (/* reexport */ getYarnConfig),
   "Vh": () => (/* reexport */ getYarnVersion),
   "Or": () => (/* reexport */ yarnInstall)
 });
 
 // EXTERNAL MODULE: ./.yarn/cache/@actions-exec-npm-1.1.1-90973d2f96-4a09f6bdbe.zip/node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(8434);
+;// CONCATENATED MODULE: ./src/yarn/config.ts
+
+/**
+ * Retrieves the value of a Yarn configuration.
+ *
+ * @param name - The name of the Yarn configuration.
+ * @returns A promise resolving to the value of the Yarn configuration.
+ */
+async function getYarnConfig(name) {
+    const res = await (0,exec.getExecOutput)("yarn", ["config", name, "--json"], {
+        silent: true,
+    });
+    return JSON.parse(res.stdout).effective;
+}
+
 // EXTERNAL MODULE: ./.yarn/cache/@actions-core-npm-1.10.1-3cb1000b4d-7a61446697.zip/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(4278);
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
@@ -79828,12 +79843,6 @@ async function getYarnVersion(options) {
 
 
 
-async function getYarnConfig(name) {
-    const res = await (0,exec.getExecOutput)("yarn", ["config", name, "--json"], {
-        silent: true,
-    });
-    return JSON.parse(res.stdout).effective;
-}
 
 
 /***/ }),
