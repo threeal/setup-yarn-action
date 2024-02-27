@@ -12,6 +12,7 @@
     "^(\\.{1,2}/.*)\\.js$": "$1"
   },
   "preset": "ts-jest/presets/default-esm",
+  "setupFilesAfterEnv": ["jest-extended/all"],
   "transform": {
     "^.+\\.ts$": ["ts-jest", { "useESM": true }]
   },

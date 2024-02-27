@@ -31,10 +31,6 @@ jest.unstable_mockModule("./inputs.js", () => ({
   getInputs: jest.fn(),
 }));
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe("install Yarn dependencies", () => {
   let failed: boolean = false;
   let logs: (string | Error)[] = [];

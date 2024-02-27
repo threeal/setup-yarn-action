@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import "jest-extended";
 
 jest.unstable_mockModule("@actions/exec", () => ({
   getExecOutput: jest.fn(),
@@ -19,31 +20,29 @@ describe("get Yarn version", () => {
     const { getExecOutput } = await import("@actions/exec");
     const { getYarnVersion } = await import("./version.js");
 
-    const version = await getYarnVersion();
-
-    expect(getExecOutput).toHaveBeenCalledTimes(1);
-    expect(getExecOutput).toHaveBeenCalledWith("yarn", ["--version"], {
-      silent: true,
-    });
-
-    expect(version).toEqual("1.2.3");
+    await expect(getYarnVersion()).resolves.toEqual("1.2.3");
+    expect(getExecOutput).toHaveBeenCalledExactlyOnceWith(
+      "yarn",
+      ["--version"],
+      {
+        silent: true,
+      },
+    );
   });
 
   it("should get Yarn version using Corepack", async () => {
     const { getExecOutput } = await import("@actions/exec");
     const { getYarnVersion } = await import("./version.js");
 
-    const version = await getYarnVersion({ corepack: true });
+    const prom = getYarnVersion({ corepack: true });
+    await expect(prom).resolves.toEqual("1.2.3");
 
-    expect(getExecOutput).toHaveBeenCalledTimes(1);
-    expect(getExecOutput).toHaveBeenCalledWith(
+    expect(getExecOutput).toHaveBeenCalledExactlyOnceWith(
       "corepack",
       ["yarn", "--version"],
       {
         silent: true,
       },
     );
-
-    expect(version).toEqual("1.2.3");
   });
 });
