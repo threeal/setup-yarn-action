@@ -15,11 +15,10 @@ Refer to [this](https://yarnpkg.com/migration/overview) for the migration guide.
 
 ## Key Features
 
-The Setup Yarn Berry Action provides the following key features:
+The Setup Yarn Berry Action offers the following key features:
 
-- Install dependencies for a Node.js package using Yarn.
-- Automatic Yarn enablement using [Corepack](https://nodejs.org/api/corepack.html) before installation.
-- Support for caching dependencies installation, enhancing workflow speed.
+- Sets up Yarn to a specified version.
+- Installs dependencies for the current Node.js project with cache support.
 
 ## Usage
 
