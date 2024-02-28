@@ -20,12 +20,7 @@ The Setup Yarn Berry Action offers the following key features:
 - Sets up Yarn to a specified version.
 - Installs dependencies for the current Node.js project with cache support.
 
-## Usage
-
-To begin using the Setup Yarn Berry Action, refer to the [action.yaml](./action.yaml) file for detailed configuration options.
-If you are new to GitHub Actions, you can explore the [GitHub Actions guide](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) for a comprehensive overview.
-
-### Inputs
+## Available Inputs
 
 Here are the available input parameters for the Setup Yarn Berry Action:
 
@@ -34,7 +29,7 @@ Here are the available input parameters for the Setup Yarn Berry Action:
 | `version` | String  | Specifies the version of Yarn to set up using this action. The specified version can be a tag (e.g., `stable`), a semver range (e.g., `4.x`), or a semver version (e.g., `4.1.0`). If not specified, it uses the default Yarn version. |
 | `cache`   | Boolean | Indicates whether to enable caching during Yarn installation. It defaults to `true`.                                                                                                                                                   |
 
-### Example
+## Example Usage
 
 Here's a basic example demonstrating how to utilize the Setup Yarn Berry Action to set up the default version of Yarn and install dependencies for the current Node.js project in the GitHub workflow:
 
@@ -56,7 +51,7 @@ jobs:
       # Add more steps as needed for your workflow
 ```
 
-#### Specifying Yarn Version
+### Specifying Yarn Version
 
 By default, this action will set up Yarn to the default version specified by the current Node.js project.
 However, you can override it by specifying it in the `version` input parameter as shown below:
@@ -70,7 +65,7 @@ However, you can override it by specifying it in the `version` input parameter a
 
 Refer to [this](https://yarnpkg.com/cli/set/version) for more information on the available versions that can be set up by this action.
 
-#### Disabling Caching
+### Disabling Caching
 
 By default, caching is always enabled when installing dependencies of the current Node.js project.
 To disable it, set the `cache` input parameter to `false` as shown below:
