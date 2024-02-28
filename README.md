@@ -5,73 +5,74 @@
 [![build status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/build.yaml?branch=main&label=build&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/build.yaml)
 [![test status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/test.yaml?branch=main&label=test&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/test.yaml)
 
-The Setup Yarn Berry Action is a [GitHub Action](https://github.com/features/actions) crafted for effortless installation of dependencies in a [Node.js](https://nodejs.org/en) package utilizing the [Yarn](https://yarnpkg.com/) package manager.
-Yarn is a fast, reliable, and secure dependency management tool for Node.js projects, offering features such as deterministic dependency resolution and offline capabilities.
+The Setup Yarn Berry Action is a [GitHub action](https://github.com/features/actions) designed to set up the [Yarn](https://yarnpkg.com/) package manager in the GitHub workflows of your [Node.js](https://nodejs.org/en) projects.
+This action sets up Yarn to a specified version and installs dependencies for the current Node.js project with cache support.
+Cache support provides fast setup for Node.js projects by using dependencies installed from previous runs.
 
-This action is designed to streamline GitHub workflows for Node.js projects, enabling quick and efficient installation by supporting the caching of dependencies. Whether you're working on a small project or a complex application, the Setup Yarn Berry Action ensures a smooth and accelerated dependency setup for your Node.js packages.
+This action currently only supports the berry version of Yarn (Yarn 2+).
+If your project still uses the classic version of Yarn, it is suggested to migrate to the berry version.
+Refer to [this](https://yarnpkg.com/migration/overview) for the migration guide.
 
 ## Key Features
 
-The Setup Yarn Berry Action provides the following key features:
+The Setup Yarn Berry Action offers the following key features:
 
-- Install dependencies for a Node.js package using Yarn.
-- Automatic Yarn enablement using [Corepack](https://nodejs.org/api/corepack.html) before installation.
-- Support for caching dependencies installation, enhancing workflow speed.
+- Sets up Yarn to a specified version.
+- Installs dependencies for the current Node.js project with cache support.
 
-## Usage
-
-To begin using the Setup Yarn Berry Action, refer to the [action.yaml](./action.yaml) file for detailed configuration options.
-If you are new to GitHub Actions, you can explore the [GitHub Actions guide](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) for a comprehensive overview.
-
-### Inputs
+## Available Inputs
 
 Here are the available input parameters for the Setup Yarn Berry Action:
 
-| Name      | Type              | Default | Description                                                                                                                                                                           |
-| --------- | ----------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `version` | String            |         | Specifies the version of Yarn to be set up using this action. The specified version can be a tag (e.g., `stable`), a semver range (e.g., `4.x`), or a semver version (e.g., `4.1.0`). |
-| `cache`   | `true` or `false` | `true`  | Indicates whether to use caching during Yarn installation.                                                                                                                            |
+| Name      | Type    | Description                                                                                                                                                                                                                            |
+| --------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `version` | String  | Specifies the version of Yarn to set up using this action. The specified version can be a tag (e.g., `stable`), a semver range (e.g., `4.x`), or a semver version (e.g., `4.1.0`). If not specified, it uses the default Yarn version. |
+| `cache`   | Boolean | Indicates whether to enable caching during Yarn installation. It defaults to `true`.                                                                                                                                                   |
 
-### Example
+## Example Usage
 
-Here's a basic example demonstrating how to utilize the Setup Yarn Berry Action to install dependencies for a Node.js package using Yarn in your GitHub Actions workflow:
+Here's a basic example demonstrating how to utilize the Setup Yarn Berry Action to set up the default version of Yarn and install dependencies for the current Node.js project in the GitHub workflow:
 
 ```yaml
-name: Build
+name: Node.js CI
 on:
   push:
 jobs:
   build:
-    name: Build Package
+    name: Build Project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
       - name: Setup Yarn
-        uses: threeal/setup-yarn-action@v1.0.0
+        uses: threeal/setup-yarn-action@v2.0.0
 
       # Add more steps as needed for your workflow
 ```
 
-#### Specifying Yarn Version
+### Specifying Yarn Version
 
-You can specify the Yarn version to be used by providing it as an input parameter:
+By default, this action will set up Yarn to the default version specified by the current Node.js project.
+However, you can override it by specifying it in the `version` input parameter as shown below:
 
 ```yaml
 - name: Setup Latest Yarn
-  uses: threeal/setup-yarn-action@v1.0.0
+  uses: threeal/setup-yarn-action@v2.0.0
   with:
     version: latest
 ```
 
-#### Disabling Caching
+Refer to [this](https://yarnpkg.com/cli/set/version) for more information on the available versions that can be set up by this action.
 
-By default, caching is enabled. To disable caching, set the `cache` input parameter to `false` as shown below:
+### Disabling Caching
+
+By default, caching is always enabled when installing dependencies of the current Node.js project.
+To disable it, set the `cache` input parameter to `false` as shown below:
 
 ```yaml
 - name: Setup Yarn Without Caching
-  uses: threeal/setup-yarn-action@v1.0.0
+  uses: threeal/setup-yarn-action@v2.0.0
   with:
     cache: false
 ```
