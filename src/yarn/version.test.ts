@@ -2,6 +2,7 @@ import { jest } from "@jest/globals";
 import "jest-extended";
 
 jest.unstable_mockModule("@actions/exec", () => ({
+  exec: jest.fn(),
   getExecOutput: jest.fn(),
 }));
 
@@ -40,6 +41,30 @@ describe("get Yarn version", () => {
     expect(getExecOutput).toHaveBeenCalledExactlyOnceWith(
       "corepack",
       ["yarn", "--version"],
+      {
+        silent: true,
+      },
+    );
+  });
+});
+
+describe("set Yarn version", () => {
+  beforeEach(async () => {
+    const { exec } = await import("@actions/exec");
+
+    jest.mocked(exec).mockReset();
+  });
+
+  it("should set Yarn version", async () => {
+    const { exec } = await import("@actions/exec");
+    const { setYarnVersion } = await import("./version.js");
+
+    const prom = setYarnVersion("stable");
+    await expect(prom).resolves.toBeUndefined();
+
+    expect(exec).toHaveBeenCalledExactlyOnceWith(
+      "yarn",
+      ["set", "version", "stable"],
       {
         silent: true,
       },
