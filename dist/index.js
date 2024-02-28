@@ -79650,6 +79650,7 @@ __webpack_async_result__();
 
 function getInputs() {
     return {
+        version: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("version"),
         cache: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("cache"),
     };
 }

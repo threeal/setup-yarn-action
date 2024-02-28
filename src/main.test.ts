@@ -97,7 +97,7 @@ describe("install Yarn dependencies", () => {
     jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
     jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
 
-    jest.mocked(getInputs).mockReturnValue({ cache: true });
+    jest.mocked(getInputs).mockReturnValue({ version: "", cache: true });
   });
 
   it("should failed to enable Yarn", async () => {
@@ -292,7 +292,7 @@ describe("install Yarn dependencies", () => {
     beforeEach(async () => {
       const { getInputs } = await import("./inputs.js");
 
-      jest.mocked(getInputs).mockReturnValue({ cache: false });
+      jest.mocked(getInputs).mockReturnValue({ version: "", cache: false });
     });
 
     it("should successfully install dependencies", async () => {

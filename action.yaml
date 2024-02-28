@@ -5,6 +5,8 @@ branding:
   icon: chevrons-right
   color: black
 inputs:
+  version:
+    description: The Yarn version to be set up
   cache:
     description: Use caching during Yarn installation
     default: true

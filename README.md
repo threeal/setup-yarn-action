@@ -27,9 +27,10 @@ If you are new to GitHub Actions, you can explore the [GitHub Actions guide](htt
 
 Here are the available input parameters for the Setup Yarn Berry Action:
 
-| Name    | Type              | Default | Description                                                |
-| ------- | ----------------- | ------- | ---------------------------------------------------------- |
-| `cache` | `true` or `false` | `true`  | Indicates whether to use caching during Yarn installation. |
+| Name      | Type              | Default | Description                                                                                                                                                                           |
+| --------- | ----------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `version` | String            |         | Specifies the version of Yarn to be set up using this action. The version specifier can be a tag (e.g., `stable`), a semver range (e.g., `4.x`), or a semver version (e.g., `4.1.0`). |
+| `cache`   | `true` or `false` | `true`  | Indicates whether to use caching during Yarn installation.                                                                                                                            |
 
 ### Example
 
