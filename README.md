@@ -36,44 +36,48 @@ Here are the available input parameters for the Setup Yarn Berry Action:
 
 ### Example
 
-Here's a basic example demonstrating how to utilize the Setup Yarn Berry Action to install dependencies for a Node.js package using Yarn in your GitHub Actions workflow:
+Here's a basic example demonstrating how to utilize the Setup Yarn Berry Action to set up the default version of Yarn and install dependencies for the current Node.js project in the GitHub workflow:
 
 ```yaml
-name: Build
+name: Node.js CI
 on:
   push:
 jobs:
   build:
-    name: Build Package
+    name: Build Project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
       - name: Setup Yarn
-        uses: threeal/setup-yarn-action@v1.0.0
+        uses: threeal/setup-yarn-action@v2.0.0
 
       # Add more steps as needed for your workflow
 ```
 
 #### Specifying Yarn Version
 
-You can specify the Yarn version to be used by providing it as an input parameter:
+By default, this action will set up Yarn to the default version specified by the current Node.js project.
+However, you can override it by specifying it in the `version` input parameter as shown below:
 
 ```yaml
 - name: Setup Latest Yarn
-  uses: threeal/setup-yarn-action@v1.0.0
+  uses: threeal/setup-yarn-action@v2.0.0
   with:
     version: latest
 ```
 
+Refer to [this](https://yarnpkg.com/cli/set/version) for more information on the available versions that can be set up by this action.
+
 #### Disabling Caching
 
-By default, caching is enabled. To disable caching, set the `cache` input parameter to `false` as shown below:
+By default, caching is always enabled when installing dependencies of the current Node.js project.
+To disable it, set the `cache` input parameter to `false` as shown below:
 
 ```yaml
 - name: Setup Yarn Without Caching
-  uses: threeal/setup-yarn-action@v1.0.0
+  uses: threeal/setup-yarn-action@v2.0.0
   with:
     cache: false
 ```
