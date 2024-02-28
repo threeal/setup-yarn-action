@@ -2,7 +2,7 @@ import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
-import { yarnInstall } from "./yarn/index.js";
+import { setYarnVersion, yarnInstall } from "./yarn/index.js";
 import { getInputs } from "./inputs.js";
 
 export async function main(): Promise<void> {
@@ -16,6 +16,17 @@ export async function main(): Promise<void> {
   } catch (err) {
     core.setFailed(`Failed to enable Yarn: ${err.message}`);
     return;
+  }
+
+  if (inputs.version != "") {
+    core.info("Setting Yarn version...");
+    try {
+      await setYarnVersion(inputs.version);
+      await corepackAssertYarnVersion();
+    } catch (err) {
+      core.setFailed(`Failed to set Yarn version: ${err.message}`);
+      return;
+    }
   }
 
   let cacheKey: string;

@@ -79650,6 +79650,7 @@ __webpack_async_result__();
 
 function getInputs() {
     return {
+        version: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("version"),
         cache: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("cache"),
     };
 }
@@ -79691,6 +79692,17 @@ async function main() {
     catch (err) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${err.message}`);
         return;
+    }
+    if (inputs.version != "") {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Setting Yarn version...");
+        try {
+            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .setYarnVersion */ .eS)(inputs.version);
+            await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to set Yarn version: ${err.message}`);
+            return;
+        }
     }
     let cacheKey;
     let cachePaths;
@@ -79772,13 +79784,12 @@ __webpack_async_result__();
 __nccwpck_require__.d(__webpack_exports__, {
   "io": () => (/* reexport */ getYarnConfig),
   "Vh": () => (/* reexport */ getYarnVersion),
+  "eS": () => (/* reexport */ setYarnVersion),
   "Or": () => (/* reexport */ yarnInstall)
 });
 
-// UNUSED EXPORTS: setYarnVersion
-
 // EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-exec-npm-1.1.1-90973d2f96-10c0.zip/node_modules/@actions/exec/lib/exec.js
-var lib_exec = __nccwpck_require__(4926);
+var exec = __nccwpck_require__(4926);
 ;// CONCATENATED MODULE: ./src/yarn/config.ts
 
 /**
@@ -79788,7 +79799,7 @@ var lib_exec = __nccwpck_require__(4926);
  * @returns A promise resolving to the value of the Yarn configuration.
  */
 async function getYarnConfig(name) {
-    const res = await (0,lib_exec.getExecOutput)("yarn", ["config", name, "--json"], {
+    const res = await (0,exec.getExecOutput)("yarn", ["config", name, "--json"], {
         silent: true,
     });
     return JSON.parse(res.stdout).effective;
@@ -79813,7 +79824,7 @@ function printYarnInstallOutput(output) {
     }
 }
 async function yarnInstall() {
-    await (0,lib_exec.exec)("yarn", ["install", "--json"], {
+    await (0,exec.exec)("yarn", ["install", "--json"], {
         silent: true,
         listeners: {
             stdline: (data) => {
@@ -79835,7 +79846,7 @@ async function yarnInstall() {
 async function getYarnVersion(options) {
     const commandLine = options?.corepack ? "corepack" : "yarn";
     const args = options?.corepack ? ["yarn", "--version"] : ["--version"];
-    const res = await (0,lib_exec.getExecOutput)(commandLine, args, {
+    const res = await (0,exec.getExecOutput)(commandLine, args, {
         silent: true,
     });
     return res.stdout.trim();
@@ -79847,7 +79858,7 @@ async function getYarnVersion(options) {
  * @returns A promise that resolves to nothing.
  */
 async function setYarnVersion(version) {
-    await exec("yarn", ["set", "version", version], { silent: true });
+    await (0,exec.exec)("yarn", ["set", "version", version], { silent: true });
 }
 
 ;// CONCATENATED MODULE: ./src/yarn/index.ts

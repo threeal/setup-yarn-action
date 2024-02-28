@@ -27,9 +27,10 @@ If you are new to GitHub Actions, you can explore the [GitHub Actions guide](htt
 
 Here are the available input parameters for the Setup Yarn Berry Action:
 
-| Name    | Type              | Default | Description                                                |
-| ------- | ----------------- | ------- | ---------------------------------------------------------- |
-| `cache` | `true` or `false` | `true`  | Indicates whether to use caching during Yarn installation. |
+| Name      | Type              | Default | Description                                                                                                                                                                           |
+| --------- | ----------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `version` | String            |         | Specifies the version of Yarn to be set up using this action. The specified version can be a tag (e.g., `stable`), a semver range (e.g., `4.x`), or a semver version (e.g., `4.1.0`). |
+| `cache`   | `true` or `false` | `true`  | Indicates whether to use caching during Yarn installation.                                                                                                                            |
 
 ### Example
 
@@ -51,6 +52,17 @@ jobs:
         uses: threeal/setup-yarn-action@v1.0.0
 
       # Add more steps as needed for your workflow
+```
+
+#### Specifying Yarn Version
+
+You can specify the Yarn version to be used by providing it as an input parameter:
+
+```yaml
+- name: Setup Latest Yarn
+  uses: threeal/setup-yarn-action@v1.0.0
+  with:
+    version: latest
 ```
 
 #### Disabling Caching
