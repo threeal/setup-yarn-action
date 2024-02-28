@@ -1,4 +1,4 @@
-import { getExecOutput } from "@actions/exec";
+import { exec, getExecOutput } from "@actions/exec";
 
 /**
  * Get the current Yarn version.
@@ -15,4 +15,14 @@ export async function getYarnVersion(options?: {
     silent: true,
   });
   return res.stdout.trim();
+}
+
+/**
+ * Set the Yarn version.
+ *
+ * @param version - The new Yarn version to set.
+ * @returns A promise that resolves to nothing.
+ */
+export async function setYarnVersion(version: string): Promise<void> {
+  await exec("yarn", ["set", "version", version], { silent: true });
 }
