@@ -14,6 +14,7 @@ jest.unstable_mockModule("@actions/core", () => ({
 }));
 
 jest.unstable_mockModule("./yarn/index.js", () => ({
+  setYarnVersion: jest.fn(),
   yarnInstall: jest.fn(),
 }));
 
@@ -38,7 +39,7 @@ describe("install Yarn dependencies", () => {
   beforeEach(async () => {
     const { restoreCache, saveCache } = await import("@actions/cache");
     const core = await import("@actions/core");
-    const { yarnInstall } = await import("./yarn/index.js");
+    const { setYarnVersion, yarnInstall } = await import("./yarn/index.js");
     const { getCacheKey, getCachePaths } = await import("./cache.js");
     const { corepackEnableYarn } = await import("./corepack.js");
     const { getInputs } = await import("./inputs.js");
@@ -88,6 +89,10 @@ describe("install Yarn dependencies", () => {
 
     jest.mocked(corepackEnableYarn).mockImplementation(async () => {
       core.info("Yarn enabled");
+    });
+
+    jest.mocked(setYarnVersion).mockImplementation(async (version) => {
+      core.info(`Yarn version set to ${version}`);
     });
 
     jest.mocked(yarnInstall).mockImplementation(async () => {
@@ -286,6 +291,65 @@ describe("install Yarn dependencies", () => {
       "Cache unavailable-key saved",
       "::endgroup::",
     ]);
+  });
+
+  describe("with version specified", () => {
+    beforeEach(async () => {
+      const { getInputs } = await import("./inputs.js");
+
+      jest.mocked(getInputs).mockReturnValue({
+        version: "stable",
+        cache: true,
+      });
+    });
+
+    it("should failed to set Yarn version", async () => {
+      const { setYarnVersion } = await import("./yarn/index.js");
+      const { main } = await import("./main.js");
+
+      jest.mocked(setYarnVersion).mockRejectedValue(new Error("some error"));
+
+      await main();
+
+      expect(failed).toBe(true);
+      expect(logs).toStrictEqual([
+        "Getting action inputs...",
+        "Enabling Yarn...",
+        "Yarn enabled",
+        "Setting Yarn version...",
+        "Failed to set Yarn version: some error",
+      ]);
+    });
+
+    it("should successfully install dependencies", async () => {
+      const { main } = await import("./main.js");
+
+      await main();
+
+      expect(failed).toBe(false);
+      expect(logs).toStrictEqual([
+        "Getting action inputs...",
+        "Enabling Yarn...",
+        "Yarn enabled",
+        "Setting Yarn version...",
+        "Yarn version set to stable",
+        "::group::Getting cache key",
+        "::endgroup::",
+        "::group::Getting cache paths",
+        "::endgroup::",
+        "::group::Restoring cache",
+        "Cache not found",
+        "::endgroup::",
+        "::group::Installing dependencies",
+        "Dependencies installed",
+        "::endgroup::",
+        "::group::Saving cache",
+        "Compressing some/path...",
+        "Compressing another/path...",
+        "Cache unavailable-key saved",
+        "::endgroup::",
+      ]);
+    });
   });
 
   describe("with cache disabled", () => {
