@@ -74,6 +74,45 @@ jobs:
       - name: Build Package
         run: yarn pack
 
+  test-action-with-specific-version:
+    name: Test Action With Specific Version
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows, ubuntu, macos]
+    steps:
+      - name: Checkout Package
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: threeal/nodejs-starter
+          ref: v1.0.0
+
+      - name: Alter Package
+        shell: bash
+        run: jq 'del(.packageManager)' package.json > package.json.tmp && mv package.json.tmp package.json
+
+      - name: Checkout Action
+        uses: actions/checkout@v4.1.1
+        with:
+          path: setup-yarn-action
+          sparse-checkout: |
+            action.yaml
+            dist
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Yarn
+        uses: ./setup-yarn-action
+        with:
+          version: 4.0.2
+
+      - name: Check Version
+        shell: bash
+        run: test $(yarn --version) == 4.0.2
+
+      - name: Build Package
+        run: yarn pack
+
   test-action-without-cache:
     name: Test Action Without Cache
     runs-on: ${{ matrix.os }}-latest
