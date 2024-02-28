@@ -5,10 +5,13 @@
 [![build status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/build.yaml?branch=main&label=build&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/build.yaml)
 [![test status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/test.yaml?branch=main&label=test&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/test.yaml)
 
-The Setup Yarn Berry Action is a [GitHub Action](https://github.com/features/actions) crafted for effortless installation of dependencies in a [Node.js](https://nodejs.org/en) package utilizing the [Yarn](https://yarnpkg.com/) package manager.
-Yarn is a fast, reliable, and secure dependency management tool for Node.js projects, offering features such as deterministic dependency resolution and offline capabilities.
+The Setup Yarn Berry Action is a [GitHub action](https://github.com/features/actions) designed to set up the [Yarn](https://yarnpkg.com/) package manager in the GitHub workflows of your [Node.js](https://nodejs.org/en) projects.
+This action sets up Yarn to a specified version and installs dependencies for the current Node.js project with cache support.
+Cache support provides fast setup for Node.js projects by using dependencies installed from previous runs.
 
-This action is designed to streamline GitHub workflows for Node.js projects, enabling quick and efficient installation by supporting the caching of dependencies. Whether you're working on a small project or a complex application, the Setup Yarn Berry Action ensures a smooth and accelerated dependency setup for your Node.js packages.
+This action currently only supports the berry version of Yarn (Yarn 2+).
+If your project still uses the classic version of Yarn, it is suggested to migrate to the berry version.
+Refer to [this](https://yarnpkg.com/migration/overview) for the migration guide.
 
 ## Key Features
 
