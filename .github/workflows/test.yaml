@@ -18,7 +18,7 @@ jobs:
           node-version: latest
 
       - name: Setup Yarn
-        uses: threeal/setup-yarn-action@main
+        uses: threeal/setup-yarn-action@v2.0.0
 
       - name: Check Format
         run: |
@@ -41,7 +41,7 @@ jobs:
           node-version: latest
 
       - name: Setup Yarn
-        uses: threeal/setup-yarn-action@v1.0.0
+        uses: threeal/setup-yarn-action@v2.0.0
 
       - name: Test Package
         run: yarn test
