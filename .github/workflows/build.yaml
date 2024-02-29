@@ -18,7 +18,7 @@ jobs:
           node-version: latest
 
       - name: Setup Yarn
-        uses: threeal/setup-yarn-action@main
+        uses: threeal/setup-yarn-action@v2.0.0
 
       - name: Build Package
         run: |
