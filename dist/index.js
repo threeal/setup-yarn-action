@@ -79683,7 +79683,14 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 async function main() {
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Getting action inputs...");
-    const inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_5__/* .getInputs */ .G)();
+    let inputs;
+    try {
+        inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_5__/* .getInputs */ .G)();
+    }
+    catch (err) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get action inputs: ${err.message}`);
+        return;
+    }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
     try {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ ._)();
