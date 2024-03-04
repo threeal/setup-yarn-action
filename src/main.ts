@@ -3,11 +3,17 @@ import * as core from "@actions/core";
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
 import { setYarnVersion, yarnInstall } from "./yarn/index.js";
-import { getInputs } from "./inputs.js";
+import { getInputs, Inputs } from "./inputs.js";
 
 export async function main(): Promise<void> {
   core.info("Getting action inputs...");
-  const inputs = getInputs();
+  let inputs: Inputs;
+  try {
+    inputs = getInputs();
+  } catch (err) {
+    core.setFailed(`Failed to get action inputs: ${err.message}`);
+    return;
+  }
 
   core.info("Enabling Yarn...");
   try {

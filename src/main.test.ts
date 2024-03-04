@@ -105,6 +105,23 @@ describe("install Yarn dependencies", () => {
     jest.mocked(getInputs).mockReturnValue({ version: "", cache: true });
   });
 
+  it("should failed to get action inputs", async () => {
+    const { getInputs } = await import("./inputs.js");
+    const { main } = await import("./main.js");
+
+    jest.mocked(getInputs).mockImplementation(() => {
+      throw new Error("some error");
+    });
+
+    await main();
+
+    expect(failed).toBe(true);
+    expect(logs).toStrictEqual([
+      "Getting action inputs...",
+      "Failed to get action inputs: some error",
+    ]);
+  });
+
   it("should failed to enable Yarn", async () => {
     const { corepackEnableYarn } = await import("./corepack.js");
     const { main } = await import("./main.js");

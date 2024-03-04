@@ -1,6 +1,6 @@
 import { getBooleanInput, getInput } from "@actions/core";
 
-interface Inputs {
+export interface Inputs {
   version: string;
   cache: boolean;
 }
