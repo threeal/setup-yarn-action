@@ -1,5 +1,6 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
+import { getErrorMessage } from "catched-error-message";
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
 import { setYarnVersion, yarnInstall } from "./yarn/index.js";
@@ -11,7 +12,7 @@ export async function main(): Promise<void> {
   try {
     inputs = getInputs();
   } catch (err) {
-    core.setFailed(`Failed to get action inputs: ${err.message}`);
+    core.setFailed(`Failed to get action inputs: ${getErrorMessage(err)}`);
     return;
   }
 
@@ -20,7 +21,7 @@ export async function main(): Promise<void> {
     await corepackEnableYarn();
     await corepackAssertYarnVersion();
   } catch (err) {
-    core.setFailed(`Failed to enable Yarn: ${err.message}`);
+    core.setFailed(`Failed to enable Yarn: ${getErrorMessage(err)}`);
     return;
   }
 
@@ -30,7 +31,7 @@ export async function main(): Promise<void> {
       await setYarnVersion(inputs.version);
       await corepackAssertYarnVersion();
     } catch (err) {
-      core.setFailed(`Failed to set Yarn version: ${err.message}`);
+      core.setFailed(`Failed to set Yarn version: ${getErrorMessage(err)}`);
       return;
     }
   }
@@ -43,7 +44,7 @@ export async function main(): Promise<void> {
       cacheKey = await getCacheKey();
     } catch (err) {
       core.endGroup();
-      core.setFailed(`Failed to get cache key: ${err.message}`);
+      core.setFailed(`Failed to get cache key: ${getErrorMessage(err)}`);
       return;
     }
     core.endGroup();
@@ -53,7 +54,7 @@ export async function main(): Promise<void> {
       cachePaths = await getCachePaths();
     } catch (err) {
       core.endGroup();
-      core.setFailed(`Failed to get cache paths: ${err.message}`);
+      core.setFailed(`Failed to get cache paths: ${getErrorMessage(err)}`);
       return;
     }
     core.endGroup();
@@ -68,7 +69,7 @@ export async function main(): Promise<void> {
       }
     } catch (err) {
       core.endGroup();
-      core.setFailed(`Failed to restore cache: ${err.message}`);
+      core.setFailed(`Failed to restore cache: ${getErrorMessage(err)}`);
       return;
     }
     core.endGroup();
@@ -84,7 +85,7 @@ export async function main(): Promise<void> {
     await yarnInstall();
   } catch (err) {
     core.endGroup();
-    core.setFailed(`Failed to install dependencies: ${err.message}`);
+    core.setFailed(`Failed to install dependencies: ${getErrorMessage(err)}`);
     return;
   }
   core.endGroup();
@@ -95,7 +96,7 @@ export async function main(): Promise<void> {
       await cache.saveCache(cachePaths.slice(), cacheKey);
     } catch (err) {
       core.endGroup();
-      core.setFailed(`Failed to save cache: ${err.message}`);
+      core.setFailed(`Failed to save cache: ${getErrorMessage(err)}`);
       return;
     }
     core.endGroup();
