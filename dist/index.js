@@ -79487,14 +79487,16 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2340);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6242);
+/* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(144);
+/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(6242);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7561);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(612);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_os__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(991);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_4__]);
-hasha__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([hasha__WEBPACK_IMPORTED_MODULE_5__]);
+hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
 
 
 
@@ -79508,13 +79510,13 @@ async function getCacheKey() {
         cacheKey += `-${version}`;
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get Yarn version: ${err.message}`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
         throw new Error("Failed to get Yarn version");
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
     try {
         if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
-            const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_4__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
+            const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
             cacheKey += `-${hash}`;
         }
         else {
@@ -79522,7 +79524,7 @@ async function getCacheKey() {
         }
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to calculate lock file hash: ${err.message}`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to calculate lock file hash: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
         throw new Error("Failed to calculate lock file hash");
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
@@ -79544,7 +79546,7 @@ async function getCachePaths() {
             cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get ${name}: ${err.message}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get ${name}: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
             throw new Error(`Failed to get ${name}`);
         }
     }
@@ -79669,12 +79671,14 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_cache__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2340);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(144);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8120);
 /* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(5758);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(991);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(8344);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
 
 
 
@@ -79688,7 +79692,7 @@ async function main() {
         inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_5__/* .getInputs */ .G)();
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get action inputs: ${err.message}`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
         return;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
@@ -79697,7 +79701,7 @@ async function main() {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${err.message}`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
         return;
     }
     if (inputs.version != "") {
@@ -79707,7 +79711,7 @@ async function main() {
             await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to set Yarn version: ${err.message}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to set Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             return;
         }
     }
@@ -79720,7 +79724,7 @@ async function main() {
         }
         catch (err) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache key: ${err.message}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             return;
         }
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
@@ -79730,7 +79734,7 @@ async function main() {
         }
         catch (err) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache paths: ${err.message}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             return;
         }
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
@@ -79745,7 +79749,7 @@ async function main() {
         }
         catch (err) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to restore cache: ${err.message}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             return;
         }
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
@@ -79760,7 +79764,7 @@ async function main() {
     }
     catch (err) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to install dependencies: ${err.message}`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
         return;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
@@ -79771,7 +79775,7 @@ async function main() {
         }
         catch (err) {
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to save cache: ${err.message}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             return;
         }
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
@@ -81724,6 +81728,18 @@ function parseParams (str) {
 }
 
 module.exports = parseParams
+
+
+/***/ }),
+
+/***/ 144:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "e": () => (/* binding */ r)
+/* harmony export */ });
+function r(r){return function(r){if("object"==typeof(e=r)&&null!==e&&"message"in e&&"string"==typeof e.message)return r;var e;try{return new Error(JSON.stringify(r))}catch(e){return new Error(String(r))}}(r).message}
+//# sourceMappingURL=index.esm.js.map
 
 
 /***/ }),

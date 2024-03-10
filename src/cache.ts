@@ -1,4 +1,5 @@
 import * as core from "@actions/core";
+import { getErrorMessage } from "catched-error-message";
 import { hashFile } from "hasha";
 import fs from "node:fs";
 import os from "node:os";
@@ -12,7 +13,7 @@ export async function getCacheKey(): Promise<string> {
     const version = await getYarnVersion({ corepack: true });
     cacheKey += `-${version}`;
   } catch (err) {
-    core.setFailed(`Failed to get Yarn version: ${err.message}`);
+    core.setFailed(`Failed to get Yarn version: ${getErrorMessage(err)}`);
     throw new Error("Failed to get Yarn version");
   }
 
@@ -25,7 +26,9 @@ export async function getCacheKey(): Promise<string> {
       core.warning(`Lock file could not be found, using empty hash`);
     }
   } catch (err) {
-    core.setFailed(`Failed to calculate lock file hash: ${err.message}`);
+    core.setFailed(
+      `Failed to calculate lock file hash: ${getErrorMessage(err)}`,
+    );
     throw new Error("Failed to calculate lock file hash");
   }
 
@@ -49,7 +52,7 @@ export async function getCachePaths(): Promise<string[]> {
     try {
       cachePaths.push(await getYarnConfig(config));
     } catch (err) {
-      core.setFailed(`Failed to get ${name}: ${err.message}`);
+      core.setFailed(`Failed to get ${name}: ${getErrorMessage(err)}`);
       throw new Error(`Failed to get ${name}`);
     }
   }
