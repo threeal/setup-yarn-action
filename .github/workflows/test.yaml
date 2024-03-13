@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -59,12 +59,12 @@ jobs:
         os: [windows, ubuntu, macos]
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           repository: threeal/nodejs-starter
 
       - name: Checkout Action
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           path: setup-yarn-action
           sparse-checkout: |
@@ -87,7 +87,7 @@ jobs:
         os: [windows, ubuntu, macos]
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           repository: threeal/nodejs-starter
           ref: v1.0.0
@@ -97,7 +97,7 @@ jobs:
         run: jq 'del(.packageManager)' package.json > package.json.tmp && mv package.json.tmp package.json
 
       - name: Checkout Action
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           path: setup-yarn-action
           sparse-checkout: |
@@ -126,12 +126,12 @@ jobs:
         os: [windows, ubuntu, macos]
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           repository: threeal/nodejs-starter
 
       - name: Checkout Action
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           path: setup-yarn-action
           sparse-checkout: |
@@ -152,12 +152,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           repository: threeal/nodejs-starter
 
       - name: Checkout Action
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
         with:
           path: setup-yarn-action
           sparse-checkout: |
