@@ -68,7 +68,7 @@ jobs:
         with:
           path: setup-yarn-action
           sparse-checkout: |
-            action.yaml
+            action.yml
             dist
           sparse-checkout-cone-mode: false
 
@@ -101,7 +101,7 @@ jobs:
         with:
           path: setup-yarn-action
           sparse-checkout: |
-            action.yaml
+            action.yml
             dist
           sparse-checkout-cone-mode: false
 
@@ -135,7 +135,7 @@ jobs:
         with:
           path: setup-yarn-action
           sparse-checkout: |
-            action.yaml
+            action.yml
             dist
           sparse-checkout-cone-mode: false
 
@@ -161,7 +161,7 @@ jobs:
         with:
           path: setup-yarn-action
           sparse-checkout: |
-            action.yaml
+            action.yml
             dist
           sparse-checkout-cone-mode: false
 
