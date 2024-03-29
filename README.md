@@ -1,10 +1,5 @@
 # Setup Yarn Berry Action
 
-[![version](https://img.shields.io/github/v/release/threeal/setup-yarn-action?style=flat-square)](https://github.com/threeal/setup-yarn-action/releases)
-[![license](https://img.shields.io/github/license/threeal/setup-yarn-action?style=flat-square)](./LICENSE)
-[![build status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/build.yaml?branch=main&label=build&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/build.yaml)
-[![test status](https://img.shields.io/github/actions/workflow/status/threeal/setup-yarn-action/test.yaml?branch=main&label=test&style=flat-square)](https://github.com/threeal/setup-yarn-action/actions/workflows/test.yaml)
-
 The Setup Yarn Berry Action is a [GitHub action](https://github.com/features/actions) designed to set up the [Yarn](https://yarnpkg.com/) package manager in the GitHub workflows of your [Node.js](https://nodejs.org/en) projects.
 This action sets up Yarn to a specified version and installs dependencies for the current Node.js project with cache support.
 Cache support provides fast setup for Node.js projects by using dependencies installed from previous runs.
