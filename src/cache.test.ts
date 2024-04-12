@@ -22,7 +22,7 @@ jest.unstable_mockModule("./yarn.js", () => ({
   getYarnVersion: jest.fn(),
 }));
 
-let failed: boolean = false;
+let failed = false;
 let logs: (string | Error)[] = [];
 
 beforeEach(async () => {

@@ -652,6 +652,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/js@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@eslint/js@npm:9.0.0"
+  checksum: 10c0/ec3242a60a2525d2785d96d1e95b8060235f47f3b953aa81626968591ef8c1eb4f7f8b3647db2c97fdfa524eace949a5695be50521f64b8dcc4ed3b493ee409e
+  languageName: node
+  linkType: hard
+
 "@fastify/busboy@npm:^2.0.0":
   version: 2.1.0
   resolution: "@fastify/busboy@npm:2.1.0"
@@ -1229,7 +1236,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^7.6.0":
+"@typescript-eslint/eslint-plugin@npm:7.6.0":
   version: 7.6.0
   resolution: "@typescript-eslint/eslint-plugin@npm:7.6.0"
   dependencies:
@@ -1254,7 +1261,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^7.6.0":
+"@typescript-eslint/parser@npm:7.6.0":
   version: 7.6.0
   resolution: "@typescript-eslint/parser@npm:7.6.0"
   dependencies:
@@ -4294,11 +4301,10 @@ __metadata:
     "@actions/cache": "npm:^3.2.4"
     "@actions/core": "npm:^1.10.1"
     "@actions/exec": "npm:^1.1.1"
+    "@eslint/js": "npm:^9.0.0"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.11.30"
-    "@typescript-eslint/eslint-plugin": "npm:^7.6.0"
-    "@typescript-eslint/parser": "npm:^7.6.0"
     "@vercel/ncc": "npm:^0.38.1"
     catched-error-message: "npm:^0.0.1"
     eslint: "npm:^8.57.0"
@@ -4308,6 +4314,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     ts-jest: "npm:^29.1.2"
     typescript: "npm:^5.4.5"
+    typescript-eslint: "npm:^7.6.0"
   languageName: unknown
   linkType: soft
 
@@ -4766,6 +4773,22 @@ __metadata:
   version: 4.8.3
   resolution: "type-fest@npm:4.8.3"
   checksum: 10c0/978edf5d00651e944b8c4d50f765a4cc09126e7fb90b46ed157265012e2f8aeb178c0ca493a175213ffa1705a795e4b5579c2ef4bc27bdd3462cdceccbf386f7
+  languageName: node
+  linkType: hard
+
+"typescript-eslint@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "typescript-eslint@npm:7.6.0"
+  dependencies:
+    "@typescript-eslint/eslint-plugin": "npm:7.6.0"
+    "@typescript-eslint/parser": "npm:7.6.0"
+    "@typescript-eslint/utils": "npm:7.6.0"
+  peerDependencies:
+    eslint: ^8.56.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/1950ae59069860cc802de9c1c4f15013099b677b47cabc8dc24200dbe9a4a5a3db5ff9b88e6813658b089e16294d75835b6c17d13a445cf29c954a71eb27ff6f
   languageName: node
   linkType: hard
 

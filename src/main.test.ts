@@ -33,7 +33,7 @@ jest.unstable_mockModule("./inputs.js", () => ({
 }));
 
 describe("install Yarn dependencies", () => {
-  let failed: boolean = false;
+  let failed = false;
   let logs: (string | Error)[] = [];
 
   beforeEach(async () => {
