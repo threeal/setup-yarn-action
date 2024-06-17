@@ -25,4 +25,4 @@ jobs:
       - name: Build Package
         run: |
           yarn build
-          git diff --exit-code --text HEAD
+          git diff --exit-code HEAD
