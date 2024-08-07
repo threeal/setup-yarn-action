@@ -80,9 +80,11 @@ it("should install package using Yarn", async () => {
   const { yarnInstall } = await import("./install.js");
 
   jest.mocked(exec).mockImplementation(async (commandLine, args, options) => {
-    options?.listeners?.stdline(
-      `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
-    );
+    if (options?.listeners?.stdline !== undefined) {
+      options?.listeners?.stdline(
+        `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
+      );
+    }
     return 0;
   });
 
