@@ -80386,8 +80386,8 @@ async function main() {
             return;
         }
     }
-    let cacheKey;
-    let cachePaths;
+    let cacheKey = "";
+    let cachePaths = [];
     if (inputs.cache) {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache key");
         try {

@@ -36,8 +36,8 @@ export async function main(): Promise<void> {
     }
   }
 
-  let cacheKey: string;
-  let cachePaths: string[];
+  let cacheKey = "";
+  let cachePaths: string[] = [];
   if (inputs.cache) {
     core.startGroup("Getting cache key");
     try {
