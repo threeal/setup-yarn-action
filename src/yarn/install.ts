@@ -1,5 +1,5 @@
-import * as core from "@actions/core";
 import { exec } from "@actions/exec";
+import { logError, logInfo, logWarning } from "gha-utils";
 
 export interface YarnInstallOutput {
   type: "info" | "warning" | "error";
@@ -11,13 +11,13 @@ export interface YarnInstallOutput {
 export function printYarnInstallOutput(output: YarnInstallOutput): void {
   switch (output.type) {
     case "info":
-      core.info(`${output.displayName}: ${output.indent}${output.data}`);
+      logInfo(`${output.displayName}: ${output.indent}${output.data}`);
       break;
     case "warning":
-      core.warning(`${output.data} (${output.displayName})`);
+      logWarning(`${output.data} (${output.displayName})`);
       break;
     case "error":
-      core.error(`${output.data} (${output.displayName})`);
+      logError(`${output.data} (${output.displayName})`);
       break;
   }
 }

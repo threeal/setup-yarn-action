@@ -7,6 +7,10 @@ jest.unstable_mockModule("@actions/exec", () => ({
   exec: jest.fn(),
 }));
 
+jest.unstable_mockModule("gha-utils", () => ({
+  addPath: jest.fn(),
+}));
+
 jest.unstable_mockModule("node:fs", () => ({
   mkdirSync: jest.fn(),
 }));
@@ -42,6 +46,7 @@ describe("assert Yarn version enabled by Corepack", () => {
 describe("enable Yarn using Corepack", () => {
   it("should enable Yarn", async () => {
     const { exec } = await import("@actions/exec");
+    const { addPath } = await import("gha-utils");
     const { mkdirSync } = await import("node:fs");
     const { corepackEnableYarn } = await import("./corepack.js");
 
@@ -59,5 +64,6 @@ describe("enable Yarn using Corepack", () => {
         silent: true,
       },
     );
+    expect(addPath).toHaveBeenCalledExactlyOnceWith(installDir);
   });
 });

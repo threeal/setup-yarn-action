@@ -5,12 +5,12 @@ jest.unstable_mockModule("@actions/cache", () => ({
   saveCache: jest.fn(),
 }));
 
-jest.unstable_mockModule("@actions/core", () => ({
-  endGroup: jest.fn(),
-  info: jest.fn(),
-  setFailed: jest.fn(),
-  startGroup: jest.fn(),
-  warning: jest.fn(),
+jest.unstable_mockModule("gha-utils", () => ({
+  beginLogGroup: jest.fn(),
+  endLogGroup: jest.fn(),
+  logError: jest.fn(),
+  logInfo: jest.fn(),
+  logWarning: jest.fn(),
 }));
 
 jest.unstable_mockModule("./yarn/index.js", () => ({
@@ -33,26 +33,25 @@ jest.unstable_mockModule("./inputs.js", () => ({
 }));
 
 describe("install Yarn dependencies", () => {
-  let failed = false;
-  let logs: (string | Error)[] = [];
+  let logs: unknown[] = [];
 
   beforeEach(async () => {
     const { restoreCache, saveCache } = await import("@actions/cache");
-    const core = await import("@actions/core");
+    const gha = await import("gha-utils");
     const { setYarnVersion, yarnInstall } = await import("./yarn/index.js");
     const { getCacheKey, getCachePaths } = await import("./cache.js");
     const { corepackEnableYarn } = await import("./corepack.js");
     const { getInputs } = await import("./inputs.js");
 
-    failed = false;
+    process.exitCode = 0;
     logs = [];
 
     jest.mocked(restoreCache).mockImplementation(async (paths, primaryKey) => {
       if (primaryKey == "some-key") {
         for (const path of paths) {
-          core.info(`Extracting ${path}...`);
+          gha.logInfo(`Extracting ${path}...`);
         }
-        core.info(`Cache ${primaryKey} restored`);
+        gha.logInfo(`Cache ${primaryKey} restored`);
         return primaryKey;
       }
       return undefined;
@@ -60,43 +59,42 @@ describe("install Yarn dependencies", () => {
 
     jest.mocked(saveCache).mockImplementation(async (paths, key) => {
       for (const path of paths) {
-        core.info(`Compressing ${path}...`);
+        gha.logInfo(`Compressing ${path}...`);
       }
-      core.info(`Cache ${key} saved`);
+      gha.logInfo(`Cache ${key} saved`);
       return 0;
     });
 
-    jest.mocked(core.endGroup).mockImplementation(() => {
-      logs.push("::endgroup::");
-    });
-
-    jest.mocked(core.info).mockImplementation((message) => {
-      logs.push(message);
-    });
-
-    jest.mocked(core.setFailed).mockImplementation((message) => {
-      failed = true;
-      logs.push(message);
-    });
-
-    jest.mocked(core.startGroup).mockImplementation((name) => {
+    jest.mocked(gha.beginLogGroup).mockImplementation((name) => {
       logs.push(`::group::${name}`);
     });
 
-    jest.mocked(core.warning).mockImplementation((message) => {
+    jest.mocked(gha.endLogGroup).mockImplementation(() => {
+      logs.push("::endgroup::");
+    });
+
+    jest.mocked(gha.logError).mockImplementation((message) => {
+      logs.push(message);
+    });
+
+    jest.mocked(gha.logInfo).mockImplementation((message) => {
+      logs.push(message);
+    });
+
+    jest.mocked(gha.logWarning).mockImplementation((message) => {
       logs.push(message);
     });
 
     jest.mocked(corepackEnableYarn).mockImplementation(async () => {
-      core.info("Yarn enabled");
+      gha.logInfo("Yarn enabled");
     });
 
     jest.mocked(setYarnVersion).mockImplementation(async (version) => {
-      core.info(`Yarn version set to ${version}`);
+      gha.logInfo(`Yarn version set to ${version}`);
     });
 
     jest.mocked(yarnInstall).mockImplementation(async () => {
-      core.info("Dependencies installed");
+      gha.logInfo("Dependencies installed");
     });
 
     jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
@@ -115,7 +113,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Failed to get action inputs: some error",
@@ -130,7 +128,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -146,7 +144,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -165,7 +163,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -186,7 +184,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -209,7 +207,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(false);
+    expect(process.exitCode).toBe(0);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -235,7 +233,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -261,7 +259,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(true);
+    expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -287,7 +285,7 @@ describe("install Yarn dependencies", () => {
 
     await main();
 
-    expect(failed).toBe(false);
+    expect(process.exitCode).toBe(0);
     expect(logs).toStrictEqual([
       "Getting action inputs...",
       "Enabling Yarn...",
@@ -328,7 +326,7 @@ describe("install Yarn dependencies", () => {
 
       await main();
 
-      expect(failed).toBe(true);
+      expect(process.exitCode).toBe(1);
       expect(logs).toStrictEqual([
         "Getting action inputs...",
         "Enabling Yarn...",
@@ -343,7 +341,7 @@ describe("install Yarn dependencies", () => {
 
       await main();
 
-      expect(failed).toBe(false);
+      expect(process.exitCode).toBe(0);
       expect(logs).toStrictEqual([
         "Getting action inputs...",
         "Enabling Yarn...",
@@ -381,7 +379,7 @@ describe("install Yarn dependencies", () => {
 
       await main();
 
-      expect(failed).toBe(false);
+      expect(process.exitCode).toBe(0);
       expect(logs).toStrictEqual([
         "Getting action inputs...",
         "Enabling Yarn...",

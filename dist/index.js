@@ -80156,9 +80156,8 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */   "N": () => (/* binding */ getCachePaths),
 /* harmony export */   "a": () => (/* binding */ getCacheKey)
 /* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2340);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(144);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2748);
 /* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4535);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7561);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
@@ -80175,30 +80174,30 @@ hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (awa
 
 async function getCacheKey() {
     let cacheKey = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}`;
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Getting Yarn version...");
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)("Getting Yarn version...");
     try {
         const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)({ corepack: true });
         cacheKey += `-${version}`;
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(`Failed to get Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
         throw new Error("Failed to get Yarn version");
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Calculating lock file hash...");
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)("Calculating lock file hash...");
     try {
         if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
             const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
             cacheKey += `-${hash}`;
         }
         else {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Lock file could not be found, using empty hash`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logWarning */ .KE)(`Lock file could not be found, using empty hash`);
         }
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to calculate lock file hash: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(`Failed to calculate lock file hash: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
         throw new Error("Failed to calculate lock file hash");
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache key: ${cacheKey}`);
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)(`Using cache key: ${cacheKey}`);
     return cacheKey;
 }
 async function getCachePaths() {
@@ -80212,16 +80211,16 @@ async function getCachePaths() {
         { name: "Yarn virtual folder", config: "virtualFolder" },
     ];
     for (const { name, config } of yarnConfigs) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Getting ${name}...`);
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)(`Getting ${name}...`);
         try {
             cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to get ${name}: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(`Failed to get ${name}: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
             throw new Error(`Failed to get ${name}`);
         }
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
     return cachePaths;
 }
 
@@ -80230,30 +80229,23 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 5758:
+/***/ 8098:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
-
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "I": () => (/* binding */ corepackAssertYarnVersion),
-  "_": () => (/* binding */ corepackEnableYarn)
-});
-
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-core-npm-1.10.1-3cb1000b4d-10c0.zip/node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2340);
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-exec-npm-1.1.1-90973d2f96-10c0.zip/node_modules/@actions/exec/lib/exec.js
-var exec = __nccwpck_require__(4926);
-// EXTERNAL MODULE: external "node:fs"
-var external_node_fs_ = __nccwpck_require__(7561);
-// EXTERNAL MODULE: external "node:os"
-var external_node_os_ = __nccwpck_require__(612);
-;// CONCATENATED MODULE: external "node:path"
-const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
-var external_node_path_default = /*#__PURE__*/__nccwpck_require__.n(external_node_path_namespaceObject);
-// EXTERNAL MODULE: ./src/yarn/index.ts + 3 modules
-var yarn = __nccwpck_require__(991);
-;// CONCATENATED MODULE: ./src/corepack.ts
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "I": () => (/* binding */ corepackAssertYarnVersion),
+/* harmony export */   "_": () => (/* binding */ corepackEnableYarn)
+/* harmony export */ });
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4926);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2748);
+/* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7561);
+/* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(612);
+/* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_os__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(9411);
+/* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(node_path__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(991);
 
 
 
@@ -80270,8 +80262,8 @@ var yarn = __nccwpck_require__(991);
  * @throws If the `yarn` command is using a different version of Yarn.
  */
 async function corepackAssertYarnVersion() {
-    const version = await (0,yarn/* getYarnVersion */.Vh)();
-    const corepackVersion = await (0,yarn/* getYarnVersion */.Vh)({ corepack: true });
+    const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .getYarnVersion */ .Vh)();
+    const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .getYarnVersion */ .Vh)({ corepack: true });
     if (version !== corepackVersion) {
         throw new Error(`The \`yarn\` command is using a different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
     }
@@ -80285,10 +80277,10 @@ async function corepackAssertYarnVersion() {
  * @returns A promise that resolves to nothing.
  */
 async function corepackEnableYarn() {
-    const corepackDir = external_node_path_default().join((0,external_node_os_.homedir)(), ".corepack");
-    (0,external_node_fs_.mkdirSync)(corepackDir, { recursive: true });
-    await (0,exec.exec)("corepack", ["enable", "--install-directory", corepackDir, "yarn"], { silent: true });
-    (0,core.addPath)(corepackDir);
+    const corepackDir = node_path__WEBPACK_IMPORTED_MODULE_4___default().join((0,node_os__WEBPACK_IMPORTED_MODULE_3__.homedir)(), ".corepack");
+    (0,node_fs__WEBPACK_IMPORTED_MODULE_2__.mkdirSync)(corepackDir, { recursive: true });
+    await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "--install-directory", corepackDir, "yarn"], { silent: true });
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .addPath */ .QM)(corepackDir);
 }
 
 
@@ -80298,14 +80290,16 @@ async function corepackEnableYarn() {
 /***/ ((module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2340);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2748);
 /* harmony import */ var _main_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(3990);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_main_js__WEBPACK_IMPORTED_MODULE_1__]);
 _main_js__WEBPACK_IMPORTED_MODULE_1__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
 
-(0,_main_js__WEBPACK_IMPORTED_MODULE_1__/* .main */ .D)().catch((err) => _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(err));
+(0,_main_js__WEBPACK_IMPORTED_MODULE_1__/* .main */ .D)().catch((err) => {
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(err);
+    process.exit(1);
+});
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
@@ -80318,13 +80312,12 @@ __webpack_async_result__();
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   "G": () => (/* binding */ getInputs)
 /* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2340);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2748);
 
 function getInputs() {
     return {
-        version: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("version"),
-        cache: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)("cache"),
+        version: (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .Np)("version"),
+        cache: (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .Np)("cache") === "true",
     };
 }
 
@@ -80340,11 +80333,10 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ });
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(3193);
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_cache__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2340);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(144);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2748);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8120);
-/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(5758);
+/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(8098);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(991);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(8344);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
@@ -80357,99 +80349,107 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 
 async function main() {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Getting action inputs...");
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Getting action inputs...");
     let inputs;
     try {
         inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_5__/* .getInputs */ .G)();
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+        process.exitCode = 1;
         return;
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Enabling Yarn...");
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Enabling Yarn...");
     try {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ ._)();
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+        process.exitCode = 1;
         return;
     }
     if (inputs.version != "") {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Setting Yarn version...");
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Setting Yarn version...");
         try {
             await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .setYarnVersion */ .eS)(inputs.version);
             await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .I)();
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to set Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to set Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            process.exitCode = 1;
             return;
         }
     }
     let cacheKey = "";
     let cachePaths = [];
     if (inputs.cache) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache key");
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Getting cache key");
         try {
             cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a)();
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            process.exitCode = 1;
             return;
         }
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Getting cache paths");
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Getting cache paths");
         try {
             cachePaths = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .N)();
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            process.exitCode = 1;
             return;
         }
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Restoring cache");
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Restoring cache");
         let cacheFound;
         try {
             const cacheId = await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.restoreCache(cachePaths.slice(), cacheKey);
             cacheFound = cacheId != undefined;
             if (!cacheFound) {
-                _actions_core__WEBPACK_IMPORTED_MODULE_1__.warning("Cache not found");
+                (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logWarning */ .KE)("Cache not found");
             }
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            process.exitCode = 1;
             return;
         }
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
         if (cacheFound) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Cache restored successfully");
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Cache restored successfully");
             return;
         }
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Installing dependencies");
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Installing dependencies");
     try {
         await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .yarnInstall */ .Or)();
     }
     catch (err) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+        process.exitCode = 1;
         return;
     }
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
     if (inputs.cache) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.startGroup("Saving cache");
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Saving cache");
         try {
             await _actions_cache__WEBPACK_IMPORTED_MODULE_0__.saveCache(cachePaths.slice(), cacheKey);
         }
         catch (err) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
+            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
+            process.exitCode = 1;
             return;
         }
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.endGroup();
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
     }
 }
 
@@ -80487,21 +80487,21 @@ async function getYarnConfig(name) {
     return JSON.parse(res.stdout).effective;
 }
 
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/@actions-core-npm-1.10.1-3cb1000b4d-10c0.zip/node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2340);
+// EXTERNAL MODULE: ../../../.yarn/berry/cache/gha-utils-npm-0.2.0-572860ffdf-10c0.zip/node_modules/gha-utils/dist/index.js
+var dist = __nccwpck_require__(2748);
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
 
 
 function printYarnInstallOutput(output) {
     switch (output.type) {
         case "info":
-            core.info(`${output.displayName}: ${output.indent}${output.data}`);
+            (0,dist/* logInfo */.PN)(`${output.displayName}: ${output.indent}${output.data}`);
             break;
         case "warning":
-            core.warning(`${output.data} (${output.displayName})`);
+            (0,dist/* logWarning */.KE)(`${output.data} (${output.displayName})`);
             break;
         case "error":
-            core.error(`${output.data} (${output.displayName})`);
+            (0,dist/* logError */.H)(`${output.data} (${output.displayName})`);
             break;
     }
 }
@@ -80667,6 +80667,13 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:os");
+
+/***/ }),
+
+/***/ 9411:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 
 /***/ }),
 
@@ -82411,6 +82418,116 @@ module.exports = parseParams
 /* harmony export */ });
 function r(r){return function(r){if("object"==typeof(e=r)&&null!==e&&"message"in e&&"string"==typeof e.message)return r;var e;try{return new Error(JSON.stringify(r))}catch(e){return new Error(String(r))}}(r).message}
 //# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ 2748:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "H": () => (/* binding */ logError),
+/* harmony export */   "KE": () => (/* binding */ logWarning),
+/* harmony export */   "Np": () => (/* binding */ getInput),
+/* harmony export */   "PN": () => (/* binding */ logInfo),
+/* harmony export */   "QM": () => (/* binding */ addPath),
+/* harmony export */   "sH": () => (/* binding */ endLogGroup),
+/* harmony export */   "zq": () => (/* binding */ beginLogGroup)
+/* harmony export */ });
+/* unused harmony exports setOutput, setEnv, logCommand */
+/* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7561);
+/* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(612);
+/* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(9411);
+
+
+
+/**
+ * Retrieves the value of a GitHub Actions input.
+ *
+ * @param name - The name of the GitHub Actions input.
+ * @returns The value of the GitHub Actions input, or an empty string if not found.
+ */
+function getInput(name) {
+    const value = process.env[`INPUT_${name.toUpperCase()}`] || "";
+    return value.trim();
+}
+/**
+ * Sets the value of a GitHub Actions output.
+ *
+ * @param name - The name of the GitHub Actions output.
+ * @param value - The value of the GitHub Actions output
+ */
+function setOutput(name, value) {
+    fs.appendFileSync(process.env["GITHUB_OUTPUT"], `${name}=${value}${os.EOL}`);
+}
+/**
+ * Sets the value of an environment variable in GitHub Actions.
+ *
+ * @param name - The name of the environment variable.
+ * @param value - The value of the environment variable.
+ */
+function setEnv(name, value) {
+    process.env[name] = value;
+    fs.appendFileSync(process.env["GITHUB_ENV"], `${name}=${value}${os.EOL}`);
+}
+/**
+ * Adds a system path to the environment in GitHub Actions.
+ *
+ * @param sysPath - The system path to add.
+ */
+function addPath(sysPath) {
+    process.env["PATH"] = `${sysPath}${node_path__WEBPACK_IMPORTED_MODULE_2__.delimiter}${process.env["PATH"]}`;
+    node_fs__WEBPACK_IMPORTED_MODULE_0__.appendFileSync(process.env["GITHUB_PATH"], `${sysPath}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+}
+/**
+ * Logs an information message in GitHub Actions.
+ *
+ * @param message - The information message to log.
+ */
+function logInfo(message) {
+    process.stdout.write(`${message}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+}
+/**
+ * Logs a warning message in GitHub Actions.
+ *
+ * @param message - The warning message to log.
+ */
+function logWarning(message) {
+    process.stdout.write(`::warning::${message}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+}
+/**
+ * Logs an error message in GitHub Actions.
+ *
+ * @param err - The error, which can be of any type.
+ */
+function logError(err) {
+    const message = err instanceof Error ? err.message : String(err);
+    process.stdout.write(`::error::${message}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+}
+/**
+ * Logs a command along with its arguments in GitHub Actions.
+ *
+ * @param command - The command to log.
+ * @param args - The arguments of the command.
+ */
+function logCommand(command, args) {
+    const message = [command, ...args].join(" ");
+    process.stdout.write(`[command]${message}${os.EOL}`);
+}
+/**
+ * Begins a log group in GitHub Actions.
+ *
+ * @param name - The name of the log group.
+ */
+function beginLogGroup(name) {
+    process.stdout.write(`::group::${name}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+}
+/**
+ * Ends the current log group in GitHub Actions.
+ */
+function endLogGroup() {
+    process.stdout.write(`::endgroup::${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+}
 
 
 /***/ }),
