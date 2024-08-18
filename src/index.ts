@@ -1,4 +1,7 @@
-import * as core from "@actions/core";
+import { logError } from "gha-utils";
 import { main } from "./main.js";
 
-main().catch((err) => core.setFailed(err));
+main().catch((err) => {
+  logError(err);
+  process.exit(1);
+});

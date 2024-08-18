@@ -1,23 +1,17 @@
 import { jest } from "@jest/globals";
 
-jest.unstable_mockModule("@actions/core", () => ({
-  getBooleanInput: jest.fn(),
+jest.unstable_mockModule("gha-utils", () => ({
   getInput: jest.fn(),
 }));
 
 beforeEach(async () => {
-  const { getBooleanInput, getInput } = await import("@actions/core");
-
-  jest.mocked(getBooleanInput).mockImplementation((name) => {
-    switch (name) {
-      case "cache":
-        return true;
-    }
-    throw new Error(`unknown input: ${name}`);
-  });
+  const { getInput } = await import("gha-utils");
 
   jest.mocked(getInput).mockImplementation((name) => {
     switch (name) {
+      case "cache":
+        return "true";
+
       case "version":
         return "";
     }

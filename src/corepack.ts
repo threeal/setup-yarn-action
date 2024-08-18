@@ -1,5 +1,5 @@
-import { addPath } from "@actions/core";
 import { exec } from "@actions/exec";
+import { addPath } from "gha-utils";
 import { mkdirSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";

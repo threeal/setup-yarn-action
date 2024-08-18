@@ -1,4 +1,4 @@
-import { getBooleanInput, getInput } from "@actions/core";
+import { getInput } from "gha-utils";
 
 export interface Inputs {
   version: string;
@@ -8,6 +8,6 @@ export interface Inputs {
 export function getInputs(): Inputs {
   return {
     version: getInput("version"),
-    cache: getBooleanInput("cache"),
+    cache: getInput("cache") === "true",
   };
 }

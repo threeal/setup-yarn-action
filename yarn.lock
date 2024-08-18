@@ -30,7 +30,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/core@npm:^1.10.0, @actions/core@npm:^1.10.1, @actions/core@npm:^1.2.6":
+"@actions/core@npm:^1.10.0, @actions/core@npm:^1.2.6":
   version: 1.10.1
   resolution: "@actions/core@npm:1.10.1"
   dependencies:
@@ -2571,6 +2571,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gha-utils@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "gha-utils@npm:0.2.0"
+  checksum: 10c0/34e597b9011518c36abbb4bbbfb0ecaf16171e2bafad3a9ddbbdd3c3b2c1234eb8afc06fc84837565afca5e9ca9d48eb62a7238613ab808d8e1c7e0b6651e2c6
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^5.1.2":
   version: 5.1.2
   resolution: "glob-parent@npm:5.1.2"
@@ -4354,7 +4361,6 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@actions/cache": "npm:^3.2.4"
-    "@actions/core": "npm:^1.10.1"
     "@actions/exec": "npm:^1.1.1"
     "@eslint/js": "npm:^9.9.0"
     "@jest/globals": "npm:^29.7.0"
@@ -4363,6 +4369,7 @@ __metadata:
     "@vercel/ncc": "npm:^0.38.1"
     catched-error-message: "npm:^0.0.1"
     eslint: "npm:^9.9.0"
+    gha-utils: "npm:^0.2.0"
     hasha: "npm:^6.0.0"
     jest: "npm:^29.7.0"
     jest-extended: "npm:^4.0.2"
