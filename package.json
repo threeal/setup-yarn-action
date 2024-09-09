@@ -8,8 +8,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@actions/cache": "^3.2.4",
     "@actions/exec": "^1.1.1",
+    "cache-action": "https://github.com/threeal/cache-action#export-cache-funcs",
     "catched-error-message": "^0.0.1",
     "gha-utils": "^0.2.0",
     "hasha": "^6.0.0"

@@ -1,4 +1,4 @@
-import * as cache from "@actions/cache";
+import { restoreCache, saveCache } from "cache-action";
 import { getErrorMessage } from "catched-error-message";
 
 import {
@@ -75,8 +75,7 @@ export async function main(): Promise<void> {
     beginLogGroup("Restoring cache");
     let cacheFound: boolean;
     try {
-      const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-      cacheFound = cacheId != undefined;
+      cacheFound = await restoreCache(cacheKey, "0");
       if (!cacheFound) {
         logWarning("Cache not found");
       }
@@ -108,7 +107,7 @@ export async function main(): Promise<void> {
   if (inputs.cache) {
     beginLogGroup("Saving cache");
     try {
-      await cache.saveCache(cachePaths.slice(), cacheKey);
+      await saveCache(cacheKey, "0", cachePaths.slice());
     } catch (err) {
       endLogGroup();
       logError(`Failed to save cache: ${getErrorMessage(err)}`);
