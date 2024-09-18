@@ -7,7 +7,7 @@ on:
 jobs:
   test-package:
     name: Test Package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
@@ -25,11 +25,11 @@ jobs:
 
   test-action:
     name: Test Action
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows, ubuntu, macos]
+        os: [ubuntu-22.04, macos-14, windows-2022]
     steps:
       - name: Checkout Package
         uses: actions/checkout@v4.1.7
@@ -53,11 +53,11 @@ jobs:
 
   test-action-with-specific-version:
     name: Test Action With Specific Version
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows, ubuntu, macos]
+        os: [ubuntu-22.04, macos-14, windows-2022]
     steps:
       - name: Checkout Package
         uses: actions/checkout@v4.1.7
@@ -92,11 +92,11 @@ jobs:
 
   test-action-without-cache:
     name: Test Action Without Cache
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows, ubuntu, macos]
+        os: [ubuntu-22.04, macos-14, windows-2022]
     steps:
       - name: Checkout Package
         uses: actions/checkout@v4.1.7
@@ -122,7 +122,7 @@ jobs:
 
   test-action-with-yarn-local-cache:
     name: Test Action With Yarn Local Cache
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Package
         uses: actions/checkout@v4.1.7
