@@ -80157,7 +80157,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */   "a": () => (/* binding */ getCacheKey)
 /* harmony export */ });
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(144);
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2748);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(312);
 /* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4535);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7561);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
@@ -80238,7 +80238,7 @@ __webpack_async_result__();
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4926);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2748);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(312);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7561);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(612);
@@ -80280,7 +80280,7 @@ async function corepackEnableYarn() {
     const corepackDir = node_path__WEBPACK_IMPORTED_MODULE_4___default().join((0,node_os__WEBPACK_IMPORTED_MODULE_3__.homedir)(), ".corepack");
     (0,node_fs__WEBPACK_IMPORTED_MODULE_2__.mkdirSync)(corepackDir, { recursive: true });
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__.exec)("corepack", ["enable", "--install-directory", corepackDir, "yarn"], { silent: true });
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .addPath */ .QM)(corepackDir);
+    await (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .addPath */ .QM)(corepackDir);
 }
 
 
@@ -80290,7 +80290,7 @@ async function corepackEnableYarn() {
 /***/ ((module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2748);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(312);
 /* harmony import */ var _main_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(3990);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_main_js__WEBPACK_IMPORTED_MODULE_1__]);
 _main_js__WEBPACK_IMPORTED_MODULE_1__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
@@ -80312,7 +80312,7 @@ __webpack_async_result__();
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   "G": () => (/* binding */ getInputs)
 /* harmony export */ });
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2748);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(312);
 
 function getInputs() {
     return {
@@ -80334,7 +80334,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(3193);
 /* harmony import */ var _actions_cache__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_cache__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(144);
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2748);
+/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(312);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8120);
 /* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(8098);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(991);
@@ -80487,8 +80487,8 @@ async function getYarnConfig(name) {
     return JSON.parse(res.stdout).effective;
 }
 
-// EXTERNAL MODULE: ../../../.yarn/berry/cache/gha-utils-npm-0.2.0-572860ffdf-10c0.zip/node_modules/gha-utils/dist/index.js
-var dist = __nccwpck_require__(2748);
+// EXTERNAL MODULE: ../../../.yarn/berry/cache/gha-utils-npm-0.3.0-2043836e46-10c0.zip/node_modules/gha-utils/dist/index.js + 3 modules
+var dist = __nccwpck_require__(312);
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
 
 
@@ -82422,25 +82422,50 @@ function r(r){return function(r){if("object"==typeof(e=r)&&null!==e&&"message"in
 
 /***/ }),
 
-/***/ 2748:
+/***/ 312:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "H": () => (/* binding */ logError),
-/* harmony export */   "KE": () => (/* binding */ logWarning),
-/* harmony export */   "Np": () => (/* binding */ getInput),
-/* harmony export */   "PN": () => (/* binding */ logInfo),
-/* harmony export */   "QM": () => (/* binding */ addPath),
-/* harmony export */   "sH": () => (/* binding */ endLogGroup),
-/* harmony export */   "zq": () => (/* binding */ beginLogGroup)
-/* harmony export */ });
-/* unused harmony exports setOutput, setEnv, logCommand */
-/* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7561);
-/* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(612);
-/* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(9411);
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "QM": () => (/* reexport */ addPath),
+  "zq": () => (/* reexport */ beginLogGroup),
+  "sH": () => (/* reexport */ endLogGroup),
+  "Np": () => (/* reexport */ getInput),
+  "H": () => (/* reexport */ logError),
+  "PN": () => (/* reexport */ logInfo),
+  "KE": () => (/* reexport */ logWarning)
+});
+
+// UNUSED EXPORTS: addPathSync, logCommand, setEnv, setEnvSync, setOutput, setOutputSync
+
+// EXTERNAL MODULE: external "node:fs"
+var external_node_fs_ = __nccwpck_require__(7561);
+;// CONCATENATED MODULE: external "node:fs/promises"
+const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
+// EXTERNAL MODULE: external "node:os"
+var external_node_os_ = __nccwpck_require__(612);
+// EXTERNAL MODULE: external "node:path"
+var external_node_path_ = __nccwpck_require__(9411);
+;// CONCATENATED MODULE: ../../../.yarn/berry/cache/gha-utils-npm-0.3.0-2043836e46-10c0.zip/node_modules/gha-utils/dist/env.js
 
 
 
+
+/**
+ * Retrieves the value of an environment variable.
+ *
+ * @param name - The name of the environment variable.
+ * @returns The value of the environment variable.
+ * @throws Error if the environment variable is not defined.
+ */
+function mustGetEnvironment(name) {
+    const value = process.env[name];
+    if (value === undefined) {
+        throw new Error(`the ${name} environment variable must be defined`);
+    }
+    return value;
+}
 /**
  * Retrieves the value of a GitHub Actions input.
  *
@@ -82455,37 +82480,78 @@ function getInput(name) {
  * Sets the value of a GitHub Actions output.
  *
  * @param name - The name of the GitHub Actions output.
- * @param value - The value of the GitHub Actions output
+ * @param value - The value to set for the GitHub Actions output.
+ * @returns A promise that resolves when the value is successfully set.
  */
-function setOutput(name, value) {
-    fs.appendFileSync(process.env["GITHUB_OUTPUT"], `${name}=${value}${os.EOL}`);
+async function setOutput(name, value) {
+    const filePath = mustGetEnvironment("GITHUB_OUTPUT");
+    await fsPromises.appendFile(filePath, `${name}=${value}${os.EOL}`);
+}
+/**
+ * Sets the value of a GitHub Actions output synchronously.
+ *
+ * @param name - The name of the GitHub Actions output.
+ * @param value - The value to set for the GitHub Actions output.
+ */
+function setOutputSync(name, value) {
+    const filePath = mustGetEnvironment("GITHUB_OUTPUT");
+    fs.appendFileSync(filePath, `${name}=${value}${os.EOL}`);
 }
 /**
  * Sets the value of an environment variable in GitHub Actions.
  *
  * @param name - The name of the environment variable.
- * @param value - The value of the environment variable.
+ * @param value - The value to set for the environment variable.
+ * @returns A promise that resolves when the environment variable is
+ *          successfully set.
  */
-function setEnv(name, value) {
+async function setEnv(name, value) {
     process.env[name] = value;
-    fs.appendFileSync(process.env["GITHUB_ENV"], `${name}=${value}${os.EOL}`);
+    const filePath = mustGetEnvironment("GITHUB_ENV");
+    await fsPromises.appendFile(filePath, `${name}=${value}${os.EOL}`);
+}
+/**
+ * Sets the value of an environment variable in GitHub Actions synchronously.
+ *
+ * @param name - The name of the environment variable.
+ * @param value - The value to set for the environment variable.
+ */
+function setEnvSync(name, value) {
+    process.env[name] = value;
+    const filePath = mustGetEnvironment("GITHUB_ENV");
+    fs.appendFileSync(filePath, `${name}=${value}${os.EOL}`);
 }
 /**
  * Adds a system path to the environment in GitHub Actions.
  *
- * @param sysPath - The system path to add.
+ * @param sysPath - The system path to add to the environment.
+ * @returns A promise that resolves when the system path is successfully added.
  */
-function addPath(sysPath) {
-    process.env["PATH"] = `${sysPath}${node_path__WEBPACK_IMPORTED_MODULE_2__.delimiter}${process.env["PATH"]}`;
-    node_fs__WEBPACK_IMPORTED_MODULE_0__.appendFileSync(process.env["GITHUB_PATH"], `${sysPath}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+async function addPath(sysPath) {
+    process.env["PATH"] = `${sysPath}${external_node_path_.delimiter}${process.env["PATH"]}`;
+    const filePath = mustGetEnvironment("GITHUB_PATH");
+    await promises_namespaceObject.appendFile(filePath, `${sysPath}${external_node_os_.EOL}`);
 }
+/**
+ * Adds a system path to the environment in GitHub Actions synchronously.
+ *
+ * @param sysPath - The system path to add to the environment.
+ */
+function addPathSync(sysPath) {
+    process.env["PATH"] = `${sysPath}${path.delimiter}${process.env["PATH"]}`;
+    const filePath = mustGetEnvironment("GITHUB_PATH");
+    fs.appendFileSync(filePath, `${sysPath}${os.EOL}`);
+}
+
+;// CONCATENATED MODULE: ../../../.yarn/berry/cache/gha-utils-npm-0.3.0-2043836e46-10c0.zip/node_modules/gha-utils/dist/log.js
+
 /**
  * Logs an information message in GitHub Actions.
  *
  * @param message - The information message to log.
  */
 function logInfo(message) {
-    process.stdout.write(`${message}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+    process.stdout.write(`${message}${external_node_os_.EOL}`);
 }
 /**
  * Logs a warning message in GitHub Actions.
@@ -82493,7 +82559,7 @@ function logInfo(message) {
  * @param message - The warning message to log.
  */
 function logWarning(message) {
-    process.stdout.write(`::warning::${message}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+    process.stdout.write(`::warning::${message}${external_node_os_.EOL}`);
 }
 /**
  * Logs an error message in GitHub Actions.
@@ -82502,7 +82568,7 @@ function logWarning(message) {
  */
 function logError(err) {
     const message = err instanceof Error ? err.message : String(err);
-    process.stdout.write(`::error::${message}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+    process.stdout.write(`::error::${message}${external_node_os_.EOL}`);
 }
 /**
  * Logs a command along with its arguments in GitHub Actions.
@@ -82510,7 +82576,7 @@ function logError(err) {
  * @param command - The command to log.
  * @param args - The arguments of the command.
  */
-function logCommand(command, args) {
+function logCommand(command, ...args) {
     const message = [command, ...args].join(" ");
     process.stdout.write(`[command]${message}${os.EOL}`);
 }
@@ -82520,14 +82586,18 @@ function logCommand(command, args) {
  * @param name - The name of the log group.
  */
 function beginLogGroup(name) {
-    process.stdout.write(`::group::${name}${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+    process.stdout.write(`::group::${name}${external_node_os_.EOL}`);
 }
 /**
  * Ends the current log group in GitHub Actions.
  */
 function endLogGroup() {
-    process.stdout.write(`::endgroup::${node_os__WEBPACK_IMPORTED_MODULE_1__.EOL}`);
+    process.stdout.write(`::endgroup::${external_node_os_.EOL}`);
 }
+
+;// CONCATENATED MODULE: ../../../.yarn/berry/cache/gha-utils-npm-0.3.0-2043836e46-10c0.zip/node_modules/gha-utils/dist/index.js
+
+
 
 
 /***/ }),

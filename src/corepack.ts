@@ -42,5 +42,5 @@ export async function corepackEnableYarn(): Promise<void> {
     { silent: true },
   );
 
-  addPath(corepackDir);
+  await addPath(corepackDir);
 }
