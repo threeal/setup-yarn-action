@@ -47,7 +47,7 @@ describe("install Yarn dependencies", () => {
     logs = [];
 
     jest.mocked(restoreCache).mockImplementation(async (paths, primaryKey) => {
-      if (primaryKey == "some-key") {
+      if (primaryKey == "some-key-some-version") {
         for (const path of paths) {
           gha.logInfo(`Extracting ${path}...`);
         }
@@ -97,7 +97,11 @@ describe("install Yarn dependencies", () => {
       gha.logInfo("Dependencies installed");
     });
 
-    jest.mocked(getCacheKey).mockResolvedValue("unavailable-key");
+    jest.mocked(getCacheKey).mockResolvedValue({
+      key: "unavailable-key",
+      version: "unavailable-version",
+    });
+
     jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
 
     jest.mocked(getInputs).mockReturnValue({ version: "", cache: true });
@@ -203,7 +207,9 @@ describe("install Yarn dependencies", () => {
     const { getCacheKey } = await import("./cache.js");
     const { main } = await import("./main.js");
 
-    jest.mocked(getCacheKey).mockResolvedValue("some-key");
+    jest
+      .mocked(getCacheKey)
+      .mockResolvedValue({ key: "some-key", version: "some-version" });
 
     await main();
 
@@ -219,7 +225,7 @@ describe("install Yarn dependencies", () => {
       "::group::Restoring cache",
       "Extracting some/path...",
       "Extracting another/path...",
-      "Cache some-key restored",
+      "Cache some-key-some-version restored",
       "::endgroup::",
       "Cache restored successfully",
     ]);
@@ -303,7 +309,7 @@ describe("install Yarn dependencies", () => {
       "::group::Saving cache",
       "Compressing some/path...",
       "Compressing another/path...",
-      "Cache unavailable-key saved",
+      "Cache unavailable-key-unavailable-version saved",
       "::endgroup::",
     ]);
   });
@@ -361,7 +367,7 @@ describe("install Yarn dependencies", () => {
         "::group::Saving cache",
         "Compressing some/path...",
         "Compressing another/path...",
-        "Cache unavailable-key saved",
+        "Cache unavailable-key-unavailable-version saved",
         "::endgroup::",
       ]);
     });

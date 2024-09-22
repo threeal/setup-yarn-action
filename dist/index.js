@@ -80173,11 +80173,11 @@ hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (awa
 
 
 async function getCacheKey() {
-    let cacheKey = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}`;
+    const key = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}`;
+    let version = "";
     (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)("Getting Yarn version...");
     try {
-        const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)({ corepack: true });
-        cacheKey += `-${version}`;
+        version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .Vh)({ corepack: true });
     }
     catch (err) {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(`Failed to get Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
@@ -80187,7 +80187,7 @@ async function getCacheKey() {
     try {
         if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
             const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .Th)("yarn.lock", { algorithm: "md5" });
-            cacheKey += `-${hash}`;
+            version += `-${hash}`;
         }
         else {
             (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logWarning */ .KE)(`Lock file could not be found, using empty hash`);
@@ -80197,8 +80197,8 @@ async function getCacheKey() {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(`Failed to calculate lock file hash: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);
         throw new Error("Failed to calculate lock file hash");
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)(`Using cache key: ${cacheKey}`);
-    return cacheKey;
+    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)(`Using cache key: ${key}-${version}`);
+    return { key, version };
 }
 async function getCachePaths() {
     const cachePaths = [".pnp.cjs", ".pnp.loader.mjs"];
@@ -80386,7 +80386,8 @@ async function main() {
     if (inputs.cache) {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Getting cache key");
         try {
-            cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a)();
+            const { key, version } = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .a)();
+            cacheKey = `${key}-${version}`;
         }
         catch (err) {
             (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();

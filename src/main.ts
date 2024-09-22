@@ -52,7 +52,8 @@ export async function main(): Promise<void> {
   if (inputs.cache) {
     beginLogGroup("Getting cache key");
     try {
-      cacheKey = await getCacheKey();
+      const { key, version } = await getCacheKey();
+      cacheKey = `${key}-${version}`;
     } catch (err) {
       endLogGroup();
       logError(`Failed to get cache key: ${getErrorMessage(err)}`);

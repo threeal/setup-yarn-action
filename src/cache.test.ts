@@ -96,15 +96,18 @@ describe("get cache key", () => {
   it("should get the cache key", async () => {
     const { getCacheKey } = await import("./cache.js");
 
-    const cacheKey = await getCacheKey();
-    const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`;
+    const actual = await getCacheKey();
+    const expected = {
+      key: `setup-yarn-action-${os.type()}`,
+      version: `1.2.3-b1484caea0bbcbfa9a3a32591e3cad5d`,
+    };
 
     expect(logs).toStrictEqual([
       "Getting Yarn version...",
       "Calculating lock file hash...",
-      `Using cache key: ${expectedCacheKey}`,
+      `Using cache key: ${expected.key}-${expected.version}`,
     ]);
-    expect(cacheKey).toBe(expectedCacheKey);
+    expect(actual).toEqual(expected);
   });
 
   describe("without existing lock file", () => {
@@ -117,16 +120,19 @@ describe("get cache key", () => {
     it("should get the cache key", async () => {
       const { getCacheKey } = await import("./cache.js");
 
-      const cacheKey = await getCacheKey();
-      const expectedCacheKey = `setup-yarn-action-${os.type()}-1.2.3`;
+      const actual = await getCacheKey();
+      const expected = {
+        key: `setup-yarn-action-${os.type()}`,
+        version: `1.2.3`,
+      };
 
       expect(logs).toStrictEqual([
         "Getting Yarn version...",
         "Calculating lock file hash...",
         "Lock file could not be found, using empty hash",
-        `Using cache key: ${expectedCacheKey}`,
+        `Using cache key: ${expected.key}-${expected.version}`,
       ]);
-      expect(cacheKey).toBe(expectedCacheKey);
+      expect(actual).toEqual(expected);
     });
   });
 });
