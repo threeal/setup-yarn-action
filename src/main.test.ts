@@ -156,27 +156,6 @@ describe("install Yarn dependencies", () => {
     ]);
   });
 
-  it("should failed to get cache paths", async () => {
-    const { getCachePaths } = await import("./cache.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(getCachePaths).mockRejectedValue(new Error("some error"));
-
-    await main();
-
-    expect(process.exitCode).toBe(1);
-    expect(logs).toStrictEqual([
-      "Getting action inputs...",
-      "Enabling Yarn...",
-      "Yarn enabled",
-      "::group::Getting cache key",
-      "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
-      "Failed to get cache paths: some error",
-    ]);
-  });
-
   it("should failed to restore cache", async () => {
     const { restoreCache } = await import("cache-action");
     const { main } = await import("./main.js");
@@ -191,8 +170,6 @@ describe("install Yarn dependencies", () => {
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
-      "::endgroup::",
-      "::group::Getting cache paths",
       "::endgroup::",
       "::group::Restoring cache",
       "::endgroup::",
@@ -217,8 +194,6 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
       "::group::Restoring cache",
       "Cache some-key some-version restored",
       "::endgroup::",
@@ -241,14 +216,39 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
       "::group::Restoring cache",
       "Cache not found",
       "::endgroup::",
       "::group::Installing dependencies",
       "::endgroup::",
       "Failed to install dependencies: some error",
+    ]);
+  });
+
+  it("should failed to get cache paths", async () => {
+    const { getCachePaths } = await import("./cache.js");
+    const { main } = await import("./main.js");
+
+    jest.mocked(getCachePaths).mockRejectedValue(new Error("some error"));
+
+    await main();
+
+    expect(process.exitCode).toBe(1);
+    expect(logs).toStrictEqual([
+      "Getting action inputs...",
+      "Enabling Yarn...",
+      "Yarn enabled",
+      "::group::Getting cache key",
+      "::endgroup::",
+      "::group::Restoring cache",
+      "Cache not found",
+      "::endgroup::",
+      "::group::Installing dependencies",
+      "Dependencies installed",
+      "::endgroup::",
+      "::group::Getting cache paths",
+      "::endgroup::",
+      "Failed to get cache paths: some error",
     ]);
   });
 
@@ -267,13 +267,13 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
       "::group::Restoring cache",
       "Cache not found",
       "::endgroup::",
       "::group::Installing dependencies",
       "Dependencies installed",
+      "::endgroup::",
+      "::group::Getting cache paths",
       "::endgroup::",
       "::group::Saving cache",
       "::endgroup::",
@@ -293,13 +293,13 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Getting cache paths",
-      "::endgroup::",
       "::group::Restoring cache",
       "Cache not found",
       "::endgroup::",
       "::group::Installing dependencies",
       "Dependencies installed",
+      "::endgroup::",
+      "::group::Getting cache paths",
       "::endgroup::",
       "::group::Saving cache",
       "Compressing some/path...",
@@ -351,13 +351,13 @@ describe("install Yarn dependencies", () => {
         "Yarn version set to stable",
         "::group::Getting cache key",
         "::endgroup::",
-        "::group::Getting cache paths",
-        "::endgroup::",
         "::group::Restoring cache",
         "Cache not found",
         "::endgroup::",
         "::group::Installing dependencies",
         "Dependencies installed",
+        "::endgroup::",
+        "::group::Getting cache paths",
         "::endgroup::",
         "::group::Saving cache",
         "Compressing some/path...",

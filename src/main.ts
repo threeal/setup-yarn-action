@@ -48,7 +48,6 @@ export async function main(): Promise<void> {
   }
 
   let cacheKey = { key: "", version: "" };
-  let cachePaths: string[] = [];
   if (inputs.cache) {
     beginLogGroup("Getting cache key");
     try {
@@ -56,17 +55,6 @@ export async function main(): Promise<void> {
     } catch (err) {
       endLogGroup();
       logError(`Failed to get cache key: ${getErrorMessage(err)}`);
-      process.exitCode = 1;
-      return;
-    }
-    endLogGroup();
-
-    beginLogGroup("Getting cache paths");
-    try {
-      cachePaths = await getCachePaths();
-    } catch (err) {
-      endLogGroup();
-      logError(`Failed to get cache paths: ${getErrorMessage(err)}`);
       process.exitCode = 1;
       return;
     }
@@ -105,6 +93,18 @@ export async function main(): Promise<void> {
   endLogGroup();
 
   if (inputs.cache) {
+    beginLogGroup("Getting cache paths");
+    let cachePaths: string[] = [];
+    try {
+      cachePaths = await getCachePaths();
+    } catch (err) {
+      endLogGroup();
+      logError(`Failed to get cache paths: ${getErrorMessage(err)}`);
+      process.exitCode = 1;
+      return;
+    }
+    endLogGroup();
+
     beginLogGroup("Saving cache");
     try {
       await saveCache(cacheKey.key, cacheKey.version, cachePaths);
