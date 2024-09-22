@@ -139,7 +139,10 @@ describe("get cache key", () => {
 
 describe("get cache paths", () => {
   beforeEach(async () => {
+    const fs = (await import("node:fs")).default;
     const { getYarnConfig } = await import("./yarn/index.js");
+
+    jest.mocked(fs.existsSync).mockReturnValue(true);
 
     jest.mocked(getYarnConfig).mockImplementation(async (name) => {
       switch (name) {

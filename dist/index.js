@@ -1293,7 +1293,10 @@ async function getCachePaths() {
     for (const { name, config } of yarnConfigs) {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .PN)(`Getting ${name}...`);
         try {
-            cachePaths.push(await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config));
+            const cachePath = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .io)(config);
+            if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync(cachePath)) {
+                cachePaths.push(cachePath);
+            }
         }
         catch (err) {
             (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .H)(`Failed to get ${name}: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .e)(err)}`);

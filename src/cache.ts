@@ -48,7 +48,10 @@ export async function getCachePaths(): Promise<string[]> {
   for (const { name, config } of yarnConfigs) {
     logInfo(`Getting ${name}...`);
     try {
-      cachePaths.push(await getYarnConfig(config));
+      const cachePath = await getYarnConfig(config);
+      if (fs.existsSync(cachePath)) {
+        cachePaths.push(cachePath);
+      }
     } catch (err) {
       logError(`Failed to get ${name}: ${getErrorMessage(err)}`);
       throw new Error(`Failed to get ${name}`);
