@@ -5,13 +5,13 @@ import fs from "node:fs";
 import os from "node:os";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
-export async function getCacheKey(): Promise<string> {
-  let cacheKey = `setup-yarn-action-${os.type()}`;
+export async function getCacheKey(): Promise<{ key: string; version: string }> {
+  const key = `setup-yarn-action-${os.type()}`;
+  let version = "";
 
   logInfo("Getting Yarn version...");
   try {
-    const version = await getYarnVersion({ corepack: true });
-    cacheKey += `-${version}`;
+    version = await getYarnVersion({ corepack: true });
   } catch (err) {
     logError(`Failed to get Yarn version: ${getErrorMessage(err)}`);
     throw new Error("Failed to get Yarn version");
@@ -21,7 +21,7 @@ export async function getCacheKey(): Promise<string> {
   try {
     if (fs.existsSync("yarn.lock")) {
       const hash = await hashFile("yarn.lock", { algorithm: "md5" });
-      cacheKey += `-${hash}`;
+      version += `-${hash}`;
     } else {
       logWarning(`Lock file could not be found, using empty hash`);
     }
@@ -30,8 +30,8 @@ export async function getCacheKey(): Promise<string> {
     throw new Error("Failed to calculate lock file hash");
   }
 
-  logInfo(`Using cache key: ${cacheKey}`);
-  return cacheKey;
+  logInfo(`Using cache key: ${key}-${version}`);
+  return { key, version };
 }
 
 export async function getCachePaths(): Promise<string[]> {
@@ -48,7 +48,10 @@ export async function getCachePaths(): Promise<string[]> {
   for (const { name, config } of yarnConfigs) {
     logInfo(`Getting ${name}...`);
     try {
-      cachePaths.push(await getYarnConfig(config));
+      const cachePath = await getYarnConfig(config);
+      if (fs.existsSync(cachePath)) {
+        cachePaths.push(cachePath);
+      }
     } catch (err) {
       logError(`Failed to get ${name}: ${getErrorMessage(err)}`);
       throw new Error(`Failed to get ${name}`);

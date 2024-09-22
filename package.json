@@ -8,8 +8,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@actions/cache": "^3.2.4",
     "@actions/exec": "^1.1.1",
+    "cache-action": "^0.2.1",
     "catched-error-message": "^0.0.1",
     "gha-utils": "^0.3.0",
     "hasha": "^6.0.0"

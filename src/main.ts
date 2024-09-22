@@ -1,4 +1,4 @@
-import * as cache from "@actions/cache";
+import { restoreCache, saveCache } from "cache-action";
 import { getErrorMessage } from "catched-error-message";
 
 import {
@@ -47,8 +47,7 @@ export async function main(): Promise<void> {
     }
   }
 
-  let cacheKey = "";
-  let cachePaths: string[] = [];
+  let cacheKey = { key: "", version: "" };
   if (inputs.cache) {
     beginLogGroup("Getting cache key");
     try {
@@ -61,35 +60,18 @@ export async function main(): Promise<void> {
     }
     endLogGroup();
 
-    beginLogGroup("Getting cache paths");
+    logInfo("Restoring cache...");
     try {
-      cachePaths = await getCachePaths();
-    } catch (err) {
-      endLogGroup();
-      logError(`Failed to get cache paths: ${getErrorMessage(err)}`);
-      process.exitCode = 1;
-      return;
-    }
-    endLogGroup();
-
-    beginLogGroup("Restoring cache");
-    let cacheFound: boolean;
-    try {
-      const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-      cacheFound = cacheId != undefined;
-      if (!cacheFound) {
+      const cacheRestored = await restoreCache(cacheKey.key, cacheKey.version);
+      if (cacheRestored) {
+        logInfo("Cache restored successfully");
+        return;
+      } else {
         logWarning("Cache not found");
       }
     } catch (err) {
-      endLogGroup();
       logError(`Failed to restore cache: ${getErrorMessage(err)}`);
       process.exitCode = 1;
-      return;
-    }
-    endLogGroup();
-
-    if (cacheFound) {
-      logInfo("Cache restored successfully");
       return;
     }
   }
@@ -106,15 +88,25 @@ export async function main(): Promise<void> {
   endLogGroup();
 
   if (inputs.cache) {
-    beginLogGroup("Saving cache");
+    beginLogGroup("Getting cache paths");
+    let cachePaths: string[] = [];
     try {
-      await cache.saveCache(cachePaths.slice(), cacheKey);
+      cachePaths = await getCachePaths();
     } catch (err) {
       endLogGroup();
-      logError(`Failed to save cache: ${getErrorMessage(err)}`);
+      logError(`Failed to get cache paths: ${getErrorMessage(err)}`);
       process.exitCode = 1;
       return;
     }
     endLogGroup();
+
+    logInfo("Saving cache...");
+    try {
+      await saveCache(cacheKey.key, cacheKey.version, cachePaths);
+    } catch (err) {
+      logError(`Failed to save cache: ${getErrorMessage(err)}`);
+      process.exitCode = 1;
+      return;
+    }
   }
 }
