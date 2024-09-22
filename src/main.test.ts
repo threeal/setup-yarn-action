@@ -47,19 +47,11 @@ describe("install Yarn dependencies", () => {
     logs = [];
 
     jest.mocked(restoreCache).mockImplementation(async (key, version) => {
-      if (key == "some-key" && version == "some-version") {
-        gha.logInfo(`Cache ${key} ${version} restored`);
-        return true;
-      }
-      return false;
+      return key == "some-key" && version == "some-version";
     });
 
-    jest.mocked(saveCache).mockImplementation(async (key, version, files) => {
-      for (const file of files) {
-        gha.logInfo(`Compressing ${file}...`);
-      }
-      gha.logInfo(`Cache ${key} ${version} saved`);
-      return true;
+    jest.mocked(saveCache).mockImplementation(async (key, version) => {
+      return key == "some-key" && version == "some-version";
     });
 
     jest.mocked(gha.beginLogGroup).mockImplementation((name) => {
@@ -171,8 +163,7 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Restoring cache",
-      "::endgroup::",
+      "Restoring cache...",
       "Failed to restore cache: some error",
     ]);
   });
@@ -194,9 +185,7 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Restoring cache",
-      "Cache some-key some-version restored",
-      "::endgroup::",
+      "Restoring cache...",
       "Cache restored successfully",
     ]);
   });
@@ -216,9 +205,8 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Restoring cache",
+      "Restoring cache...",
       "Cache not found",
-      "::endgroup::",
       "::group::Installing dependencies",
       "::endgroup::",
       "Failed to install dependencies: some error",
@@ -240,9 +228,8 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Restoring cache",
+      "Restoring cache...",
       "Cache not found",
-      "::endgroup::",
       "::group::Installing dependencies",
       "Dependencies installed",
       "::endgroup::",
@@ -267,16 +254,14 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Restoring cache",
+      "Restoring cache...",
       "Cache not found",
-      "::endgroup::",
       "::group::Installing dependencies",
       "Dependencies installed",
       "::endgroup::",
       "::group::Getting cache paths",
       "::endgroup::",
-      "::group::Saving cache",
-      "::endgroup::",
+      "Saving cache...",
       "Failed to save cache: some error",
     ]);
   });
@@ -293,19 +278,14 @@ describe("install Yarn dependencies", () => {
       "Yarn enabled",
       "::group::Getting cache key",
       "::endgroup::",
-      "::group::Restoring cache",
+      "Restoring cache...",
       "Cache not found",
-      "::endgroup::",
       "::group::Installing dependencies",
       "Dependencies installed",
       "::endgroup::",
       "::group::Getting cache paths",
       "::endgroup::",
-      "::group::Saving cache",
-      "Compressing some/path...",
-      "Compressing another/path...",
-      "Cache unavailable-key unavailable-version saved",
-      "::endgroup::",
+      "Saving cache...",
     ]);
   });
 
@@ -351,19 +331,14 @@ describe("install Yarn dependencies", () => {
         "Yarn version set to stable",
         "::group::Getting cache key",
         "::endgroup::",
-        "::group::Restoring cache",
+        "Restoring cache...",
         "Cache not found",
-        "::endgroup::",
         "::group::Installing dependencies",
         "Dependencies installed",
         "::endgroup::",
         "::group::Getting cache paths",
         "::endgroup::",
-        "::group::Saving cache",
-        "Compressing some/path...",
-        "Compressing another/path...",
-        "Cache unavailable-key unavailable-version saved",
-        "::endgroup::",
+        "Saving cache...",
       ]);
     });
   });

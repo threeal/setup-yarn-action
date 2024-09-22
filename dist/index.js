@@ -1476,23 +1476,20 @@ async function main() {
             return;
         }
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Restoring cache");
-        let cacheRestored;
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Restoring cache...");
         try {
-            cacheRestored = await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .restoreCache */ .u)(cacheKey.key, cacheKey.version);
-            if (!cacheRestored) {
+            const cacheRestored = await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .restoreCache */ .u)(cacheKey.key, cacheKey.version);
+            if (cacheRestored) {
+                (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Cache restored successfully");
+                return;
+            }
+            else {
                 (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logWarning */ .KE)("Cache not found");
             }
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
             (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             process.exitCode = 1;
-            return;
-        }
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
-        if (cacheRestored) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Cache restored successfully");
             return;
         }
     }
@@ -1520,17 +1517,15 @@ async function main() {
             return;
         }
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .zq)("Saving cache");
+        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .PN)("Saving cache...");
         try {
             await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .saveCache */ .f)(cacheKey.key, cacheKey.version, cachePaths);
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
             (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .H)(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .e)(err)}`);
             process.exitCode = 1;
             return;
         }
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .sH)();
     }
 }
 

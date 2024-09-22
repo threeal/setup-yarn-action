@@ -60,23 +60,18 @@ export async function main(): Promise<void> {
     }
     endLogGroup();
 
-    beginLogGroup("Restoring cache");
-    let cacheRestored: boolean;
+    logInfo("Restoring cache...");
     try {
-      cacheRestored = await restoreCache(cacheKey.key, cacheKey.version);
-      if (!cacheRestored) {
+      const cacheRestored = await restoreCache(cacheKey.key, cacheKey.version);
+      if (cacheRestored) {
+        logInfo("Cache restored successfully");
+        return;
+      } else {
         logWarning("Cache not found");
       }
     } catch (err) {
-      endLogGroup();
       logError(`Failed to restore cache: ${getErrorMessage(err)}`);
       process.exitCode = 1;
-      return;
-    }
-    endLogGroup();
-
-    if (cacheRestored) {
-      logInfo("Cache restored successfully");
       return;
     }
   }
@@ -105,15 +100,13 @@ export async function main(): Promise<void> {
     }
     endLogGroup();
 
-    beginLogGroup("Saving cache");
+    logInfo("Saving cache...");
     try {
       await saveCache(cacheKey.key, cacheKey.version, cachePaths);
     } catch (err) {
-      endLogGroup();
       logError(`Failed to save cache: ${getErrorMessage(err)}`);
       process.exitCode = 1;
       return;
     }
-    endLogGroup();
   }
 }
