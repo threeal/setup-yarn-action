@@ -1,4 +1,4 @@
-import * as cache from "@actions/cache";
+import { restoreCache, saveCache } from "cache-action";
 import { getErrorMessage } from "catched-error-message";
 
 import {
@@ -47,13 +47,12 @@ export async function main(): Promise<void> {
     }
   }
 
-  let cacheKey = "";
+  let cacheKey = { key: "", version: "" };
   let cachePaths: string[] = [];
   if (inputs.cache) {
     beginLogGroup("Getting cache key");
     try {
-      const { key, version } = await getCacheKey();
-      cacheKey = `${key}-${version}`;
+      cacheKey = await getCacheKey();
     } catch (err) {
       endLogGroup();
       logError(`Failed to get cache key: ${getErrorMessage(err)}`);
@@ -74,11 +73,10 @@ export async function main(): Promise<void> {
     endLogGroup();
 
     beginLogGroup("Restoring cache");
-    let cacheFound: boolean;
+    let cacheRestored: boolean;
     try {
-      const cacheId = await cache.restoreCache(cachePaths.slice(), cacheKey);
-      cacheFound = cacheId != undefined;
-      if (!cacheFound) {
+      cacheRestored = await restoreCache(cacheKey.key, cacheKey.version);
+      if (!cacheRestored) {
         logWarning("Cache not found");
       }
     } catch (err) {
@@ -89,7 +87,7 @@ export async function main(): Promise<void> {
     }
     endLogGroup();
 
-    if (cacheFound) {
+    if (cacheRestored) {
       logInfo("Cache restored successfully");
       return;
     }
@@ -109,7 +107,7 @@ export async function main(): Promise<void> {
   if (inputs.cache) {
     beginLogGroup("Saving cache");
     try {
-      await cache.saveCache(cachePaths.slice(), cacheKey);
+      await saveCache(cacheKey.key, cacheKey.version, cachePaths);
     } catch (err) {
       endLogGroup();
       logError(`Failed to save cache: ${getErrorMessage(err)}`);
