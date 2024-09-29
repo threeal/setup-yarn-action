@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
 
       - name: Setup Yarn
         uses: threeal/setup-yarn-action@v2.0.0
