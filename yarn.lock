@@ -2351,10 +2351,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gha-utils@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "gha-utils@npm:0.3.0"
-  checksum: 10c0/f8fe13abc48640d60072518260c8e6d5fb695e933c3ef2e16970838d3676254d21ed239e4267ae65f83dc5c167a1bd97959005b713217ead7bf8873e79b2343b
+"gha-utils@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "gha-utils@npm:0.4.1"
+  checksum: 10c0/410823a971ac5d6cb2249e4e7e2f112cf4362fad26f01644877b2756e4e9e81814e005c1adf9622c6c8d228d36c32fdc47f31b041088012688848b621c0323d7
   languageName: node
   linkType: hard
 
@@ -4084,7 +4084,7 @@ __metadata:
     cache-action: "npm:^0.2.1"
     catched-error-message: "npm:^0.0.1"
     eslint: "npm:^9.13.0"
-    gha-utils: "npm:^0.3.0"
+    gha-utils: "npm:^0.4.1"
     hasha: "npm:^6.0.0"
     jest: "npm:^29.7.0"
     jest-extended: "npm:^4.0.2"
