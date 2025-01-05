@@ -1,25 +1,22 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { exec } from "@actions/exec";
+import { logError, logInfo, logWarning } from "gha-utils";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { printYarnInstallOutput, yarnInstall } from "./install.js";
 
-jest.unstable_mockModule("@actions/exec", () => ({
-  exec: jest.fn(),
-}));
+vi.mock("@actions/exec", () => ({ exec: vi.fn() }));
 
-jest.unstable_mockModule("gha-utils", () => ({
-  logError: jest.fn(),
-  logInfo: jest.fn(),
-  logWarning: jest.fn(),
+vi.mock("gha-utils", () => ({
+  logError: vi.fn(),
+  logInfo: vi.fn(),
+  logWarning: vi.fn(),
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("print Yarn install package output", () => {
-  it("should print info output", async () => {
-    const { logError, logInfo, logWarning } = await import("gha-utils");
-    const { printYarnInstallOutput } = await import("./install.js");
-
+  it("should print info output", () => {
     printYarnInstallOutput({
       type: "info",
       displayName: "YN0000",
@@ -27,7 +24,8 @@ describe("print Yarn install package output", () => {
       data: "\u001b[1mYarn 4.1.0\u001b[22m",
     });
 
-    expect(logInfo).toHaveBeenCalledExactlyOnceWith(
+    expect(logInfo).toHaveBeenCalledOnce();
+    expect(logInfo).toHaveBeenCalledWith(
       "YN0000: . \u001b[1mYarn 4.1.0\u001b[22m",
     );
 
@@ -35,10 +33,7 @@ describe("print Yarn install package output", () => {
     expect(logError).toHaveBeenCalledTimes(0);
   });
 
-  it("should print warning output", async () => {
-    const { logError, logInfo, logWarning } = await import("gha-utils");
-    const { printYarnInstallOutput } = await import("./install.js");
-
+  it("should print warning output", () => {
     printYarnInstallOutput({
       type: "warning",
       displayName: "YN0000",
@@ -46,7 +41,8 @@ describe("print Yarn install package output", () => {
       data: "ESM support for PnP uses the experimental loader API and is therefore experimental",
     });
 
-    expect(logWarning).toHaveBeenCalledExactlyOnceWith(
+    expect(logWarning).toHaveBeenCalledOnce();
+    expect(logWarning).toHaveBeenCalledWith(
       "ESM support for PnP uses the experimental loader API and is therefore experimental (YN0000)",
     );
 
@@ -54,10 +50,7 @@ describe("print Yarn install package output", () => {
     expect(logError).toHaveBeenCalledTimes(0);
   });
 
-  it("should print error output", async () => {
-    const { logError, logInfo, logWarning } = await import("gha-utils");
-    const { printYarnInstallOutput } = await import("./install.js");
-
+  it("should print error output", () => {
     printYarnInstallOutput({
       type: "error",
       displayName: "YN0028",
@@ -65,7 +58,8 @@ describe("print Yarn install package output", () => {
       data: "The lockfile would have been created by this install, which is explicitly forbidden.",
     });
 
-    expect(logError).toHaveBeenCalledExactlyOnceWith(
+    expect(logError).toHaveBeenCalledOnce();
+    expect(logError).toHaveBeenCalledWith(
       "The lockfile would have been created by this install, which is explicitly forbidden. (YN0028)",
     );
 
@@ -75,11 +69,7 @@ describe("print Yarn install package output", () => {
 });
 
 it("should install package using Yarn", async () => {
-  const { exec } = await import("@actions/exec");
-  const { logInfo } = await import("gha-utils");
-  const { yarnInstall } = await import("./install.js");
-
-  jest.mocked(exec).mockImplementation(async (commandLine, args, options) => {
+  vi.mocked(exec).mockImplementation(async (commandLine, args, options) => {
     if (options?.listeners?.stdline !== undefined) {
       options?.listeners?.stdline(
         `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
@@ -92,10 +82,11 @@ it("should install package using Yarn", async () => {
 
   expect(exec).toHaveBeenCalledTimes(1);
 
-  const execCall = jest.mocked(exec).mock.calls[0];
+  const execCall = vi.mocked(exec).mock.calls[0];
   expect(execCall).toHaveLength(3);
   expect(execCall[0]).toBe("yarn");
   expect(execCall[1]).toEqual(["install", "--json"]);
 
-  expect(logInfo).toHaveBeenCalledExactlyOnceWith("YN0000: └ Completed");
+  expect(logInfo).toHaveBeenCalledOnce();
+  expect(logInfo).toHaveBeenCalledWith("YN0000: └ Completed");
 });

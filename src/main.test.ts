@@ -1,106 +1,109 @@
-import { jest } from "@jest/globals";
+import { restoreCache, saveCache } from "cache-action";
 
-jest.unstable_mockModule("cache-action", () => ({
-  restoreCache: jest.fn(),
-  saveCache: jest.fn(),
+import {
+  beginLogGroup,
+  endLogGroup,
+  logError,
+  logInfo,
+  logWarning,
+} from "gha-utils";
+
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { getCacheKey, getCachePaths } from "./cache.js";
+import { corepackEnableYarn } from "./corepack.js";
+import { getInputs } from "./inputs.js";
+import { main } from "./main.js";
+import { setYarnVersion, yarnInstall } from "./yarn/index.js";
+
+vi.mock("cache-action", () => ({
+  restoreCache: vi.fn(),
+  saveCache: vi.fn(),
 }));
 
-jest.unstable_mockModule("gha-utils", () => ({
-  beginLogGroup: jest.fn(),
-  endLogGroup: jest.fn(),
-  logError: jest.fn(),
-  logInfo: jest.fn(),
-  logWarning: jest.fn(),
+vi.mock("gha-utils", () => ({
+  beginLogGroup: vi.fn(),
+  endLogGroup: vi.fn(),
+  logError: vi.fn(),
+  logInfo: vi.fn(),
+  logWarning: vi.fn(),
 }));
 
-jest.unstable_mockModule("./yarn/index.js", () => ({
-  setYarnVersion: jest.fn(),
-  yarnInstall: jest.fn(),
+vi.mock("./yarn/index.js", () => ({
+  setYarnVersion: vi.fn(),
+  yarnInstall: vi.fn(),
 }));
 
-jest.unstable_mockModule("./cache.js", () => ({
-  getCacheKey: jest.fn(),
-  getCachePaths: jest.fn(),
+vi.mock("./cache.js", () => ({
+  getCacheKey: vi.fn(),
+  getCachePaths: vi.fn(),
 }));
 
-jest.unstable_mockModule("./corepack.js", () => ({
-  corepackAssertYarnVersion: jest.fn(),
-  corepackEnableYarn: jest.fn(),
+vi.mock("./corepack.js", () => ({
+  corepackAssertYarnVersion: vi.fn(),
+  corepackEnableYarn: vi.fn(),
 }));
 
-jest.unstable_mockModule("./inputs.js", () => ({
-  getInputs: jest.fn(),
-}));
+vi.mock("./inputs.js", () => ({ getInputs: vi.fn() }));
 
 describe("install Yarn dependencies", () => {
   let logs: unknown[] = [];
 
-  beforeEach(async () => {
-    const { restoreCache, saveCache } = await import("cache-action");
-    const gha = await import("gha-utils");
-    const { setYarnVersion, yarnInstall } = await import("./yarn/index.js");
-    const { getCacheKey, getCachePaths } = await import("./cache.js");
-    const { corepackEnableYarn } = await import("./corepack.js");
-    const { getInputs } = await import("./inputs.js");
-
+  beforeEach(() => {
     process.exitCode = 0;
     logs = [];
 
-    jest.mocked(restoreCache).mockImplementation(async (key, version) => {
+    vi.mocked(restoreCache).mockImplementation(async (key, version) => {
       return key == "some-key" && version == "some-version";
     });
 
-    jest.mocked(saveCache).mockImplementation(async (key, version) => {
+    vi.mocked(saveCache).mockImplementation(async (key, version) => {
       return key == "some-key" && version == "some-version";
     });
 
-    jest.mocked(gha.beginLogGroup).mockImplementation((name) => {
+    vi.mocked(beginLogGroup).mockImplementation((name) => {
       logs.push(`::group::${name}`);
     });
 
-    jest.mocked(gha.endLogGroup).mockImplementation(() => {
+    vi.mocked(endLogGroup).mockImplementation(() => {
       logs.push("::endgroup::");
     });
 
-    jest.mocked(gha.logError).mockImplementation((message) => {
+    vi.mocked(logError).mockImplementation((message) => {
       logs.push(message);
     });
 
-    jest.mocked(gha.logInfo).mockImplementation((message) => {
+    vi.mocked(logInfo).mockImplementation((message) => {
       logs.push(message);
     });
 
-    jest.mocked(gha.logWarning).mockImplementation((message) => {
+    vi.mocked(logWarning).mockImplementation((message) => {
       logs.push(message);
     });
 
-    jest.mocked(corepackEnableYarn).mockImplementation(async () => {
-      gha.logInfo("Yarn enabled");
+    vi.mocked(corepackEnableYarn).mockImplementation(async () => {
+      logInfo("Yarn enabled");
     });
 
-    jest.mocked(setYarnVersion).mockImplementation(async (version) => {
-      gha.logInfo(`Yarn version set to ${version}`);
+    vi.mocked(setYarnVersion).mockImplementation(async (version) => {
+      logInfo(`Yarn version set to ${version}`);
     });
 
-    jest.mocked(yarnInstall).mockImplementation(async () => {
-      gha.logInfo("Dependencies installed");
+    vi.mocked(yarnInstall).mockImplementation(async () => {
+      logInfo("Dependencies installed");
     });
 
-    jest.mocked(getCacheKey).mockResolvedValue({
+    vi.mocked(getCacheKey).mockResolvedValue({
       key: "unavailable-key",
       version: "unavailable-version",
     });
 
-    jest.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
+    vi.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
 
-    jest.mocked(getInputs).mockReturnValue({ version: "", cache: true });
+    vi.mocked(getInputs).mockReturnValue({ version: "", cache: true });
   });
 
   it("should failed to get action inputs", async () => {
-    const { getInputs } = await import("./inputs.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(getInputs).mockImplementation(() => {
+    vi.mocked(getInputs).mockImplementation(() => {
       throw new Error("some error");
     });
 
@@ -114,10 +117,7 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to enable Yarn", async () => {
-    const { corepackEnableYarn } = await import("./corepack.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(corepackEnableYarn).mockRejectedValue(new Error("some error"));
+    vi.mocked(corepackEnableYarn).mockRejectedValue(new Error("some error"));
 
     await main();
 
@@ -130,10 +130,7 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to get cache key", async () => {
-    const { getCacheKey } = await import("./cache.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(getCacheKey).mockRejectedValue(new Error("some error"));
+    vi.mocked(getCacheKey).mockRejectedValue(new Error("some error"));
 
     await main();
 
@@ -149,10 +146,7 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to restore cache", async () => {
-    const { restoreCache } = await import("cache-action");
-    const { main } = await import("./main.js");
-
-    jest.mocked(restoreCache).mockRejectedValue(new Error("some error"));
+    vi.mocked(restoreCache).mockRejectedValue(new Error("some error"));
 
     await main();
 
@@ -169,12 +163,10 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should successfully restore cache without install and save", async () => {
-    const { getCacheKey } = await import("./cache.js");
-    const { main } = await import("./main.js");
-
-    jest
-      .mocked(getCacheKey)
-      .mockResolvedValue({ key: "some-key", version: "some-version" });
+    vi.mocked(getCacheKey).mockResolvedValue({
+      key: "some-key",
+      version: "some-version",
+    });
 
     await main();
 
@@ -191,10 +183,7 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to install dependencies", async () => {
-    const { yarnInstall } = await import("./yarn/index.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(yarnInstall).mockRejectedValue(new Error("some error"));
+    vi.mocked(yarnInstall).mockRejectedValue(new Error("some error"));
 
     await main();
 
@@ -214,10 +203,7 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to get cache paths", async () => {
-    const { getCachePaths } = await import("./cache.js");
-    const { main } = await import("./main.js");
-
-    jest.mocked(getCachePaths).mockRejectedValue(new Error("some error"));
+    vi.mocked(getCachePaths).mockRejectedValue(new Error("some error"));
 
     await main();
 
@@ -240,10 +226,7 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should failed to save cache", async () => {
-    const { saveCache } = await import("cache-action");
-    const { main } = await import("./main.js");
-
-    jest.mocked(saveCache).mockRejectedValue(new Error("some error"));
+    vi.mocked(saveCache).mockRejectedValue(new Error("some error"));
 
     await main();
 
@@ -267,8 +250,6 @@ describe("install Yarn dependencies", () => {
   });
 
   it("should successfully install dependencies and save cache", async () => {
-    const { main } = await import("./main.js");
-
     await main();
 
     expect(process.exitCode).toBe(0);
@@ -290,20 +271,15 @@ describe("install Yarn dependencies", () => {
   });
 
   describe("with version specified", () => {
-    beforeEach(async () => {
-      const { getInputs } = await import("./inputs.js");
-
-      jest.mocked(getInputs).mockReturnValue({
+    beforeEach(() => {
+      vi.mocked(getInputs).mockReturnValue({
         version: "stable",
         cache: true,
       });
     });
 
     it("should failed to set Yarn version", async () => {
-      const { setYarnVersion } = await import("./yarn/index.js");
-      const { main } = await import("./main.js");
-
-      jest.mocked(setYarnVersion).mockRejectedValue(new Error("some error"));
+      vi.mocked(setYarnVersion).mockRejectedValue(new Error("some error"));
 
       await main();
 
@@ -318,8 +294,6 @@ describe("install Yarn dependencies", () => {
     });
 
     it("should successfully install dependencies", async () => {
-      const { main } = await import("./main.js");
-
       await main();
 
       expect(process.exitCode).toBe(0);
@@ -344,15 +318,11 @@ describe("install Yarn dependencies", () => {
   });
 
   describe("with cache disabled", () => {
-    beforeEach(async () => {
-      const { getInputs } = await import("./inputs.js");
-
-      jest.mocked(getInputs).mockReturnValue({ version: "", cache: false });
+    beforeEach(() => {
+      vi.mocked(getInputs).mockReturnValue({ version: "", cache: false });
     });
 
     it("should successfully install dependencies", async () => {
-      const { main } = await import("./main.js");
-
       await main();
 
       expect(process.exitCode).toBe(0);

@@ -1,13 +1,11 @@
-import { jest } from "@jest/globals";
+import { getInput } from "gha-utils";
+import { beforeEach, expect, it, vi } from "vitest";
+import { getInputs } from "./inputs.js";
 
-jest.unstable_mockModule("gha-utils", () => ({
-  getInput: jest.fn(),
-}));
+vi.mock("gha-utils", () => ({ getInput: vi.fn() }));
 
-beforeEach(async () => {
-  const { getInput } = await import("gha-utils");
-
-  jest.mocked(getInput).mockImplementation((name) => {
+beforeEach(() => {
+  vi.mocked(getInput).mockImplementation((name) => {
     switch (name) {
       case "cache":
         return "true";
@@ -19,10 +17,7 @@ beforeEach(async () => {
   });
 });
 
-it("should get the action inputs", async () => {
-  const { getInputs } = await import("./inputs.js");
-
+it("should get the action inputs", () => {
   const inputs = getInputs();
-
   expect(inputs).toStrictEqual({ version: "", cache: true });
 });

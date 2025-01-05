@@ -1,72 +1,62 @@
-import { jest } from "@jest/globals";
+import { logError, logInfo, logWarning } from "gha-utils";
+import { hashFile } from "hasha";
+import fs from "node:fs";
 import os from "node:os";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { getCacheKey, getCachePaths } from "./cache.js";
+import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
-jest.unstable_mockModule("gha-utils", () => ({
-  logError: jest.fn(),
-  logInfo: jest.fn(),
-  logWarning: jest.fn(),
+vi.mock("gha-utils", () => ({
+  logError: vi.fn(),
+  logInfo: vi.fn(),
+  logWarning: vi.fn(),
 }));
 
-jest.unstable_mockModule("hasha", () => ({
-  hashFile: jest.fn(),
-}));
+vi.mock("hasha", () => ({ hashFile: vi.fn() }));
 
-jest.unstable_mockModule("node:fs", () => ({
-  default: {
-    existsSync: jest.fn(),
-  },
-}));
+vi.mock("node:fs", () => ({ default: { existsSync: vi.fn() } }));
 
-jest.unstable_mockModule("./yarn.js", () => ({
-  getYarnConfig: jest.fn(),
-  getYarnVersion: jest.fn(),
+vi.mock("./yarn/index.js", () => ({
+  getYarnConfig: vi.fn(),
+  getYarnVersion: vi.fn(),
 }));
 
 let logs: unknown[] = [];
 
-beforeEach(async () => {
-  const { logError, logInfo, logWarning } = await import("gha-utils");
-
+beforeEach(() => {
   logs = [];
 
-  jest.mocked(logInfo).mockImplementation((message) => {
+  vi.mocked(logInfo).mockImplementation((message) => {
     logs.push(message);
   });
-  jest.mocked(logError).mockImplementation((message) => {
+  vi.mocked(logError).mockImplementation((message) => {
     logs.push(message);
   });
-  jest.mocked(logWarning).mockImplementation((message) => {
+  vi.mocked(logWarning).mockImplementation((message) => {
     logs.push(message);
   });
 });
 
 describe("get cache key", () => {
-  beforeEach(async () => {
-    const { hashFile } = await import("hasha");
-    const fs = (await import("node:fs")).default;
-    const { getYarnVersion } = await import("./yarn/index.js");
-
-    (hashFile as jest.Mock).mockImplementation(async (filePath) => {
+  beforeEach(() => {
+    vi.mocked(hashFile).mockImplementation((async (filePath) => {
       if (filePath == "yarn.lock") return "b1484caea0bbcbfa9a3a32591e3cad5d";
       throw new Error(`file not found: ${filePath}`);
-    });
+    }) as typeof hashFile);
 
-    jest.mocked(fs.existsSync).mockImplementation((path) => {
+    vi.mocked(fs.existsSync).mockImplementation((path) => {
       if (path == "yarn.lock") return true;
       return false;
     });
 
-    jest.mocked(getYarnVersion).mockImplementation(async (options) => {
+    vi.mocked(getYarnVersion).mockImplementation(async (options) => {
       if (options?.corepack) return "1.2.3";
       throw new Error("Unable to get Yarn version");
     });
   });
 
   it("should failed to get Yarn version", async () => {
-    const { getYarnVersion } = await import("./yarn/index.js");
-    const { getCacheKey } = await import("./cache.js");
-
-    jest.mocked(getYarnVersion).mockRejectedValue(new Error("some error"));
+    vi.mocked(getYarnVersion).mockRejectedValue(new Error("some error"));
 
     const prom = getCacheKey();
 
@@ -78,10 +68,7 @@ describe("get cache key", () => {
   });
 
   it("should failed to calculate lock file hash", async () => {
-    const { hashFile } = await import("hasha");
-    const { getCacheKey } = await import("./cache.js");
-
-    jest.mocked(hashFile).mockRejectedValue(new Error("some error"));
+    vi.mocked(hashFile).mockRejectedValue(new Error("some error"));
 
     const prom = getCacheKey();
 
@@ -94,8 +81,6 @@ describe("get cache key", () => {
   });
 
   it("should get the cache key", async () => {
-    const { getCacheKey } = await import("./cache.js");
-
     const actual = await getCacheKey();
     const expected = {
       key: `setup-yarn-action-${os.type()}`,
@@ -111,15 +96,11 @@ describe("get cache key", () => {
   });
 
   describe("without existing lock file", () => {
-    beforeEach(async () => {
-      const fs = (await import("node:fs")).default;
-
-      jest.mocked(fs.existsSync).mockReturnValue(false);
+    beforeEach(() => {
+      vi.mocked(fs.existsSync).mockReturnValue(false);
     });
 
     it("should get the cache key", async () => {
-      const { getCacheKey } = await import("./cache.js");
-
       const actual = await getCacheKey();
       const expected = {
         key: `setup-yarn-action-${os.type()}`,
@@ -138,13 +119,10 @@ describe("get cache key", () => {
 });
 
 describe("get cache paths", () => {
-  beforeEach(async () => {
-    const fs = (await import("node:fs")).default;
-    const { getYarnConfig } = await import("./yarn/index.js");
+  beforeEach(() => {
+    vi.mocked(fs.existsSync).mockReturnValue(true);
 
-    jest.mocked(fs.existsSync).mockReturnValue(true);
-
-    jest.mocked(getYarnConfig).mockImplementation(async (name) => {
+    vi.mocked(getYarnConfig).mockImplementation(async (name) => {
       switch (name) {
         case "cacheFolder":
           return ".yarn/cache";
@@ -164,10 +142,7 @@ describe("get cache paths", () => {
   });
 
   it("should failed to get Yarn config", async () => {
-    const { getYarnConfig } = await import("./yarn/index.js");
-    const { getCachePaths } = await import("./cache.js");
-
-    jest.mocked(getYarnConfig).mockRejectedValue(new Error("some error"));
+    vi.mocked(getYarnConfig).mockRejectedValue(new Error("some error"));
 
     const prom = getCachePaths();
 
@@ -179,8 +154,6 @@ describe("get cache paths", () => {
   });
 
   it("should get the cache paths", async () => {
-    const { getCachePaths } = await import("./cache.js");
-
     const cachePaths = await getCachePaths();
     const expectedCachePaths = [
       ".pnp.cjs",

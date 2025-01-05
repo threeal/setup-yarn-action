@@ -1,15 +1,11 @@
-import { jest } from "@jest/globals";
-import "jest-extended";
+import { getExecOutput } from "@actions/exec";
+import { expect, it, vi } from "vitest";
+import { getYarnConfig } from "./config.js";
 
-jest.unstable_mockModule("@actions/exec", () => ({
-  getExecOutput: jest.fn(),
-}));
+vi.mock("@actions/exec", () => ({ getExecOutput: vi.fn() }));
 
 it("should get Yarn config", async () => {
-  const { getExecOutput } = await import("@actions/exec");
-  const { getYarnConfig } = await import("./config.js");
-
-  jest.mocked(getExecOutput).mockResolvedValueOnce({
+  vi.mocked(getExecOutput).mockResolvedValueOnce({
     exitCode: 0,
     stdout: `{"key":"globalFolder","effective":"/.yarn/berry","source":"<default>","description":"Folder where all system-global files are stored","type":"ABSOLUTE_PATH","default":"/.yarn/berry"}\n`,
     stderr: "",
@@ -18,7 +14,8 @@ it("should get Yarn config", async () => {
   const prom = getYarnConfig("globalFolder");
   await expect(prom).resolves.toEqual("/.yarn/berry");
 
-  expect(getExecOutput).toHaveBeenCalledExactlyOnceWith(
+  expect(getExecOutput).toHaveBeenCalledOnce();
+  expect(getExecOutput).toHaveBeenCalledWith(
     "yarn",
     ["config", "globalFolder", "--json"],
     {
