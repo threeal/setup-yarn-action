@@ -1,39 +1,25 @@
-import { jest } from "@jest/globals";
+import { exec } from "@actions/exec";
+import { addPath } from "gha-utils";
+import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { homedir } from "node:os";
-import "jest-extended";
+import { describe, expect, it, vi } from "vitest";
+import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
+import { getYarnVersion } from "./yarn/index.js";
 
-jest.unstable_mockModule("@actions/exec", () => ({
-  exec: jest.fn(),
-}));
-
-jest.unstable_mockModule("gha-utils", () => ({
-  addPath: jest.fn(),
-}));
-
-jest.unstable_mockModule("node:fs", () => ({
-  mkdirSync: jest.fn(),
-}));
-
-jest.unstable_mockModule("./yarn/index.js", () => ({
-  getYarnVersion: jest.fn(),
-}));
+vi.mock("@actions/exec", () => ({ exec: vi.fn() }));
+vi.mock("gha-utils", () => ({ addPath: vi.fn() }));
+vi.mock("node:fs", () => ({ mkdirSync: vi.fn() }));
+vi.mock("./yarn/index.js", () => ({ getYarnVersion: vi.fn() }));
 
 describe("assert Yarn version enabled by Corepack", () => {
   it("should not throw an error if Yarn versions are the same", async () => {
-    const { getYarnVersion } = await import("./yarn/index.js");
-    const { corepackAssertYarnVersion } = await import("./corepack.js");
-
-    jest.mocked(getYarnVersion).mockResolvedValue("1.2.3");
-
+    vi.mocked(getYarnVersion).mockResolvedValue("1.2.3");
     await expect(corepackAssertYarnVersion()).resolves.toBeUndefined();
   });
 
   it("should throw an error if Yarn versions are different", async () => {
-    const { getYarnVersion } = await import("./yarn/index.js");
-    const { corepackAssertYarnVersion } = await import("./corepack.js");
-
-    jest.mocked(getYarnVersion).mockImplementation(async (options) => {
+    vi.mocked(getYarnVersion).mockImplementation(async (options) => {
       return options?.corepack ? "1.2.3" : "1.2.4";
     });
 
@@ -45,25 +31,24 @@ describe("assert Yarn version enabled by Corepack", () => {
 
 describe("enable Yarn using Corepack", () => {
   it("should enable Yarn", async () => {
-    const { exec } = await import("@actions/exec");
-    const { addPath } = await import("gha-utils");
-    const { mkdirSync } = await import("node:fs");
-    const { corepackEnableYarn } = await import("./corepack.js");
-
     await expect(corepackEnableYarn()).resolves.toBeUndefined();
     const installDir = path.join(homedir(), ".corepack");
 
-    expect(mkdirSync).toHaveBeenCalledExactlyOnceWith(installDir, {
+    expect(mkdirSync).toHaveBeenCalledOnce();
+    expect(mkdirSync).toHaveBeenCalledWith(installDir, {
       recursive: true,
     });
-    expect(exec).toHaveBeenCalledAfter(jest.mocked(mkdirSync));
-    expect(exec).toHaveBeenCalledExactlyOnceWith(
+
+    expect(exec).toHaveBeenCalledOnce();
+    expect(exec).toHaveBeenCalledWith(
       "corepack",
       ["enable", "--install-directory", installDir, "yarn"],
       {
         silent: true,
       },
     );
-    expect(addPath).toHaveBeenCalledExactlyOnceWith(installDir);
+
+    expect(addPath).toHaveBeenCalledOnce();
+    expect(addPath).toHaveBeenCalledWith(installDir);
   });
 });
