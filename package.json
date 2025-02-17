@@ -19,7 +19,7 @@
     "@types/node": "^22.13.4",
     "@vercel/ncc": "^0.38.3",
     "@vitest/coverage-v8": "^3.0.5",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.1",
     "prettier": "^3.5.1",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0",
