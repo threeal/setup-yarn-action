@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "ncc build src/index.ts",
+    "build": "rollup -c",
     "format": "prettier --write --cache . !dist",
     "lint": "eslint",
     "test": "vitest"
@@ -16,11 +16,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^22.13.4",
-    "@vercel/ncc": "^0.38.3",
     "@vitest/coverage-v8": "^3.0.5",
     "eslint": "^9.20.1",
     "prettier": "^3.5.1",
+    "rollup": "^4.34.9",
+    "tslib": "^2.8.1",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.1",
     "vitest": "^3.0.5"
