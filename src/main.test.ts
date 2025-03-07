@@ -288,8 +288,7 @@ describe("install Yarn dependencies", () => {
         "Getting action inputs...",
         "Enabling Yarn...",
         "Yarn enabled",
-        "Setting Yarn version...",
-        "Failed to set Yarn version: some error",
+        "Failed to enable Yarn: some error",
       ]);
     });
 
@@ -301,7 +300,6 @@ describe("install Yarn dependencies", () => {
         "Getting action inputs...",
         "Enabling Yarn...",
         "Yarn enabled",
-        "Setting Yarn version...",
         "Yarn version set to stable",
         "::group::Getting cache key",
         "::endgroup::",
