@@ -1346,6 +1346,9 @@ __webpack_async_result__();
  */
 async function corepackAssertYarnVersion() {
     const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .getYarnVersion */ .$)();
+    if (version.match(/1\.\d+\.\d+/)) {
+        throw new Error(`This action does not support Yarn classic (${version})`);
+    }
     const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .getYarnVersion */ .$)({ corepack: true });
     if (version !== corepackVersion) {
         throw new Error(`The \`yarn\` command is using a different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
