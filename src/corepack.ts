@@ -16,6 +16,9 @@ import { getYarnVersion } from "./yarn/index.js";
  */
 export async function corepackAssertYarnVersion(): Promise<void> {
   const version = await getYarnVersion();
+  if (version.match(/1\.\d+\.\d+/)) {
+    throw new Error(`This action does not support Yarn classic (${version})`);
+  }
   const corepackVersion = await getYarnVersion({ corepack: true });
   if (version !== corepackVersion) {
     throw new Error(

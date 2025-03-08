@@ -1346,6 +1346,9 @@ __webpack_async_result__();
  */
 async function corepackAssertYarnVersion() {
     const version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .getYarnVersion */ .$)();
+    if (version.match(/1\.\d+\.\d+/)) {
+        throw new Error(`This action does not support Yarn classic (${version})`);
+    }
     const corepackVersion = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .getYarnVersion */ .$)({ corepack: true });
     if (version !== corepackVersion) {
         throw new Error(`The \`yarn\` command is using a different version of Yarn, expected \`${corepackVersion}\` but got \`${version}\``);
@@ -1444,24 +1447,15 @@ async function main() {
     (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Enabling Yarn...");
     try {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ .e)();
+        if (inputs.version != "") {
+            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .setYarnVersion */ .DA)(inputs.version);
+        }
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .N)();
     }
     catch (err) {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
         process.exitCode = 1;
         return;
-    }
-    if (inputs.version != "") {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Setting Yarn version...");
-        try {
-            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .setYarnVersion */ .DA)(inputs.version);
-            await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .N)();
-        }
-        catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to set Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
-            process.exitCode = 1;
-            return;
-        }
     }
     let cacheKey = { key: "", version: "" };
     if (inputs.cache) {
