@@ -28,23 +28,14 @@ export async function main(): Promise<void> {
   logInfo("Enabling Yarn...");
   try {
     await corepackEnableYarn();
+    if (inputs.version != "") {
+      await setYarnVersion(inputs.version);
+    }
     await corepackAssertYarnVersion();
   } catch (err) {
     logError(`Failed to enable Yarn: ${getErrorMessage(err)}`);
     process.exitCode = 1;
     return;
-  }
-
-  if (inputs.version != "") {
-    logInfo("Setting Yarn version...");
-    try {
-      await setYarnVersion(inputs.version);
-      await corepackAssertYarnVersion();
-    } catch (err) {
-      logError(`Failed to set Yarn version: ${getErrorMessage(err)}`);
-      process.exitCode = 1;
-      return;
-    }
   }
 
   let cacheKey = { key: "", version: "" };
