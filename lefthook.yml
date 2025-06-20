@@ -13,7 +13,7 @@ pre-commit:
       run: pnpm prettier --write --ignore-unknown {staged_files}
 
     - name: check types
-      run: pnpm tsc --noEmit
+      run: pnpm tsc
       glob:
         - "*.ts"
         - .npmrc
