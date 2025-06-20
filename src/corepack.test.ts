@@ -27,9 +27,12 @@ describe("assert Yarn version enabled by Corepack", () => {
   });
 
   it("should throw an error if Yarn versions are different", async () => {
-    vi.mocked(getYarnVersion).mockImplementation(async (options) => {
-      return options?.corepack ? "2.3.4" : "2.3.5";
-    });
+    vi.mocked(getYarnVersion).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async (options) => {
+        return options?.corepack ? "2.3.4" : "2.3.5";
+      },
+    );
 
     await expect(corepackAssertYarnVersion()).rejects.toThrow(
       "The `yarn` command is using a different version of Yarn, expected `2.3.4` but got `2.3.5`",

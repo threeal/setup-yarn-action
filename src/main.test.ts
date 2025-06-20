@@ -52,13 +52,19 @@ describe("install Yarn dependencies", () => {
     process.exitCode = 0;
     logs = [];
 
-    vi.mocked(restoreCache).mockImplementation(async (key, version) => {
-      return key == "some-key" && version == "some-version";
-    });
+    vi.mocked(restoreCache).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async (key, version) => {
+        return key == "some-key" && version == "some-version";
+      },
+    );
 
-    vi.mocked(saveCache).mockImplementation(async (key, version) => {
-      return key == "some-key" && version == "some-version";
-    });
+    vi.mocked(saveCache).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async (key, version) => {
+        return key == "some-key" && version == "some-version";
+      },
+    );
 
     vi.mocked(beginLogGroup).mockImplementation((name) => {
       logs.push(`::group::${name}`);
@@ -80,17 +86,26 @@ describe("install Yarn dependencies", () => {
       logs.push(message);
     });
 
-    vi.mocked(corepackEnableYarn).mockImplementation(async () => {
-      logInfo("Yarn enabled");
-    });
+    vi.mocked(corepackEnableYarn).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async () => {
+        logInfo("Yarn enabled");
+      },
+    );
 
-    vi.mocked(setYarnVersion).mockImplementation(async (version) => {
-      logInfo(`Yarn version set to ${version}`);
-    });
+    vi.mocked(setYarnVersion).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async (version) => {
+        logInfo(`Yarn version set to ${version}`);
+      },
+    );
 
-    vi.mocked(yarnInstall).mockImplementation(async () => {
-      logInfo("Dependencies installed");
-    });
+    vi.mocked(yarnInstall).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async () => {
+        logInfo("Dependencies installed");
+      },
+    );
 
     vi.mocked(getCacheKey).mockResolvedValue({
       key: "unavailable-key",

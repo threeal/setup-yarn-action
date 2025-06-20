@@ -69,14 +69,17 @@ describe("print Yarn install package output", () => {
 });
 
 it("should install package using Yarn", async () => {
-  vi.mocked(exec).mockImplementation(async (commandLine, args, options) => {
-    if (options?.listeners?.stdline !== undefined) {
-      options?.listeners?.stdline(
-        `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
-      );
-    }
-    return 0;
-  });
+  vi.mocked(exec).mockImplementation(
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async (commandLine, args, options) => {
+      if (options?.listeners?.stdline !== undefined) {
+        options.listeners.stdline(
+          `{"type":"info","name":null,"displayName":"YN0000","indent":"","data":"└ Completed"}`,
+        );
+      }
+      return 0;
+    },
+  );
 
   await yarnInstall();
 

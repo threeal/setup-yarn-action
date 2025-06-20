@@ -10,5 +10,5 @@ export async function getYarnConfig(name: string): Promise<string> {
   const res = await getExecOutput("yarn", ["config", name, "--json"], {
     silent: true,
   });
-  return JSON.parse(res.stdout).effective;
+  return (JSON.parse(res.stdout) as { effective: string }).effective;
 }
