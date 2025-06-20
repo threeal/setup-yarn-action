@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@actions/exec": "^1.1.1",
-    "cache-action": "^0.2.1",
+    "cache-action": "^1.0.0",
     "catched-error-message": "^0.0.1",
     "gha-utils": "^0.4.1",
     "hasha": "^6.0.0"

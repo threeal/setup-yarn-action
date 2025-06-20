@@ -12,8 +12,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       cache-action:
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^1.0.0
+        version: 1.0.0
       catched-error-message:
         specifier: ^0.0.1
         version: 0.0.1
@@ -594,8 +594,8 @@ packages:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
-  cache-action@0.2.1:
-    resolution: {integrity: sha512-80c0JBL6QNf6U9TxqL+DOb3iKpq7SmM1rTx4YIDRuLHniCn4eCMTLTu/3uah9n4Uf3EaV/2SS/kDwHeXVH8Idg==}
+  cache-action@1.0.0:
+    resolution: {integrity: sha512-B/99lEgC0relb1xfnI4/umATnKpbYe51/Tmu+FeBJVzbpDfbinKO5AQneQydlUeQHME0cfGr4W/PZW2dsGIK/A==}
 
   callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
@@ -1669,7 +1669,7 @@ snapshots:
 
   cac@6.7.14: {}
 
-  cache-action@0.2.1: {}
+  cache-action@1.0.0: {}
 
   callsites@3.1.0: {}
 
