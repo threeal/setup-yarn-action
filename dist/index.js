@@ -1417,7 +1417,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   i: () => (/* binding */ main)
 /* harmony export */ });
-/* harmony import */ var cache_action__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(176);
+/* harmony import */ var cache_action__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(689);
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(214);
 /* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(521);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(619);
@@ -1719,7 +1719,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("timers");
 
 /***/ }),
 
-/***/ 176:
+/***/ 689:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -1729,367 +1729,135 @@ __nccwpck_require__.d(__webpack_exports__, {
   I: () => (/* binding */ saveCache)
 });
 
+// EXTERNAL MODULE: external "node:crypto"
+var external_node_crypto_ = __nccwpck_require__(598);
 // EXTERNAL MODULE: external "node:fs/promises"
 var promises_ = __nccwpck_require__(455);
 // EXTERNAL MODULE: external "node:os"
 var external_node_os_ = __nccwpck_require__(161);
 // EXTERNAL MODULE: external "node:path"
 var external_node_path_ = __nccwpck_require__(760);
-// EXTERNAL MODULE: external "node:fs"
-var external_node_fs_ = __nccwpck_require__(24);
-;// CONCATENATED MODULE: external "node:https"
-const external_node_https_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:https");
+;// CONCATENATED MODULE: ./node_modules/.pnpm/cache-action@1.0.0/node_modules/cache-action/dist/lib/internal/api.js
+async function fetchCacheService(method, body) {
+    const url = process.env.ACTIONS_RESULTS_URL ?? "/";
+    const token = process.env.ACTIONS_RUNTIME_TOKEN ?? "";
+    return fetch(`${url}twirp/github.actions.results.api.v1.CacheService/${method}`, {
+        body: JSON.stringify(body),
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
+async function handleCacheServiceError(res) {
+    const contentType = res.headers.get("content-type");
+    if (contentType?.includes("application/json")) {
+        const data = await res.json();
+        if (typeof data === "object" && data && "msg" in data) {
+            throw new Error(`${data.msg} (${res.status.toFixed()})`);
+        }
+    }
+    throw new Error(`${res.statusText} (${res.status.toFixed()})`);
+}
+async function getCacheEntryDownloadUrl(key, version) {
+    const res = await fetchCacheService("GetCacheEntryDownloadURL", {
+        key,
+        version,
+    });
+    if (!res.ok) {
+        await handleCacheServiceError(res);
+    }
+    return (await res.json());
+}
+async function createCacheEntry(key, version) {
+    const res = await fetchCacheService("CreateCacheEntry", {
+        key,
+        version,
+    });
+    if (!res.ok) {
+        if (res.status == 409)
+            return { ok: false, signed_upload_url: "" };
+        await handleCacheServiceError(res);
+    }
+    return (await res.json());
+}
+async function finalizeCacheEntryUpload(key, version, sizeBytes) {
+    const res = await fetchCacheService("FinalizeCacheEntryUpload", {
+        key,
+        version,
+        sizeBytes,
+    });
+    if (!res.ok) {
+        await handleCacheServiceError(res);
+    }
+    return (await res.json());
+}
+
 ;// CONCATENATED MODULE: external "node:child_process"
 const external_node_child_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:child_process");
-;// CONCATENATED MODULE: ./node_modules/.pnpm/cache-action@0.2.1/node_modules/cache-action/dist/lib.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/cache-action@1.0.0/node_modules/cache-action/dist/lib/internal/cmd.js
 
-
-
-
-
-
-
-/**
- * Sends an HTTP request containing raw data.
- *
- * @param req - The HTTP request object.
- * @param data - The raw data to be sent in the request body.
- * @returns A promise that resolves to an HTTP response object.
- */
-async function sendRequest(req, data) {
-    return new Promise((resolve, reject) => {
-        req.on("response", (res) => resolve(res));
-        req.on("error", reject);
-        if (data !== undefined)
-            req.write(data);
-        req.end();
-    });
-}
-/**
- * Sends an HTTP request containing JSON data.
- *
- * @param req - The HTTP request object.
- * @param data - The JSON data to be sent in the request body.
- * @returns A promise that resolves to an HTTP response object.
- */
-async function sendJsonRequest(req, data) {
-    req.setHeader("Content-Type", "application/json");
-    return sendRequest(req, JSON.stringify(data));
-}
-/**
- * Sends an HTTP request containing a binary stream.
- *
- * @param req - The HTTP request object.
- * @param bin - The binary stream to be sent in the request body.
- * @param start - The starting byte of the binary stream.
- * @param end - The ending byte of the binary stream.
- * @returns A promise that resolves to an HTTP response object.
- */
-async function sendStreamRequest(req, bin, start, end) {
-    return new Promise((resolve, reject) => {
-        req.setHeader("Content-Type", "application/octet-stream");
-        req.setHeader("Content-Range", `bytes ${start}-${end}/*`);
-        req.on("response", (res) => resolve(res));
-        req.on("error", reject);
-        bin.pipe(req);
-    });
-}
-/**
- * Asserts whether the content type of the given HTTP incoming message matches
- * the expected type.
- *
- * @param msg - The HTTP incoming message.
- * @param expectedType - The expected content type of the message.
- * @throws {Error} Throws an error if the content type does not match the
- * expected type.
- */
-function assertIncomingMessageContentType(msg, expectedType) {
-    const actualType = msg.headers["content-type"] ?? "undefined";
-    if (!actualType.includes(expectedType)) {
-        throw new Error(`expected content type to be '${expectedType}', but instead got '${actualType}'`);
+class ProcessError extends Error {
+    constructor(args, code, output) {
+        let message = "Process failed";
+        if (code !== null)
+            message += ` (${code.toString()})`;
+        message += `: ${args.join(" ")}`;
+        const trimmedOutput = output.trim();
+        if (trimmedOutput !== "")
+            message += `\n${trimmedOutput}`;
+        super(message);
+        this.name = this.constructor.name;
+        Error.captureStackTrace(this, this.constructor);
     }
 }
-/**
- * Waits until an HTTP incoming message has ended.
- *
- * @param msg - The HTTP incoming message.
- * @returns A promise that resolves when the incoming message ends.
- */
-async function waitIncomingMessage(msg) {
-    return new Promise((resolve, reject) => {
-        msg.on("data", () => {
-            /** discarded **/
-        });
-        msg.on("end", resolve);
-        msg.on("error", reject);
-    });
-}
-/**
- * Reads the data from an HTTP incoming message.
- *
- * @param msg - The HTTP incoming message.
- * @returns A promise that resolves to the buffered data from the message.
- */
-async function readIncomingMessage(msg) {
+async function waitProcess(proc) {
     return new Promise((resolve, reject) => {
         const chunks = [];
-        msg.on("data", (chunk) => chunks.push(chunk));
-        msg.on("end", () => resolve(Buffer.concat(chunks)));
-        msg.on("error", reject);
-    });
-}
-/**
- * Reads the JSON data from an HTTP incoming message.
- *
- * @typeParam T - The expected type of the parsed JSON data.
- * @param msg - The HTTP incoming message.
- * @returns A promise that resolves to the parsed JSON data from the message.
- */
-async function readJsonIncomingMessage(msg) {
-    assertIncomingMessageContentType(msg, "application/json");
-    const buffer = await readIncomingMessage(msg);
-    return JSON.parse(buffer.toString());
-}
-/**
- * Reads the error data from an HTTP incoming message.
- *
- * @param msg - The HTTP incoming message.
- * @returns A promise that resolves to an `Error` object based on the error
- * data from the message.
- */
-async function readErrorIncomingMessage(msg) {
-    const buffer = await readIncomingMessage(msg);
-    const contentType = msg.headers["content-type"];
-    if (contentType !== undefined) {
-        if (contentType.includes("application/json")) {
-            const data = JSON.parse(buffer.toString());
-            if (typeof data === "object" && "message" in data) {
-                return new Error(`${data["message"]} (${msg.statusCode})`);
-            }
-        }
-        else if (contentType.includes("application/xml")) {
-            const data = buffer.toString().match(/<Message>(.*?)<\/Message>/s);
-            if (data !== null && data.length > 1) {
-                return new Error(`${data[1]} (${msg.statusCode})`);
-            }
-        }
-    }
-    return new Error(`${buffer.toString()} (${msg.statusCode})`);
-}
-
-function createCacheRequest(resourcePath, options) {
-    const url = `${process.env["ACTIONS_CACHE_URL"]}_apis/artifactcache/${resourcePath}`;
-    const req = external_node_https_namespaceObject.request(url, options);
-    req.setHeader("Accept", "application/json;api-version=6.0-preview");
-    const bearer = `Bearer ${process.env["ACTIONS_RUNTIME_TOKEN"]}`;
-    req.setHeader("Authorization", bearer);
-    return req;
-}
-/**
- * Sends a request to retrieve cache information for the specified key and version.
- *
- * @param key - The cache key.
- * @param version - The cache version.
- * @returns A promise that resolves with the cache information or null if not found.
- */
-async function requestGetCache(key, version) {
-    const resourcePath = `cache?keys=${key}&version=${version}`;
-    const req = createCacheRequest(resourcePath, { method: "GET" });
-    const res = await sendRequest(req);
-    switch (res.statusCode) {
-        case 200:
-            return await readJsonIncomingMessage(res);
-        // Cache not found, return null.
-        case 204:
-            await waitIncomingMessage(res);
-            return null;
-        default:
-            throw await readErrorIncomingMessage(res);
-    }
-}
-/**
- * Sends a request to reserve a cache with the specified key, version, and size.
- *
- * @param key - The key of the cache to reserve.
- * @param version - The version of the cache to reserve.
- * @param size - The size of the cache to reserve, in bytes.
- * @returns A promise that resolves to the reserved cache ID, or null if the
- * cache is already reserved.
- */
-async function requestReserveCache(key, version, size) {
-    const req = createCacheRequest("caches", { method: "POST" });
-    const res = await sendJsonRequest(req, { key, version, cacheSize: size });
-    switch (res.statusCode) {
-        case 201: {
-            const { cacheId } = await readJsonIncomingMessage(res);
-            return cacheId;
-        }
-        // Cache already reserved, return null.
-        case 409:
-            await waitIncomingMessage(res);
-            return null;
-        default:
-            throw await readErrorIncomingMessage(res);
-    }
-}
-/**
- * Sends multiple requests to upload a file to the cache with the specified ID.
- *
- * @param id - The cache ID.
- * @param filePath - The path of the file to upload.
- * @param fileSize - The size of the file to upload, in bytes.
- * @param options - The upload options.
- * @param options.maxChunkSize - The maximum size of each chunk to be uploaded,
- * in bytes. Defaults to 4 MB.
- * @returns A promise that resolves when the file has been uploaded.
- */
-async function requestUploadCache(id, filePath, fileSize, options) {
-    const { maxChunkSize } = {
-        maxChunkSize: 4 * 1024 * 1024,
-        ...options,
-    };
-    const proms = [];
-    for (let start = 0; start < fileSize; start += maxChunkSize) {
-        proms.push((async () => {
-            const end = Math.min(start + maxChunkSize - 1, fileSize);
-            const bin = external_node_fs_.createReadStream(filePath, { start, end });
-            const req = createCacheRequest(`caches/${id}`, { method: "PATCH" });
-            const res = await sendStreamRequest(req, bin, start, end);
-            switch (res.statusCode) {
-                case 204:
-                    await waitIncomingMessage(res);
-                    break;
-                default:
-                    throw await readErrorIncomingMessage(res);
-            }
-        })());
-    }
-    await Promise.all(proms);
-}
-/**
- * Sends a request to commit a cache with the specified ID.
- *
- * @param id - The cache ID.
- * @param size - The size of the cache to be committed, in bytes.
- * @returns A promise that resolves when the cache has been committed.
- */
-async function requestCommitCache(id, size) {
-    const req = createCacheRequest(`caches/${id}`, { method: "POST" });
-    const res = await sendJsonRequest(req, { size });
-    if (res.statusCode !== 204) {
-        throw await readErrorIncomingMessage(res);
-    }
-    await waitIncomingMessage(res);
-}
-
-/**
- * Waits for a child process to exit.
- *
- * @param proc - The child process to wait for.
- * @returns A promise that resolves when the child process exits successfully,
- * or rejects if the process fails.
- */
-async function waitChildProcess(proc) {
-    return new Promise((resolve, reject) => {
-        const chunks = [];
-        proc.stderr?.on("data", (chunk) => chunks.push(chunk));
+        proc.stderr.on("data", (chunk) => chunks.push(chunk));
         proc.on("error", reject);
         proc.on("close", (code) => {
             if (code === 0) {
                 resolve(undefined);
             }
             else {
-                reject(new Error([
-                    `Process failed: ${proc.spawnargs.join(" ")}`,
-                    Buffer.concat(chunks).toString(),
-                ].join("\n")));
+                const output = Buffer.concat(chunks).toString();
+                reject(new ProcessError(proc.spawnargs, code, output));
             }
         });
     });
 }
-/**
- * Creates a compressed archive from files using Tar and Zstandard.
- *
- * @param archivePath - The output path for the compressed archive.
- * @param filePaths - The paths of the files to be archived.
- * @returns A promise that resolves when the compressed archive is created.
- */
 async function createArchive(archivePath, filePaths) {
     const tar = (0,external_node_child_process_namespaceObject.spawn)("tar", ["-cf", "-", "-P", ...filePaths]);
     const zstd = (0,external_node_child_process_namespaceObject.spawn)("zstd", ["-T0", "-o", archivePath]);
     tar.stdout.pipe(zstd.stdin);
-    await Promise.all([waitChildProcess(tar), waitChildProcess(zstd)]);
+    await Promise.all([waitProcess(tar), waitProcess(zstd)]);
 }
-/**
- * Extracts files from a compressed archive using Tar and Zstandard.
- *
- * @param archivePath - The path to the compressed archive to be extracted.
- * @returns A promise that resolves when the files have been successfully extracted.
- */
 async function extractArchive(archivePath) {
     const zstd = (0,external_node_child_process_namespaceObject.spawn)("zstd", ["-d", "-T0", "-c", archivePath]);
     const tar = (0,external_node_child_process_namespaceObject.spawn)("tar", ["-xf", "-", "-P"]);
     zstd.stdout.pipe(tar.stdin);
-    await Promise.all([waitChildProcess(zstd), waitChildProcess(tar)]);
+    await Promise.all([waitProcess(zstd), waitProcess(tar)]);
+}
+async function azureStorageCopy(source, destination) {
+    const azcopy = (0,external_node_child_process_namespaceObject.spawn)("azcopy", [
+        "copy",
+        "--skip-version-check",
+        "--block-size-mb",
+        "32",
+        source,
+        destination,
+    ]);
+    await waitProcess(azcopy);
 }
 
-/**
- * Retrieves the file size of a file to be downloaded from the specified URL.
- *
- * @param url - The URL of the file to be downloaded.
- * @returns A promise that resolves to the size of the file to be downloaded, in bytes.
- */
-async function getDownloadFileSize(url) {
-    const req = external_node_https_namespaceObject.request(url, { method: "HEAD" });
-    const res = await sendRequest(req);
-    switch (res.statusCode) {
-        case 200: {
-            await readIncomingMessage(res);
-            return Number.parseInt(res.headers["content-length"]);
-        }
-        default:
-            throw await readErrorIncomingMessage(res);
-    }
-}
-/**
- * Downloads a file from the specified URL and saves it to the provided path.
- *
- * @param url - The URL of the file to be downloaded.
- * @param savePath - The path where the downloaded file will be saved.
- * @param options - The download options.
- * @param options.maxChunkSize - The maximum size of each chunk to be downloaded
- * in bytes. Defaults to 4 MB.
- * @returns A promise that resolves when the download is complete.
- */
-async function downloadFile(url, savePath, options) {
-    const { maxChunkSize } = {
-        maxChunkSize: 4 * 1024 * 1024,
-        ...options,
-    };
-    const [file, fileSize] = await Promise.all([
-        promises_.open(savePath, "w"),
-        getDownloadFileSize(url),
-    ]);
-    const proms = [];
-    for (let start = 0; start < fileSize; start += maxChunkSize) {
-        proms.push((async () => {
-            const end = Math.min(start + maxChunkSize - 1, fileSize);
-            const req = external_node_https_namespaceObject.request(url, { method: "GET" });
-            req.setHeader("range", `bytes=${start}-${end}`);
-            const res = await sendRequest(req);
-            if (res.statusCode === 206) {
-                assertIncomingMessageContentType(res, "application/octet-stream");
-                const buffer = await readIncomingMessage(res);
-                await file.write(buffer, 0, buffer.length, start);
-            }
-            else {
-                throw await readErrorIncomingMessage(res);
-            }
-        })());
-    }
-    await Promise.all(proms);
-    await file.close();
-}
+;// CONCATENATED MODULE: ./node_modules/.pnpm/cache-action@1.0.0/node_modules/cache-action/dist/lib/cache.js
+
+
+
+
+
 
 /**
  * Restores files from the cache using the specified key and version.
@@ -2100,12 +1868,13 @@ async function downloadFile(url, savePath, options) {
  * file was restored successfully.
  */
 async function restoreCache(key, version) {
-    const cache = await requestGetCache(key, version);
-    if (cache === null)
+    const versionHash = (0,external_node_crypto_.createHash)("sha256").update(version).digest("hex");
+    const res = await getCacheEntryDownloadUrl(key, versionHash);
+    if (!res.ok)
         return false;
     const tempDir = await promises_.mkdtemp(external_node_path_.join(external_node_os_.tmpdir(), "temp-"));
     const archivePath = external_node_path_.join(tempDir, "cache.tar.zst");
-    await downloadFile(cache.archiveLocation, archivePath);
+    await azureStorageCopy(res.signed_download_url, archivePath);
     await extractArchive(archivePath);
     await promises_.rm(tempDir, { recursive: true });
     return true;
@@ -2124,18 +1893,16 @@ async function saveCache(key, version, filePaths) {
     const archivePath = external_node_path_.join(tempDir, "cache.tar.zst");
     await createArchive(archivePath, filePaths);
     const archiveStat = await promises_.stat(archivePath);
-    const cacheId = await requestReserveCache(key, version, archiveStat.size);
-    if (cacheId === null) {
-        await promises_.rm(tempDir, { recursive: true });
-        return false;
+    const versionHash = (0,external_node_crypto_.createHash)("sha256").update(version).digest("hex");
+    const res = await createCacheEntry(key, versionHash);
+    if (res.ok) {
+        await azureStorageCopy(archivePath, res.signed_upload_url);
+        const { ok } = await finalizeCacheEntryUpload(key, versionHash, archiveStat.size);
+        res.ok = ok;
     }
-    await requestUploadCache(cacheId, archivePath, archiveStat.size);
-    await requestCommitCache(cacheId, archiveStat.size);
     await promises_.rm(tempDir, { recursive: true });
-    return true;
+    return res.ok;
 }
-
-
 
 
 /***/ }),
