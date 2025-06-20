@@ -39,20 +39,26 @@ beforeEach(() => {
 
 describe("get cache key", () => {
   beforeEach(() => {
-    vi.mocked(hashFile).mockImplementation((async (filePath) => {
-      if (filePath == "yarn.lock") return "b1484caea0bbcbfa9a3a32591e3cad5d";
-      throw new Error(`file not found: ${filePath}`);
-    }) as typeof hashFile);
+    vi.mocked(hashFile).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      (async (filePath) => {
+        if (filePath == "yarn.lock") return "b1484caea0bbcbfa9a3a32591e3cad5d";
+        throw new Error(`file not found: ${filePath}`);
+      }) as typeof hashFile,
+    );
 
     vi.mocked(fs.existsSync).mockImplementation((path) => {
       if (path == "yarn.lock") return true;
       return false;
     });
 
-    vi.mocked(getYarnVersion).mockImplementation(async (options) => {
-      if (options?.corepack) return "1.2.3";
-      throw new Error("Unable to get Yarn version");
-    });
+    vi.mocked(getYarnVersion).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async (options) => {
+        if (options?.corepack) return "1.2.3";
+        throw new Error("Unable to get Yarn version");
+      },
+    );
   });
 
   it("should failed to get Yarn version", async () => {
@@ -122,23 +128,26 @@ describe("get cache paths", () => {
   beforeEach(() => {
     vi.mocked(fs.existsSync).mockReturnValue(true);
 
-    vi.mocked(getYarnConfig).mockImplementation(async (name) => {
-      switch (name) {
-        case "cacheFolder":
-          return ".yarn/cache";
-        case "deferredVersionFolder":
-          return ".yarn/versions";
-        case "installStatePath":
-          return ".yarn/install-state.gz";
-        case "patchFolder":
-          return ".yarn/patches";
-        case "pnpUnpluggedFolder":
-          return ".yarn/unplugged";
-        case "virtualFolder":
-          return ".yarn/__virtual__";
-      }
-      throw new Error(`unknown config: ${name}`);
-    });
+    vi.mocked(getYarnConfig).mockImplementation(
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async (name) => {
+        switch (name) {
+          case "cacheFolder":
+            return ".yarn/cache";
+          case "deferredVersionFolder":
+            return ".yarn/versions";
+          case "installStatePath":
+            return ".yarn/install-state.gz";
+          case "patchFolder":
+            return ".yarn/patches";
+          case "pnpUnpluggedFolder":
+            return ".yarn/unplugged";
+          case "virtualFolder":
+            return ".yarn/__virtual__";
+        }
+        throw new Error(`unknown config: ${name}`);
+      },
+    );
   });
 
   it("should failed to get Yarn config", async () => {
