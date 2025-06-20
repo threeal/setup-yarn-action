@@ -22,7 +22,7 @@ jobs:
         run: pnpm prettier --check .
 
       - name: Check Types
-        run: pnpm tsc --noEmit
+        run: pnpm tsc
 
       - name: Check Lint
         run: pnpm eslint
