@@ -24,11 +24,5 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.1",
     "vitest": "^3.0.8"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lefthook"
-    ]
   }
 }
