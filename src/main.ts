@@ -11,8 +11,8 @@ import {
 
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
-import { setYarnVersion, yarnInstall } from "./yarn/index.js";
 import { getInputs, Inputs } from "./inputs.js";
+import { setYarnVersion, yarnInstall } from "./yarn/index.js";
 
 export async function main(): Promise<void> {
   logInfo("Getting action inputs...");
