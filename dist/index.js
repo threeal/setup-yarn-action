@@ -1422,8 +1422,8 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(521);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(619);
 /* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(355);
-/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(363);
-/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(52);
+/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(52);
+/* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(363);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
 _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
@@ -1437,7 +1437,7 @@ async function main() {
     (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Getting action inputs...");
     let inputs;
     try {
-        inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_5__/* .getInputs */ .G)();
+        inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_4__/* .getInputs */ .G)();
     }
     catch (err) {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
@@ -1448,7 +1448,7 @@ async function main() {
     try {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ .e)();
         if (inputs.version != "") {
-            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .setYarnVersion */ .DA)(inputs.version);
+            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .setYarnVersion */ .DA)(inputs.version);
         }
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .N)();
     }
@@ -1489,7 +1489,7 @@ async function main() {
     }
     (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Installing dependencies");
     try {
-        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_4__/* .yarnInstall */ .yr)();
+        await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .yarnInstall */ .yr)();
     }
     catch (err) {
         (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
