@@ -1,8 +1,8 @@
 import { exec } from "@actions/exec";
 import { addPath } from "gha-utils";
 import { mkdirSync } from "node:fs";
-import path from "node:path";
 import { homedir } from "node:os";
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
 import { getYarnVersion } from "./yarn/index.js";
