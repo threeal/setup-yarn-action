@@ -11,5 +11,5 @@ inputs:
     description: Use caching during Yarn installation
     default: true
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
