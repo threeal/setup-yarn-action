@@ -1238,7 +1238,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ });
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(214);
 /* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(521);
-/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(185);
+/* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(436);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(24);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(161);
@@ -2147,7 +2147,7 @@ function endLogGroup() {
 
 /***/ }),
 
-/***/ 185:
+/***/ 436:
 /***/ ((__webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
@@ -2173,11 +2173,31 @@ let worker; // Lazy
 let taskIdCounter = 0;
 const tasks = new Map();
 
+const formatOutput = (buffer, encoding) => {
+	if (encoding === 'buffer' || encoding === undefined) {
+		return Buffer.from(buffer);
+	}
+
+	if (!['hex', 'base64', 'latin1'].includes(encoding)) {
+		throw new TypeError(`Invalid encoding: ${encoding}`);
+	}
+
+	return Buffer.from(buffer).toString(encoding);
+};
+
 const recreateWorkerError = sourceError => {
 	const error = new Error(sourceError.message);
 
+	if (sourceError.name) {
+		error.name = sourceError.name;
+	}
+
+	if (sourceError.stack) {
+		error.stack = sourceError.stack;
+	}
+
 	for (const [key, value] of Object.entries(sourceError)) {
-		if (key !== 'message') {
+		if (!(key in error) && key !== 'message') {
 			error[key] = value;
 		}
 	}
@@ -2190,6 +2210,12 @@ const createWorker = () => {
 
 	worker.on('message', message => {
 		const task = tasks.get(message.id);
+
+		if (!task) {
+			// Task may have been aborted and cleaned up already
+			return;
+		}
+
 		tasks.delete(message.id);
 
 		if (tasks.size === 0) {
@@ -2203,31 +2229,112 @@ const createWorker = () => {
 		}
 	});
 
-	worker.on('error', error => {
-		// Any error here is effectively an equivalent of segfault, and have no scope, so we just throw it on callback level
-		throw error;
+	const handleWorkerError = error => {
+		for (const task of tasks.values()) {
+			task.reject(error);
+		}
+
+		tasks.clear();
+		worker = undefined;
+	};
+
+	worker.on('error', handleWorkerError);
+	worker.on('exit', code => {
+		if (code !== 0) {
+			handleWorkerError(new Error(`Worker thread exited with code ${code}`));
+		}
 	});
 };
 
-const taskWorker = (method, arguments_, transferList) => new Promise((resolve, reject) => {
+const taskWorker = (method, arguments_, signal) => new Promise((resolve, reject) => {
 	const id = taskIdCounter++;
-	tasks.set(id, {resolve, reject});
+
+	const cleanup = () => {
+		tasks.delete(id);
+		if (tasks.size === 0) {
+			worker?.unref();
+		}
+	};
+
+	let abortCleanup;
+
+	const handleTaskEnd = (fn, value) => {
+		cleanup();
+		abortCleanup?.();
+		fn(value);
+	};
+
+	const task = {
+		resolve: value => handleTaskEnd(resolve, value),
+		reject: error => handleTaskEnd(reject, error),
+	};
+
+	tasks.set(id, task);
+
+	// Handle abort signal
+	if (signal) {
+		const onAbort = () => {
+			worker?.postMessage({id, abort: true});
+			task.reject(signal.reason);
+		};
+
+		if (signal.aborted) {
+			onAbort();
+			return;
+		}
+
+		signal.addEventListener('abort', onAbort, {once: true});
+		abortCleanup = () => signal.removeEventListener('abort', onAbort);
+	}
 
 	if (worker === undefined) {
 		createWorker();
 	}
 
 	worker.ref();
+
+	// Prepare transfer list for buffer inputs
+	let transferList;
+	if (method === 'hash' && arguments_[1]) {
+		const parts = [arguments_[1]].flat();
+		transferList = [];
+		arguments_[1] = parts.map(part => {
+			if (part instanceof Uint8Array) {
+				const ab = part.buffer.slice(part.byteOffset, part.byteOffset + part.byteLength);
+				transferList.push(ab);
+				return ab;
+			}
+
+			return part;
+		});
+
+		if (arguments_[1].length === 1) {
+			arguments_[1] = arguments_[1][0];
+		}
+	}
+
 	worker.postMessage({id, method, arguments_}, transferList);
 });
 
 async function hash(input, options = {}) {
+	const {signal} = options;
+
+	signal?.throwIfAborted();
+
 	if (isStream(input)) {
 		return new Promise((resolve, reject) => {
+			const hashStream = hashingStream(options);
+
+			signal?.addEventListener('abort', () => {
+				input.destroy();
+				hashStream.destroy();
+				reject(signal.reason);
+			}, {once: true});
+
 			// TODO: Use `stream.compose` and `.toArray()`.
 			input
 				.on('error', reject)
-				.pipe(hashingStream(options))
+				.pipe(hashStream)
 				.on('error', reject)
 				.on('finish', function () {
 					resolve(this.read());
@@ -2239,44 +2346,38 @@ async function hash(input, options = {}) {
 		return hashSync(input, options);
 	}
 
-	let {
+	const {
 		encoding = 'hex',
 		algorithm = 'sha512',
 	} = options;
 
-	if (encoding === 'buffer') {
-		encoding = undefined;
-	}
-
-	const hash = await taskWorker('hash', [algorithm, input]);
-
-	if (encoding === undefined) {
-		return Buffer.from(hash);
-	}
-
-	return Buffer.from(hash).toString(encoding);
+	const hash = await taskWorker('hash', [algorithm, input], signal);
+	return formatOutput(hash, encoding);
 }
 
 function hashSync(input, {encoding = 'hex', algorithm = 'sha512'} = {}) {
-	if (encoding === 'buffer') {
-		encoding = undefined;
+	if (isStream(input)) {
+		throw new TypeError('hashSync does not accept streams');
 	}
 
 	const hash = crypto.createHash(algorithm);
 
-	const update = buffer => {
-		const inputEncoding = typeof buffer === 'string' ? 'utf8' : undefined;
-		hash.update(buffer, inputEncoding);
-	};
-
 	for (const element of [input].flat()) {
-		update(element);
+		if (typeof element === 'string') {
+			hash.update(element, 'utf8');
+		} else {
+			hash.update(element);
+		}
 	}
 
-	return hash.digest(encoding);
+	return formatOutput(hash.digest(), encoding);
 }
 
 async function hashFile(filePath, options = {}) {
+	const {signal} = options;
+
+	signal?.throwIfAborted();
+
 	if (Worker === undefined) {
 		return hash(node_fs__WEBPACK_IMPORTED_MODULE_0__.createReadStream(filePath), options);
 	}
@@ -2286,26 +2387,45 @@ async function hashFile(filePath, options = {}) {
 		algorithm = 'sha512',
 	} = options;
 
-	const hash = await taskWorker('hashFile', [algorithm, filePath]);
-
-	if (encoding === 'buffer') {
-		return Buffer.from(hash);
-	}
-
-	return Buffer.from(hash).toString(encoding);
+	const hash = await taskWorker('hashFile', [algorithm, filePath], signal);
+	return formatOutput(hash, encoding);
 }
 
-function hashFileSync(filePath, options) {
-	return hashSync(fs.readFileSync(filePath), options);
+function hashFileSync(filePath, {encoding = 'hex', algorithm = 'sha512'} = {}) {
+	// Stream file synchronously for better memory usage with large files
+	const hasher = crypto.createHash(algorithm);
+	const chunkSize = 64 * 1024; // 64KB chunks
+	const buffer = Buffer.alloc(chunkSize);
+	const fd = fs.openSync(filePath, 'r');
+
+	try {
+		let bytesRead;
+		let position = 0;
+
+		do {
+			bytesRead = fs.readSync(fd, buffer, 0, chunkSize, position);
+			if (bytesRead > 0) {
+				hasher.update(buffer.subarray(0, bytesRead));
+				position += bytesRead;
+			}
+		} while (bytesRead > 0);
+	} finally {
+		fs.closeSync(fd);
+	}
+
+	return formatOutput(hasher.digest(), encoding);
 }
 
 function hashingStream({encoding = 'hex', algorithm = 'sha512'} = {}) {
-	if (encoding === 'buffer') {
-		encoding = undefined;
+	if (encoding !== 'buffer' && !['hex', 'base64', 'latin1'].includes(encoding)) {
+		throw new TypeError(`Invalid encoding: ${encoding}`);
 	}
 
 	const stream = crypto.createHash(algorithm);
-	stream.setEncoding(encoding);
+	if (encoding !== 'buffer') {
+		stream.setEncoding(encoding);
+	}
+
 	return stream;
 }
 
