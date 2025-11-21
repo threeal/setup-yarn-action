@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
 
       - name: Setup pnpm
         uses: threeal/setup-pnpm-action@v1.0.0
@@ -30,13 +30,13 @@ jobs:
         os: [ubuntu-24.04, macos-14, windows-2022]
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           repository: threeal/nodejs-starter
           ref: v2.1.2
 
       - name: Checkout Action
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           path: setup-yarn-action
           sparse-checkout: |
@@ -59,7 +59,7 @@ jobs:
         os: [ubuntu-24.04, macos-14, windows-2022]
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           repository: threeal/nodejs-starter
           ref: v1.0.0
@@ -69,7 +69,7 @@ jobs:
         run: jq 'del(.packageManager)' package.json > package.json.tmp && mv package.json.tmp package.json
 
       - name: Checkout Action
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           path: setup-yarn-action
           sparse-checkout: |
@@ -98,13 +98,13 @@ jobs:
         os: [ubuntu-24.04, macos-14, windows-2022]
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           repository: threeal/nodejs-starter
           ref: v2.1.2
 
       - name: Checkout Action
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           path: setup-yarn-action
           sparse-checkout: |
@@ -125,13 +125,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Package
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           repository: threeal/nodejs-starter
           ref: v2.1.2
 
       - name: Checkout Action
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
         with:
           path: setup-yarn-action
           sparse-checkout: |
