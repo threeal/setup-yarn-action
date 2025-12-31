@@ -5,7 +5,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@actions/exec": "^1.1.1",
+    "@actions/exec": "^2.0.0",
     "cache-action": "^1.0.0",
     "catched-error-message": "^0.0.1",
     "gha-utils": "^0.4.1",
