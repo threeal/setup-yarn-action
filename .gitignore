@@ -1,6 +1,9 @@
 .*
-!.git*
+!.github/
+!.gitattributes
+!.gitignore
 !.npmrc
-!.prettier*
+!.prettierignore
+!.prettierrc.json
 
 node_modules/
