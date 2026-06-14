@@ -26,5 +26,12 @@
     "typescript-eslint": "^8.59.3",
     "vitest": "^3.2.6"
   },
-  "packageManager": "pnpm@10.34.1"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.16.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@11.6.0"
 }
