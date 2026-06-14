@@ -2,7 +2,6 @@
 !.github/
 !.gitattributes
 !.gitignore
-!.npmrc
 !.prettierignore
 !.prettierrc.json
 
