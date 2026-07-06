@@ -126,7 +126,19 @@ describe("get cache key", () => {
 
 describe("get cache paths", () => {
   beforeEach(() => {
-    vi.mocked(fs.existsSync).mockReturnValue(true);
+    vi.mocked(fs.existsSync).mockImplementation((path) => {
+      switch (path) {
+        case ".pnp.cjs":
+        case ".pnp.loader.mjs":
+        case ".yarn/cache":
+        case ".yarn/versions":
+        case ".yarn/install-state.gz":
+        case ".yarn/patches":
+        case ".yarn/unplugged":
+          return true;
+      }
+      return false;
+    });
 
     vi.mocked(getYarnConfig).mockImplementation(
       // eslint-disable-next-line @typescript-eslint/require-await
@@ -172,7 +184,6 @@ describe("get cache paths", () => {
       ".yarn/install-state.gz",
       ".yarn/patches",
       ".yarn/unplugged",
-      ".yarn/__virtual__",
     ];
 
     expect(logs).toStrictEqual([
