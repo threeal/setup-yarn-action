@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container" id="app">
+    <header>
+      <h1>Weather Dashboard</h1>
+      <form id="searchForm" aria-label="Search city">
+        <label for="cityInput" class="visually-hidden">City name</label>
+        <input id="cityInput" name="city" type="search" placeholder="Enter city or ZIP" autocomplete="on" />
+        <button id="searchBtn" type="submit">Search</button>
+        <button id="geoBtn" type="button" title="Use my location">Use my location</button>
+      </form>
+      <div class="controls">
+        <label class="units">
+          <input type="radio" name="units" value="metric" checked /> °C
+        </label>
+        <label class="units">
+          <input type="radio" name="units" value="imperial" /> °F
+        </label>
+      </div>
+    </header>
+
+    <section id="status" aria-live="polite" class="status"></section>
+
+    <section id="weather" class="weather hidden" aria-hidden="true">
+      <div class="current">
+        <div class="location">
+          <h2 id="locName">—</h2>
+          <p id="locTime" class="muted">—</p>
+        </div>
+        <div class="now">
+          <img id="nowIcon" alt="" />
+          <div class="now-info">
+            <p id="nowTemp" class="big">—</p>
+            <p id="nowDesc" class="muted">—</p>
+            <p id="nowDetails" class="muted">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forecast" id="forecast" aria-label="Forecast">
+        <!-- Forecast cards are inserted here by JS -->
+      </div>
+    </section>
+
+    <footer>
+      <small>Data from <a href="https://openweathermap.org/" target="_blank" rel="noopener">OpenWeatherMap</a>. API key is stored on the server (not exposed to the browser).</small>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

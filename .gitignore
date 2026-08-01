@@ -1,8 +1,4 @@
-.*
-!.github/
-!.gitattributes
-!.gitignore
-!.prettierignore
-!.prettierrc.json
-
 node_modules/
+.env
+.DS_Store
+npm-debug.log
