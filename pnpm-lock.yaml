@@ -41,7 +41,7 @@ importers:
         version: 4.1.10(vitest@4.1.10)
       eslint:
         specifier: ^10.8.0
-        version: 10.8.0(jiti@2.7.0)
+        version: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
@@ -49,8 +49,8 @@ importers:
         specifier: ^2.1.10
         version: 2.1.10
       node:
-        specifier: runtime:^24.18.0
-        version: runtime:24.18.0
+        specifier: runtime:^24.19.0
+        version: runtime:24.19.0
       prettier:
         specifier: ^3.9.6
         version: 3.9.6
@@ -62,7 +62,7 @@ importers:
         version: 6.0.3
       typescript-eslint:
         specifier: ^8.65.0
-        version: 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
+        version: 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.2)(@vitest/coverage-v8@4.1.10)(vite@7.3.5(@types/node@26.1.2)(jiti@2.7.0))
@@ -899,7 +899,7 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  node@runtime:24.18.0:
+  node@runtime:24.19.0:
     resolution:
       type: variations
       variants:
@@ -907,9 +907,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-ZGOiNzn2sjAOvsXM1gJ14TjjhY/Br8bo+bxOT2pLdvo=
+            integrity: sha256-9ONcExZd5ogMqiVYwKpIyoitpH/iI0vtB9Ztu4CkfI0=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-aix-ppc64.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-aix-ppc64.tar.gz
           targets:
             - cpu: ppc64
               os: aix
@@ -917,9 +917,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-4al+FMmcgD6WxzOUAyguoFpJnDL42D3v6e9exm+XntE=
+            integrity: sha256-gpS3qpsDmXSBwGur8eiycMhZNY8n2lehFQmv5TesOB0=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-darwin-arm64.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-darwin-arm64.tar.gz
           targets:
             - cpu: arm64
               os: darwin
@@ -927,9 +927,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-39Db0+chUDQ033tyBecZ9hs6OjGyvPlym4uR/qJA8IA=
+            integrity: sha256-0bXpmdsVjGL+j3JnpEdrA12L2TsaYFusJKPw3RZuMxY=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-darwin-x64.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-darwin-x64.tar.gz
           targets:
             - cpu: x64
               os: darwin
@@ -937,9 +937,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-a0SEwhkCdBdd+aqPKOLXWKgZyxwf5qtIHi+VtGOrhQg=
+            integrity: sha256-0oyKW/CoCPDtQ0odzoxUrpjwNxwL2GrFirxhP3PmZD8=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-linux-arm64.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -947,9 +947,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-/hM4ly95KDxrwh5h2/RXa76MBa3tKZnUHIZDrTAmUUI=
+            integrity: sha256-sxqMTLxYn5FS8y/bQxhGl1nhZViltdk7f/L7KHsBPbI=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-ppc64le.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-linux-ppc64le.tar.gz
           targets:
             - cpu: ppc64le
               os: linux
@@ -957,9 +957,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-Nx68E5RfwWlJPnUvLdr6+rbs2My0Ubz/RuCfacXdjHo=
+            integrity: sha256-s6tqQ5KCjbn9TtloOY1VGIKSvMFYGVQtU74LEQDjMvw=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-s390x.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-linux-s390x.tar.gz
           targets:
             - cpu: s390x
               os: linux
@@ -967,9 +967,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-eDEwmElj23upy9AQierywu+wVcfBaTyUMXS5Z7MFDLg=
+            integrity: sha256-9iXZfNcH30/5YlSRb7xf8BTwnAnv/loeDKj21BqHidQ=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-x64.tar.gz
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-linux-x64.tar.gz
           targets:
             - cpu: x64
               os: linux
@@ -977,10 +977,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-8nRmmtuTsf0Pv48h/QeGCencyEMz1PJxjS3eP5oWGgE=
-            prefix: node-v24.18.0-win-arm64
+            integrity: sha256-hQL0pQtFjUzDjtjyABVWws0jnUZJIPdAF5Jsyx4cFX8=
+            prefix: node-v24.19.0-win-arm64
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-win-arm64.zip
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-win-arm64.zip
           targets:
             - cpu: arm64
               os: win32
@@ -988,10 +988,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-CuaEBrQtdyVmHal5sUA+yZJtogXGdwgn8zqsnY8m6CE=
-            prefix: node-v24.18.0-win-x64
+            integrity: sha256-V/cas2UueX2ErN3HnIHMn/HG3bKhl0zbg/AP7pv/THM=
+            prefix: node-v24.19.0-win-x64
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-win-x64.zip
+            url: https://nodejs.org/download/release/v24.19.0/node-v24.19.0-win-x64.zip
           targets:
             - cpu: x64
               os: win32
@@ -999,9 +999,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-scbC3DG0bdj7IyL0/nWwfndcUSC8NyUd7uoo9SnUVns=
+            integrity: sha256-IIJOTTWUj65bM33M70eBOwTYmVMS9Z33OG8iVtn5q34=
             type: binary
-            url: https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64-musl.tar.gz
+            url: https://unofficial-builds.nodejs.org/download/release/v24.19.0/node-v24.19.0-linux-arm64-musl.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -1010,14 +1010,14 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-6lhAmRHhQexrGdkXjvotkYWhMpUAWxy/VSGzFX7tHZU=
+            integrity: sha256-xgIjeG3xSl0j4iDruOYDGPUyJkCmL5Dm2eVNOhjaUy4=
             type: binary
-            url: https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-x64-musl.tar.gz
+            url: https://unofficial-builds.nodejs.org/download/release/v24.19.0/node-v24.19.0-linux-x64-musl.tar.gz
           targets:
             - cpu: x64
               os: linux
               libc: musl
-    version: 24.18.0
+    version: 24.19.0
     hasBin: true
 
   obug@2.1.3:
@@ -1363,17 +1363,17 @@ snapshots:
   '@esbuild/win32-x64@0.27.7':
     optional: true
 
-  '@eslint-community/eslint-utils@4.10.1(eslint@10.8.0(jiti@2.7.0))':
+  '@eslint-community/eslint-utils@4.10.1(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))':
     dependencies:
-      eslint: 10.8.0(jiti@2.7.0)
+      eslint: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
 
-  '@eslint/config-array@0.23.5':
+  '@eslint/config-array@0.23.5(supports-color@7.2.0)':
     dependencies:
       '@eslint/object-schema': 3.0.5
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       minimatch: 10.2.5
     transitivePeerDependencies:
       - supports-color
@@ -1516,15 +1516,15 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
-  '@typescript-eslint/eslint-plugin@8.65.0(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@typescript-eslint/eslint-plugin@8.65.0(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
-      '@typescript-eslint/parser': 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/scope-manager': 8.65.0
-      '@typescript-eslint/type-utils': 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/type-utils': 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.65.0
-      eslint: 10.8.0(jiti@2.7.0)
+      eslint: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       ignore: 7.0.6
       natural-compare: 1.4.0
       ts-api-utils: 2.5.0(typescript@6.0.3)
@@ -1532,23 +1532,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.65.0
       '@typescript-eslint/types': 8.65.0
-      '@typescript-eslint/typescript-estree': 8.65.0(typescript@6.0.3)
+      '@typescript-eslint/typescript-estree': 8.65.0(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.65.0
-      debug: 4.4.3
-      eslint: 10.8.0(jiti@2.7.0)
+      debug: 4.4.3(supports-color@7.2.0)
+      eslint: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/project-service@8.65.0(typescript@6.0.3)':
+  '@typescript-eslint/project-service@8.65.0(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.65.0(typescript@6.0.3)
       '@typescript-eslint/types': 8.65.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -1562,13 +1562,13 @@ snapshots:
     dependencies:
       typescript: 6.0.3
 
-  '@typescript-eslint/type-utils@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@typescript-eslint/type-utils@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/types': 8.65.0
-      '@typescript-eslint/typescript-estree': 8.65.0(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
-      debug: 4.4.3
-      eslint: 10.8.0(jiti@2.7.0)
+      '@typescript-eslint/typescript-estree': 8.65.0(supports-color@7.2.0)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      debug: 4.4.3(supports-color@7.2.0)
+      eslint: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -1576,13 +1576,13 @@ snapshots:
 
   '@typescript-eslint/types@8.65.0': {}
 
-  '@typescript-eslint/typescript-estree@8.65.0(typescript@6.0.3)':
+  '@typescript-eslint/typescript-estree@8.65.0(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/project-service': 8.65.0(typescript@6.0.3)
+      '@typescript-eslint/project-service': 8.65.0(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/tsconfig-utils': 8.65.0(typescript@6.0.3)
       '@typescript-eslint/types': 8.65.0
       '@typescript-eslint/visitor-keys': 8.65.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       minimatch: 10.2.5
       semver: 7.8.5
       tinyglobby: 0.2.17
@@ -1591,13 +1591,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@typescript-eslint/utils@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@10.8.0(jiti@2.7.0))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))
       '@typescript-eslint/scope-manager': 8.65.0
       '@typescript-eslint/types': 8.65.0
-      '@typescript-eslint/typescript-estree': 8.65.0(typescript@6.0.3)
-      eslint: 10.8.0(jiti@2.7.0)
+      '@typescript-eslint/typescript-estree': 8.65.0(supports-color@7.2.0)(typescript@6.0.3)
+      eslint: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -1705,9 +1705,11 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  debug@4.4.3:
+  debug@4.4.3(supports-color@7.2.0):
     dependencies:
       ms: 2.1.3
+    optionalDependencies:
+      supports-color: 7.2.0
 
   deep-is@0.1.4: {}
 
@@ -1755,11 +1757,11 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
-  eslint@10.8.0(jiti@2.7.0):
+  eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0):
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@10.8.0(jiti@2.7.0))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))
       '@eslint-community/regexpp': 4.12.2
-      '@eslint/config-array': 0.23.5
+      '@eslint/config-array': 0.23.5(supports-color@7.2.0)
       '@eslint/config-helpers': 0.7.0
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
@@ -1769,7 +1771,7 @@ snapshots:
       '@types/estree': 1.0.9
       ajv: 6.15.0
       cross-spawn: 7.0.6
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       escape-string-regexp: 4.0.0
       eslint-scope: 9.1.2
       eslint-visitor-keys: 5.0.1
@@ -1979,7 +1981,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  node@runtime:24.18.0: {}
+  node@runtime:24.19.0: {}
 
   obug@2.1.3: {}
 
@@ -2099,13 +2101,13 @@ snapshots:
 
   type-fest@4.41.0: {}
 
-  typescript-eslint@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3):
+  typescript-eslint@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.65.0(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
-      '@typescript-eslint/parser': 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
-      '@typescript-eslint/typescript-estree': 8.65.0(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
-      eslint: 10.8.0(jiti@2.7.0)
+      '@typescript-eslint/eslint-plugin': 8.65.0(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      '@typescript-eslint/typescript-estree': 8.65.0(supports-color@7.2.0)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      eslint: 10.8.0(jiti@2.7.0)(supports-color@7.2.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
