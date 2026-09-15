@@ -12,3 +12,8 @@ updates:
     cooldown:
       default-days: 1
     versioning-strategy: increase
+    groups:
+      vitest:
+        patterns:
+          - vitest
+          - "@vitest/coverage-v8"
