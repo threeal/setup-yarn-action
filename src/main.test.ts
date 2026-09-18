@@ -1,5 +1,6 @@
 import { restoreCache, saveCache } from "cache-action";
 
+import { getInput } from "ghakit/io";
 import {
   beginLogGroup,
   endLogGroup,
@@ -11,7 +12,6 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackEnableYarn } from "./corepack.js";
-import { getInputs } from "./inputs.js";
 import { main } from "./main.js";
 import { setYarnVersion, yarnInstall } from "./yarn/index.js";
 
@@ -19,6 +19,8 @@ vi.mock("cache-action", () => ({
   restoreCache: vi.fn(),
   saveCache: vi.fn(),
 }));
+
+vi.mock("ghakit/io", () => ({ getInput: vi.fn() }));
 
 vi.mock("ghakit/log", () => ({
   beginLogGroup: vi.fn(),
@@ -42,8 +44,6 @@ vi.mock("./corepack.js", () => ({
   corepackAssertYarnVersion: vi.fn(),
   corepackEnableYarn: vi.fn(),
 }));
-
-vi.mock("./inputs.js", () => ({ getInputs: vi.fn() }));
 
 describe("install Yarn dependencies", () => {
   let logs: unknown[] = [];
@@ -114,21 +114,16 @@ describe("install Yarn dependencies", () => {
 
     vi.mocked(getCachePaths).mockResolvedValue(["some/path", "another/path"]);
 
-    vi.mocked(getInputs).mockReturnValue({ version: "", cache: true });
-  });
+    vi.mocked(getInput).mockImplementation((name) => {
+      switch (name) {
+        case "cache":
+          return "true";
 
-  it("should failed to get action inputs", async () => {
-    vi.mocked(getInputs).mockImplementation(() => {
-      throw new Error("some error");
+        case "version":
+          return "";
+      }
+      throw new Error(`unknown input: ${name}`);
     });
-
-    await main();
-
-    expect(process.exitCode).toBe(1);
-    expect(logs).toStrictEqual([
-      "Getting action inputs...",
-      "Failed to get action inputs: some error",
-    ]);
   });
 
   it("should failed to enable Yarn", async () => {
@@ -138,7 +133,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Failed to enable Yarn: some error",
     ]);
@@ -151,7 +145,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -167,7 +160,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -187,7 +179,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(0);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -204,7 +195,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -224,7 +214,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -247,7 +236,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(1);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -269,7 +257,6 @@ describe("install Yarn dependencies", () => {
 
     expect(process.exitCode).toBe(0);
     expect(logs).toStrictEqual([
-      "Getting action inputs...",
       "Enabling Yarn...",
       "Yarn enabled",
       "::group::Getting cache key",
@@ -287,9 +274,15 @@ describe("install Yarn dependencies", () => {
 
   describe("with version specified", () => {
     beforeEach(() => {
-      vi.mocked(getInputs).mockReturnValue({
-        version: "stable",
-        cache: true,
+      vi.mocked(getInput).mockImplementation((name) => {
+        switch (name) {
+          case "cache":
+            return "true";
+
+          case "version":
+            return "stable";
+        }
+        throw new Error(`unknown input: ${name}`);
       });
     });
 
@@ -300,7 +293,6 @@ describe("install Yarn dependencies", () => {
 
       expect(process.exitCode).toBe(1);
       expect(logs).toStrictEqual([
-        "Getting action inputs...",
         "Enabling Yarn...",
         "Yarn enabled",
         "Failed to enable Yarn: some error",
@@ -312,7 +304,6 @@ describe("install Yarn dependencies", () => {
 
       expect(process.exitCode).toBe(0);
       expect(logs).toStrictEqual([
-        "Getting action inputs...",
         "Enabling Yarn...",
         "Yarn enabled",
         "Yarn version set to stable",
@@ -332,7 +323,16 @@ describe("install Yarn dependencies", () => {
 
   describe("with cache disabled", () => {
     beforeEach(() => {
-      vi.mocked(getInputs).mockReturnValue({ version: "", cache: false });
+      vi.mocked(getInput).mockImplementation((name) => {
+        switch (name) {
+          case "cache":
+            return "false";
+
+          case "version":
+            return "";
+        }
+        throw new Error(`unknown input: ${name}`);
+      });
     });
 
     it("should successfully install dependencies", async () => {
@@ -340,7 +340,6 @@ describe("install Yarn dependencies", () => {
 
       expect(process.exitCode).toBe(0);
       expect(logs).toStrictEqual([
-        "Getting action inputs...",
         "Enabling Yarn...",
         "Yarn enabled",
         "::group::Installing dependencies",

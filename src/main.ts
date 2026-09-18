@@ -1,6 +1,7 @@
 import { restoreCache, saveCache } from "cache-action";
 import { getErrorMessage } from "catched-error-message";
 
+import { getInput } from "ghakit/io";
 import {
   beginLogGroup,
   endLogGroup,
@@ -11,25 +12,17 @@ import {
 
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
-import { getInputs, Inputs } from "./inputs.js";
 import { setYarnVersion, yarnInstall } from "./yarn/index.js";
 
 export async function main(): Promise<void> {
-  logInfo("Getting action inputs...");
-  let inputs: Inputs;
-  try {
-    inputs = getInputs();
-  } catch (err) {
-    logError(`Failed to get action inputs: ${getErrorMessage(err)}`);
-    process.exitCode = 1;
-    return;
-  }
+  const version = getInput("version");
+  const cache = getInput("cache") === "true";
 
   logInfo("Enabling Yarn...");
   try {
     await corepackEnableYarn();
-    if (inputs.version != "") {
-      await setYarnVersion(inputs.version);
+    if (version != "") {
+      await setYarnVersion(version);
     }
     await corepackAssertYarnVersion();
   } catch (err) {
@@ -39,7 +32,7 @@ export async function main(): Promise<void> {
   }
 
   let cacheKey = { key: "", version: "" };
-  if (inputs.cache) {
+  if (cache) {
     beginLogGroup("Getting cache key");
     try {
       cacheKey = await getCacheKey();
@@ -78,7 +71,7 @@ export async function main(): Promise<void> {
   }
   endLogGroup();
 
-  if (inputs.cache) {
+  if (cache) {
     beginLogGroup("Getting cache paths");
     let cachePaths: string[] = [];
     try {
