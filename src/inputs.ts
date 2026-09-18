@@ -1,4 +1,4 @@
-import { getInput } from "gha-utils";
+import { getInput } from "ghakit/io";
 
 export interface Inputs {
   version: string;

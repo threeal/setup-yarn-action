@@ -6,7 +6,7 @@ import {
   logError,
   logInfo,
   logWarning,
-} from "gha-utils";
+} from "ghakit/log";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getCacheKey, getCachePaths } from "./cache.js";
@@ -20,7 +20,7 @@ vi.mock("cache-action", () => ({
   saveCache: vi.fn(),
 }));
 
-vi.mock("gha-utils", () => ({
+vi.mock("ghakit/log", () => ({
   beginLogGroup: vi.fn(),
   endLogGroup: vi.fn(),
   logError: vi.fn(),

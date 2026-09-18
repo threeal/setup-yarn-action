@@ -1,5 +1,5 @@
 import { getErrorMessage } from "catched-error-message";
-import { logError, logInfo, logWarning } from "gha-utils";
+import { logError, logInfo, logWarning } from "ghakit/log";
 import { hashFile } from "hasha";
 import fs from "node:fs";
 import os from "node:os";

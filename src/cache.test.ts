@@ -1,4 +1,4 @@
-import { logError, logInfo, logWarning } from "gha-utils";
+import { logError, logInfo, logWarning } from "ghakit/log";
 import { hashFile } from "hasha";
 import fs from "node:fs";
 import os from "node:os";
@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { getYarnConfig, getYarnVersion } from "./yarn/index.js";
 
-vi.mock("gha-utils", () => ({
+vi.mock("ghakit/log", () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
   logWarning: vi.fn(),

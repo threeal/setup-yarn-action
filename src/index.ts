@@ -1,4 +1,4 @@
-import { logError } from "gha-utils";
+import { logError } from "ghakit/log";
 import { main } from "./main.js";
 
 main().catch((err: unknown) => {

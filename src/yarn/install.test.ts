@@ -1,11 +1,11 @@
 import { exec } from "@actions/exec";
-import { logError, logInfo, logWarning } from "gha-utils";
+import { logError, logInfo, logWarning } from "ghakit/log";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { printYarnInstallOutput, yarnInstall } from "./install.js";
 
 vi.mock("@actions/exec", () => ({ exec: vi.fn() }));
 
-vi.mock("gha-utils", () => ({
+vi.mock("ghakit/log", () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
   logWarning: vi.fn(),

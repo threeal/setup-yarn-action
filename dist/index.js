@@ -10,7 +10,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */   e: () => (/* binding */ getCacheKey)
 /* harmony export */ });
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(493);
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(896);
+/* harmony import */ var ghakit_log__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(990);
 /* harmony import */ var hasha__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(993);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(24);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_1__);
@@ -28,29 +28,29 @@ hasha__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (awa
 async function getCacheKey() {
     const key = `setup-yarn-action-${node_os__WEBPACK_IMPORTED_MODULE_2___default().type()}`;
     let version = "";
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)("Getting Yarn version...");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)("Getting Yarn version...");
     try {
         version = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnVersion */ .$)({ corepack: true });
     }
     catch (err) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(`Failed to get Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(`Failed to get Yarn version: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .u)(err)}`);
         throw new Error("Failed to get Yarn version");
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)("Calculating lock file hash...");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)("Calculating lock file hash...");
     try {
         if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync("yarn.lock")) {
             const hash = await (0,hasha__WEBPACK_IMPORTED_MODULE_5__/* .hashFile */ .DC)("yarn.lock", { algorithm: "md5" });
             version += `-${hash}`;
         }
         else {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logWarning */ .FF)(`Lock file could not be found, using empty hash`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logWarning */ .FF)(`Lock file could not be found, using empty hash`);
         }
     }
     catch (err) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(`Failed to calculate lock file hash: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(`Failed to calculate lock file hash: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .u)(err)}`);
         throw new Error("Failed to calculate lock file hash");
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)(`Using cache key: ${key}-${version}`);
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)(`Using cache key: ${key}-${version}`);
     return { key, version };
 }
 async function getCachePaths() {
@@ -64,7 +64,7 @@ async function getCachePaths() {
         { name: "Yarn virtual folder", config: "virtualFolder" },
     ];
     for (const { name, config } of yarnConfigs) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)(`Getting ${name}...`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)(`Getting ${name}...`);
         try {
             const cachePath = await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getYarnConfig */ .T0)(config);
             if (node_fs__WEBPACK_IMPORTED_MODULE_1___default().existsSync(cachePath)) {
@@ -72,11 +72,11 @@ async function getCachePaths() {
             }
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(`Failed to get ${name}: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(`Failed to get ${name}: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_4__/* .getErrorMessage */ .u)(err)}`);
             throw new Error(`Failed to get ${name}`);
         }
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logInfo */ .fH)(`Using cache paths: ${JSON.stringify(cachePaths, null, 4)}`);
     return cachePaths;
 }
 
@@ -93,7 +93,7 @@ __webpack_async_result__();
 /* harmony export */   e: () => (/* binding */ corepackEnableYarn)
 /* harmony export */ });
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(329);
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(896);
+/* harmony import */ var ghakit_io__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(76);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(24);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(161);
@@ -138,7 +138,7 @@ async function corepackEnableYarn() {
     const corepackDir = node_path__WEBPACK_IMPORTED_MODULE_4___default().join((0,node_os__WEBPACK_IMPORTED_MODULE_3__.homedir)(), ".corepack");
     (0,node_fs__WEBPACK_IMPORTED_MODULE_2__.mkdirSync)(corepackDir, { recursive: true });
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_0__/* .exec */ .m)("corepack", ["enable", "--install-directory", corepackDir, "yarn"], { silent: true });
-    await (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .addPath */ .fM)(corepackDir);
+    await (0,ghakit_io__WEBPACK_IMPORTED_MODULE_1__/* .addPath */ .fM)(corepackDir);
 }
 
 
@@ -148,14 +148,14 @@ async function corepackEnableYarn() {
 /***/ ((module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(896);
+/* harmony import */ var ghakit_log__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(990);
 /* harmony import */ var _main_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(785);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_main_js__WEBPACK_IMPORTED_MODULE_1__]);
 _main_js__WEBPACK_IMPORTED_MODULE_1__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
 
 (0,_main_js__WEBPACK_IMPORTED_MODULE_1__/* .main */ .i)().catch((err) => {
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(err);
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_0__/* .logError */ .vV)(err);
     process.exit(1);
 });
 
@@ -170,12 +170,12 @@ __webpack_async_result__();
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   G: () => (/* binding */ getInputs)
 /* harmony export */ });
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(896);
+/* harmony import */ var ghakit_io__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76);
 
 function getInputs() {
     return {
-        version: (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)("version"),
-        cache: (0,gha_utils__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)("cache") === "true",
+        version: (0,ghakit_io__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)("version"),
+        cache: (0,ghakit_io__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)("cache") === "true",
     };
 }
 
@@ -191,7 +191,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ });
 /* harmony import */ var cache_action__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(630);
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(493);
-/* harmony import */ var gha_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(896);
+/* harmony import */ var ghakit_log__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(990);
 /* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(348);
 /* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(142);
 /* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(481);
@@ -206,17 +206,17 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 
 async function main() {
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Getting action inputs...");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Getting action inputs...");
     let inputs;
     try {
         inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_4__/* .getInputs */ .G)();
     }
     catch (err) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
         process.exitCode = 1;
         return;
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Enabling Yarn...");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Enabling Yarn...");
     try {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ .e)();
         if (inputs.version != "") {
@@ -225,70 +225,70 @@ async function main() {
         await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .N)();
     }
     catch (err) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
         process.exitCode = 1;
         return;
     }
     let cacheKey = { key: "", version: "" };
     if (inputs.cache) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Getting cache key");
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Getting cache key");
         try {
             cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .e)();
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Restoring cache...");
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Restoring cache...");
         try {
             const cacheRestored = await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .restoreCache */ .P)(cacheKey.key, cacheKey.version);
             if (cacheRestored) {
-                (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Cache restored successfully");
+                (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Cache restored successfully");
                 return;
             }
             else {
-                (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logWarning */ .FF)("Cache not found");
+                (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logWarning */ .FF)("Cache not found");
             }
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Installing dependencies");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Installing dependencies");
     try {
         await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .yarnInstall */ .yr)();
     }
     catch (err) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
         process.exitCode = 1;
         return;
     }
-    (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
     if (inputs.cache) {
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Getting cache paths");
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Getting cache paths");
         let cachePaths = [];
         try {
             cachePaths = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .V)();
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-        (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Saving cache...");
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Saving cache...");
         try {
             await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .saveCache */ .I)(cacheKey.key, cacheKey.version, cachePaths);
         }
         catch (err) {
-            (0,gha_utils__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
@@ -329,21 +329,21 @@ async function getYarnConfig(name) {
     return JSON.parse(res.stdout).effective;
 }
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/gha-utils@0.4.1/node_modules/gha-utils/dist/index.js + 2 modules
-var dist = __nccwpck_require__(896);
+// EXTERNAL MODULE: ./node_modules/.pnpm/ghakit@1.0.0/node_modules/ghakit/dist/log.js
+var log = __nccwpck_require__(990);
 ;// CONCATENATED MODULE: ./src/yarn/install.ts
 
 
 function printYarnInstallOutput(output) {
     switch (output.type) {
         case "info":
-            (0,dist/* logInfo */.fH)(`${output.displayName}: ${output.indent}${output.data}`);
+            (0,log/* logInfo */.fH)(`${output.displayName}: ${output.indent}${output.data}`);
             break;
         case "warning":
-            (0,dist/* logWarning */.FF)(`${output.data} (${output.displayName})`);
+            (0,log/* logWarning */.FF)(`${output.data} (${output.displayName})`);
             break;
         case "error":
-            (0,dist/* logError */.vV)(`${output.data} (${output.displayName})`);
+            (0,log/* logError */.vV)(`${output.data} (${output.displayName})`);
             break;
     }
 }
@@ -1784,22 +1784,17 @@ function r(r){return function(r){if("object"==typeof(e=r)&&null!==e&&"message"in
 
 /***/ }),
 
-/***/ 896:
+/***/ 76:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
-  fM: () => (/* reexport */ addPath),
-  NL: () => (/* reexport */ beginLogGroup),
-  NZ: () => (/* reexport */ endLogGroup),
-  V4: () => (/* reexport */ getInput),
-  vV: () => (/* reexport */ logError),
-  fH: () => (/* reexport */ logInfo),
-  FF: () => (/* reexport */ logWarning)
+  fM: () => (/* binding */ addPath),
+  V4: () => (/* binding */ getInput)
 });
 
-// UNUSED EXPORTS: addPathSync, getState, logCommand, logDebug, setEnv, setEnvSync, setOutput, setOutputSync, setState, setStateSync
+// UNUSED EXPORTS: addPathSync, getState, setEnv, setEnvSync, setOutput, setOutputSync, setState, setStateSync
 
 // EXTERNAL MODULE: external "node:fs"
 var external_node_fs_ = __nccwpck_require__(24);
@@ -1809,69 +1804,495 @@ var promises_ = __nccwpck_require__(455);
 var external_node_os_ = __nccwpck_require__(161);
 // EXTERNAL MODULE: external "node:path"
 var external_node_path_ = __nccwpck_require__(760);
-;// CONCATENATED MODULE: ./node_modules/.pnpm/gha-utils@0.4.1/node_modules/gha-utils/dist/env.js
-
-
-
-
+;// CONCATENATED MODULE: ./node_modules/.pnpm/ghakit@1.0.0/node_modules/ghakit/dist/vars.js
 /**
- * @internal
- * Retrieves the value of an environment variable.
+ * Returns whether the workflow is running in a CI environment.
  *
- * @param name - The name of the environment variable.
- * @returns The value of the environment variable.
- * @throws Error if the environment variable is not defined.
+ * @returns `true` if running in a CI environment, `false` otherwise.
  */
-function mustGetEnvironment(name) {
-    const value = process.env[name];
-    if (value === undefined) {
-        throw new Error(`the ${name} environment variable must be defined`);
-    }
-    return value;
+function getCI() {
+    return process.env.CI === "true";
 }
+/**
+ * Returns the name or ID of the currently running action or step.
+ *
+ * For scripts without an ID, GitHub uses `__run`. Repeated invocations get
+ * numeric suffixes (e.g. `__run_2`).
+ *
+ * @returns The name or ID of the currently running action or step, or an
+ *   empty string if not set.
+ */
+function getGitHubAction() {
+    return process.env.GITHUB_ACTION ?? "";
+}
+/**
+ * Returns the path where the currently running action is located.
+ *
+ * Only set in composite actions. Useful for accessing files in the action's
+ * own repository.
+ *
+ * @returns The path where the action is located, or `undefined` outside of
+ *   composite actions.
+ */
+function getGitHubActionPath() {
+    return process.env.GITHUB_ACTION_PATH;
+}
+/**
+ * Returns the owner and repository name of the action being executed.
+ *
+ * Only set for steps that execute an action (e.g. `actions/checkout`).
+ *
+ * @returns The action repository in `owner/repo` format, or `undefined` if
+ *   the step is not executing an action.
+ */
+function getGitHubActionRepository() {
+    return process.env.GITHUB_ACTION_REPOSITORY;
+}
+/**
+ * Returns whether the workflow is running in GitHub Actions.
+ *
+ * Always `true` when GitHub Actions is executing the workflow. Useful for
+ * differentiating local runs from automated CI runs.
+ *
+ * @returns `true` if running in GitHub Actions, `false` otherwise.
+ */
+function getGitHubActions() {
+    return process.env.GITHUB_ACTIONS === "true";
+}
+/**
+ * Returns the username of the person or app that triggered the workflow.
+ *
+ * @returns The actor's username, or an empty string if not set.
+ */
+function getGitHubActor() {
+    return process.env.GITHUB_ACTOR ?? "";
+}
+/**
+ * Returns the account ID of the person or app that triggered the workflow.
+ *
+ * This is distinct from the username in `GITHUB_ACTOR`.
+ *
+ * @returns The actor's account ID, or an empty string if not set.
+ */
+function getGitHubActorId() {
+    return process.env.GITHUB_ACTOR_ID ?? "";
+}
+/**
+ * Returns the GitHub API URL.
+ *
+ * @returns The API URL (e.g. `https://api.github.com`), or an empty string
+ *   if not set.
+ */
+function getGitHubApiUrl() {
+    return process.env.GITHUB_API_URL ?? "";
+}
+/**
+ * Returns the base branch of a pull request.
+ *
+ * Only set when the triggering event is `pull_request` or
+ * `pull_request_target`.
+ *
+ * @returns The base branch name, or `undefined` outside of pull request events.
+ */
+function getGitHubBaseRef() {
+    return process.env.GITHUB_BASE_REF;
+}
+/**
+ * Returns the path to the file used to set environment variables from
+ * workflow commands.
+ *
+ * @returns The path to the GitHub env file, or an empty string if not set.
+ */
+function vars_getGitHubEnv() {
+    return process.env.GITHUB_ENV ?? "";
+}
+/**
+ * Returns the name of the event that triggered the workflow.
+ *
+ * @returns The event name (e.g. `push`, `pull_request`), or an empty string
+ *   if not set.
+ */
+function getGitHubEventName() {
+    return process.env.GITHUB_EVENT_NAME ?? "";
+}
+/**
+ * Returns the path to the file containing the full event webhook payload.
+ *
+ * @returns The path to the event payload file, or an empty string if not set.
+ */
+function getGitHubEventPath() {
+    return process.env.GITHUB_EVENT_PATH ?? "";
+}
+/**
+ * Returns the GitHub GraphQL API URL.
+ *
+ * @returns The GraphQL API URL (e.g. `https://api.github.com/graphql`), or
+ *   an empty string if not set.
+ */
+function getGitHubGraphqlUrl() {
+    return process.env.GITHUB_GRAPHQL_URL ?? "";
+}
+/**
+ * Returns the source branch of a pull request.
+ *
+ * Only set when the triggering event is `pull_request` or
+ * `pull_request_target`.
+ *
+ * @returns The head branch name, or `undefined` outside of pull request events.
+ */
+function getGitHubHeadRef() {
+    return process.env.GITHUB_HEAD_REF;
+}
+/**
+ * Returns the `job_id` of the current job as defined in the workflow file.
+ *
+ * @returns The current job ID, or an empty string if not set.
+ */
+function getGitHubJob() {
+    return process.env.GITHUB_JOB ?? "";
+}
+/**
+ * Returns the path to the file used to set step outputs from workflow
+ * commands.
+ *
+ * @returns The path to the GitHub output file, or an empty string if not set.
+ */
+function vars_getGitHubOutput() {
+    return process.env.GITHUB_OUTPUT ?? "";
+}
+/**
+ * Returns the path to the file used to prepend entries to the system `PATH`
+ * from workflow commands.
+ *
+ * @returns The path to the GitHub path file, or an empty string if not set.
+ */
+function vars_getGitHubPath() {
+    return process.env.GITHUB_PATH ?? "";
+}
+/**
+ * Returns the fully-formed ref that triggered the workflow.
+ *
+ * @returns The full ref string (e.g. `refs/heads/main`, `refs/tags/v1.0`),
+ *   or an empty string if not set.
+ */
+function getGitHubRef() {
+    return process.env.GITHUB_REF ?? "";
+}
+/**
+ * Returns the short ref name of the branch or tag that triggered the run.
+ *
+ * For `pull_request` events, the format is `<pr_number>/merge`.
+ *
+ * @returns The short ref name, or an empty string if not set.
+ */
+function getGitHubRefName() {
+    return process.env.GITHUB_REF_NAME ?? "";
+}
+/**
+ * Returns whether branch protections or rulesets are configured for the
+ * triggering ref.
+ *
+ * @returns `true` if the ref is protected, `false` otherwise.
+ */
+function getGitHubRefProtected() {
+    return process.env.GITHUB_REF_PROTECTED === "true";
+}
+/**
+ * Returns the type of ref that triggered the workflow run.
+ *
+ * @returns The ref type, either `branch` or `tag`, or an empty string if not
+ *   set.
+ */
+function getGitHubRefType() {
+    return process.env.GITHUB_REF_TYPE ?? "";
+}
+/**
+ * Returns the owner and repository name for the current repository.
+ *
+ * @returns The repository name in `owner/repo` format
+ *   (e.g. `octocat/Hello-World`), or an empty string if not set.
+ */
+function getGitHubRepository() {
+    return process.env.GITHUB_REPOSITORY ?? "";
+}
+/**
+ * Returns the unique ID of the repository.
+ *
+ * This is distinct from the repository name.
+ *
+ * @returns The repository ID, or an empty string if not set.
+ */
+function getGitHubRepositoryId() {
+    return process.env.GITHUB_REPOSITORY_ID ?? "";
+}
+/**
+ * Returns the repository owner's username.
+ *
+ * @returns The repository owner's username, or an empty string if not set.
+ */
+function getGitHubRepositoryOwner() {
+    return process.env.GITHUB_REPOSITORY_OWNER ?? "";
+}
+/**
+ * Returns the unique account ID of the repository owner.
+ *
+ * This is distinct from the owner's username.
+ *
+ * @returns The repository owner's account ID, or an empty string if not set.
+ */
+function getGitHubRepositoryOwnerId() {
+    return process.env.GITHUB_REPOSITORY_OWNER_ID ?? "";
+}
+/**
+ * Returns the number of days that workflow run logs and artifacts are retained.
+ *
+ * @returns The retention period in days, or `0` if not set.
+ */
+function getGitHubRetentionDays() {
+    return parseInt(process.env.GITHUB_RETENTION_DAYS ?? "0", 10);
+}
+/**
+ * Returns the attempt number for the current workflow run.
+ *
+ * Starts at `1` for the first attempt and increments with each re-run.
+ *
+ * @returns The run attempt number, or `0` if not set.
+ */
+function getGitHubRunAttempt() {
+    return parseInt(process.env.GITHUB_RUN_ATTEMPT ?? "0", 10);
+}
+/**
+ * Returns the unique ID for the current workflow run within the repository.
+ *
+ * This value does not change if the workflow is re-run.
+ *
+ * @returns The workflow run ID, or an empty string if not set.
+ */
+function getGitHubRunId() {
+    return process.env.GITHUB_RUN_ID ?? "";
+}
+/**
+ * Returns the sequential run number for the workflow within the repository.
+ *
+ * Starts at `1` for the first run and increments with each new run.
+ *
+ * @returns The workflow run number, or `0` if not set.
+ */
+function getGitHubRunNumber() {
+    return parseInt(process.env.GITHUB_RUN_NUMBER ?? "0", 10);
+}
+/**
+ * Returns the URL of the GitHub server.
+ *
+ * @returns The GitHub server URL (e.g. `https://github.com`), or an empty
+ *   string if not set.
+ */
+function getGitHubServerUrl() {
+    return process.env.GITHUB_SERVER_URL ?? "";
+}
+/**
+ * Returns the commit SHA that triggered the workflow.
+ *
+ * The exact value depends on the triggering event.
+ *
+ * @returns The triggering commit SHA, or an empty string if not set.
+ */
+function getGitHubSha() {
+    return process.env.GITHUB_SHA ?? "";
+}
+/**
+ * Returns the path to the file used to persist state values from workflow
+ * commands.
+ *
+ * @returns The path to the GitHub state file, or an empty string if not set.
+ */
+function vars_getGitHubState() {
+    return process.env.GITHUB_STATE ?? "";
+}
+/**
+ * Returns the path to the file used to write job summaries from workflow
+ * commands.
+ *
+ * @returns The path to the step summary file, or an empty string if not set.
+ */
+function getGitHubStepSummary() {
+    return process.env.GITHUB_STEP_SUMMARY ?? "";
+}
+/**
+ * Returns the username of the user who initiated the workflow run.
+ *
+ * May differ from {@link getGitHubActor} when the workflow is re-run by a
+ * different user.
+ *
+ * @returns The triggering actor's username, or an empty string if not set.
+ */
+function getGitHubTriggeringActor() {
+    return process.env.GITHUB_TRIGGERING_ACTOR ?? "";
+}
+/**
+ * Returns the name of the workflow.
+ *
+ * Defaults to the full file path if the workflow file has no `name` field.
+ *
+ * @returns The workflow name, or an empty string if not set.
+ */
+function getGitHubWorkflow() {
+    return process.env.GITHUB_WORKFLOW ?? "";
+}
+/**
+ * Returns the ref path to the workflow file.
+ *
+ * @returns The workflow file ref path
+ *   (e.g. `owner/repo/.github/workflows/ci.yml@refs/heads/main`), or an
+ *   empty string if not set.
+ */
+function getGitHubWorkflowRef() {
+    return process.env.GITHUB_WORKFLOW_REF ?? "";
+}
+/**
+ * Returns the commit SHA for the workflow file.
+ *
+ * @returns The workflow file's commit SHA, or an empty string if not set.
+ */
+function getGitHubWorkflowSha() {
+    return process.env.GITHUB_WORKFLOW_SHA ?? "";
+}
+/**
+ * Returns the default working directory on the runner where the repository
+ * is checked out.
+ *
+ * @returns The workspace path, or an empty string if not set.
+ */
+function getGitHubWorkspace() {
+    return process.env.GITHUB_WORKSPACE ?? "";
+}
+/**
+ * Returns the CPU architecture of the runner executing the job.
+ *
+ * @returns The runner architecture (e.g. `X86`, `X64`, `ARM`, `ARM64`), or
+ *   an empty string if not set.
+ */
+function getRunnerArch() {
+    return process.env.RUNNER_ARCH ?? "";
+}
+/**
+ * Returns whether debug logging is enabled for the runner.
+ *
+ * Only set when debug logging is enabled, with a value of `1`.
+ *
+ * @returns `true` if debug logging is enabled, `false` otherwise.
+ */
+function getRunnerDebug() {
+    return process.env.RUNNER_DEBUG === "1";
+}
+/**
+ * Returns the type of runner executing the job.
+ *
+ * @returns The runner environment type, either `github-hosted` or
+ *   `self-hosted`, or an empty string if not set.
+ */
+function getRunnerEnvironment() {
+    return process.env.RUNNER_ENVIRONMENT ?? "";
+}
+/**
+ * Returns the name of the runner executing the job.
+ *
+ * Names may not be unique across repository and organization levels.
+ *
+ * @returns The runner name, or an empty string if not set.
+ */
+function getRunnerName() {
+    return process.env.RUNNER_NAME ?? "";
+}
+/**
+ * Returns the operating system of the runner executing the job.
+ *
+ * @returns The runner OS (e.g. `Linux`, `Windows`, `macOS`), or an empty
+ *   string if not set.
+ */
+function getRunnerOs() {
+    return process.env.RUNNER_OS ?? "";
+}
+/**
+ * Returns the path to a temporary directory on the runner.
+ *
+ * This directory is cleared at the start and end of each job.
+ *
+ * @returns The runner temp directory path, or an empty string if not set.
+ */
+function getRunnerTemp() {
+    return process.env.RUNNER_TEMP ?? "";
+}
+/**
+ * Returns the path to the directory containing preinstalled tools for
+ * GitHub-hosted runners.
+ *
+ * @returns The runner tool cache path, or an empty string if not set.
+ */
+function getRunnerToolCache() {
+    return process.env.RUNNER_TOOL_CACHE ?? "";
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/ghakit@1.0.0/node_modules/ghakit/dist/io.js
+
+
+
+
+
 /**
  * Retrieves the value of a GitHub Actions input.
  *
+ * Input names are matched case-insensitively — `getInput("token")` and
+ * `getInput("TOKEN")` both read the same `INPUT_TOKEN` env var.
+ *
  * @param name - The name of the GitHub Actions input.
- * @returns The value of the GitHub Actions input, or an empty string if not found.
+ * @returns The value of the GitHub Actions input, or an empty string if not set.
  */
 function getInput(name) {
-    const value = process.env[`INPUT_${name.toUpperCase()}`] ?? "";
-    return value.trim();
+    return process.env[`INPUT_${name.toUpperCase()}`] ?? "";
 }
 /**
  * Sets the value of a GitHub Actions output.
+ *
+ * Appends the value to the output file so it is available to subsequent steps
+ * in the workflow.
  *
  * @param name - The name of the GitHub Actions output.
  * @param value - The value to set for the GitHub Actions output.
  * @returns A promise that resolves when the value is successfully set.
  */
 async function setOutput(name, value) {
-    const filePath = mustGetEnvironment("GITHUB_OUTPUT");
-    await fsPromises.appendFile(filePath, `${name}=${value}${os.EOL}`);
+    await appendFile(getGitHubOutput(), `${name}=${value}${EOL}`);
 }
 /**
  * Sets the value of a GitHub Actions output synchronously.
+ *
+ * Appends the value to the output file so it is available to subsequent steps
+ * in the workflow.
  *
  * @param name - The name of the GitHub Actions output.
  * @param value - The value to set for the GitHub Actions output.
  */
 function setOutputSync(name, value) {
-    const filePath = mustGetEnvironment("GITHUB_OUTPUT");
-    fs.appendFileSync(filePath, `${name}=${value}${os.EOL}`);
+    appendFileSync(getGitHubOutput(), `${name}=${value}${EOL}`);
 }
 /**
  * Retrieves the value of a GitHub Actions state.
  *
+ * State names are case-sensitive — use the exact same casing that was passed
+ * to {@link setState}.
+ *
  * @param name - The name of the GitHub Actions state.
- * @returns The value of the GitHub Actions state, or an empty string if not found.
+ * @returns The value of the GitHub Actions state, or an empty string if not set.
  */
 function getState(name) {
-    const value = process.env[`STATE_${name}`] ?? "";
-    return value.trim();
+    return process.env[`STATE_${name}`] ?? "";
 }
 /**
  * Sets the value of a GitHub Actions state.
+ *
+ * Makes the state available in the current process and persists it across
+ * the pre, main, and post steps of the same action.
  *
  * @param name - The name of the GitHub Actions state.
  * @param value - The value to set for the GitHub Actions state.
@@ -1879,46 +2300,53 @@ function getState(name) {
  */
 async function setState(name, value) {
     process.env[`STATE_${name}`] = value;
-    const filePath = mustGetEnvironment("GITHUB_STATE");
-    await fsPromises.appendFile(filePath, `${name}=${value}${os.EOL}`);
+    await appendFile(getGitHubState(), `${name}=${value}${EOL}`);
 }
 /**
  * Sets the value of a GitHub Actions state synchronously.
+ *
+ * Makes the state available in the current process and persists it across
+ * the pre, main, and post steps of the same action.
  *
  * @param name - The name of the GitHub Actions state.
  * @param value - The value to set for the GitHub Actions state.
  */
 function setStateSync(name, value) {
     process.env[`STATE_${name}`] = value;
-    const filePath = mustGetEnvironment("GITHUB_STATE");
-    fs.appendFileSync(filePath, `${name}=${value}${os.EOL}`);
+    appendFileSync(getGitHubState(), `${name}=${value}${EOL}`);
 }
 /**
  * Sets the value of an environment variable in GitHub Actions.
  *
+ * Updates `process.env` immediately so the variable is available in the
+ * current process, and appends it to the env file for subsequent steps.
+ *
  * @param name - The name of the environment variable.
  * @param value - The value to set for the environment variable.
- * @returns A promise that resolves when the environment variable is
- *          successfully set.
+ * @returns A promise that resolves when the environment variable is successfully set.
  */
 async function setEnv(name, value) {
     process.env[name] = value;
-    const filePath = mustGetEnvironment("GITHUB_ENV");
-    await fsPromises.appendFile(filePath, `${name}=${value}${os.EOL}`);
+    await appendFile(getGitHubEnv(), `${name}=${value}${EOL}`);
 }
 /**
  * Sets the value of an environment variable in GitHub Actions synchronously.
+ *
+ * Updates `process.env` immediately so the variable is available in the
+ * current process, and appends it to the env file for subsequent steps.
  *
  * @param name - The name of the environment variable.
  * @param value - The value to set for the environment variable.
  */
 function setEnvSync(name, value) {
     process.env[name] = value;
-    const filePath = mustGetEnvironment("GITHUB_ENV");
-    fs.appendFileSync(filePath, `${name}=${value}${os.EOL}`);
+    appendFileSync(getGitHubEnv(), `${name}=${value}${EOL}`);
 }
 /**
  * Adds a system path to the environment in GitHub Actions.
+ *
+ * Prepends the path to `process.env.PATH` immediately so it is available in
+ * the current process, and appends it to the path file for subsequent steps.
  *
  * @param sysPath - The system path to add to the environment.
  * @returns A promise that resolves when the system path is successfully added.
@@ -1928,24 +2356,39 @@ async function addPath(sysPath) {
         process.env.PATH !== undefined
             ? `${sysPath}${external_node_path_.delimiter}${process.env.PATH}`
             : sysPath;
-    const filePath = mustGetEnvironment("GITHUB_PATH");
-    await promises_.appendFile(filePath, `${sysPath}${external_node_os_.EOL}`);
+    await (0,promises_.appendFile)(vars_getGitHubPath(), `${sysPath}${external_node_os_.EOL}`);
 }
 /**
  * Adds a system path to the environment in GitHub Actions synchronously.
+ *
+ * Prepends the path to `process.env.PATH` immediately so it is available in
+ * the current process, and appends it to the path file for subsequent steps.
  *
  * @param sysPath - The system path to add to the environment.
  */
 function addPathSync(sysPath) {
     process.env.PATH =
         process.env.PATH !== undefined
-            ? `${sysPath}${path.delimiter}${process.env.PATH}`
+            ? `${sysPath}${delimiter}${process.env.PATH}`
             : sysPath;
-    const filePath = mustGetEnvironment("GITHUB_PATH");
-    fs.appendFileSync(filePath, `${sysPath}${os.EOL}`);
+    appendFileSync(getGitHubPath(), `${sysPath}${EOL}`);
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/gha-utils@0.4.1/node_modules/gha-utils/dist/log.js
+
+/***/ }),
+
+/***/ 990:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   FF: () => (/* binding */ logWarning),
+/* harmony export */   NL: () => (/* binding */ beginLogGroup),
+/* harmony export */   NZ: () => (/* binding */ endLogGroup),
+/* harmony export */   fH: () => (/* binding */ logInfo),
+/* harmony export */   vV: () => (/* binding */ logError)
+/* harmony export */ });
+/* unused harmony exports logDebug, logNotice, logCommand, addLogMask, stopCommands, resumeCommands */
+/* harmony import */ var node_os__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(161);
 
 /**
  * Logs an information message in GitHub Actions.
@@ -1953,7 +2396,7 @@ function addPathSync(sysPath) {
  * @param message - The information message to log.
  */
 function logInfo(message) {
-    process.stdout.write(`${message}${external_node_os_.EOL}`);
+    process.stdout.write(`${message}${node_os__WEBPACK_IMPORTED_MODULE_0__.EOL}`);
 }
 /**
  * Logs a debug message in GitHub Actions.
@@ -1961,24 +2404,45 @@ function logInfo(message) {
  * @param message - The debug message to log.
  */
 function logDebug(message) {
-    process.stdout.write(`::debug::${message}${os.EOL}`);
+    process.stdout.write(`::debug::${message}${EOL}`);
+}
+function formatAnnotationParams(options) {
+    const params = Object.entries(options)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => `${k}=${String(v)}`)
+        .join(",");
+    return params ? ` ${params}` : "";
+}
+/**
+ * Logs a notice message in GitHub Actions.
+ *
+ * @param message - The notice message to log.
+ * @param options - Optional annotation parameters to pin the message to a file location.
+ */
+function logNotice(message, options) {
+    const params = options ? formatAnnotationParams(options) : "";
+    process.stdout.write(`::notice${params}::${message}${EOL}`);
 }
 /**
  * Logs a warning message in GitHub Actions.
  *
  * @param message - The warning message to log.
+ * @param options - Optional annotation parameters to pin the message to a file location.
  */
-function logWarning(message) {
-    process.stdout.write(`::warning::${message}${external_node_os_.EOL}`);
+function logWarning(message, options) {
+    const params = options ? formatAnnotationParams(options) : "";
+    process.stdout.write(`::warning${params}::${message}${node_os__WEBPACK_IMPORTED_MODULE_0__.EOL}`);
 }
 /**
  * Logs an error message in GitHub Actions.
  *
  * @param err - The error, which can be of any type.
+ * @param options - Optional annotation parameters to pin the message to a file location.
  */
-function logError(err) {
+function logError(err, options) {
     const message = err instanceof Error ? err.message : String(err);
-    process.stdout.write(`::error::${message}${external_node_os_.EOL}`);
+    const params = options ? formatAnnotationParams(options) : "";
+    process.stdout.write(`::error${params}::${message}${node_os__WEBPACK_IMPORTED_MODULE_0__.EOL}`);
 }
 /**
  * Logs a command along with its arguments in GitHub Actions.
@@ -1988,26 +2452,49 @@ function logError(err) {
  */
 function logCommand(command, ...args) {
     const message = [command, ...args].join(" ");
-    process.stdout.write(`[command]${message}${os.EOL}`);
+    process.stdout.write(`[command]${message}${EOL}`);
 }
 /**
- * Begins a log group in GitHub Actions.
+ * Masks a value in GitHub Actions logs.
+ *
+ * @param value - The value to mask. Any occurrence of this value in subsequent
+ *   log output will be replaced with `***`.
+ */
+function addLogMask(value) {
+    process.stdout.write(`::add-mask::${value}${EOL}`);
+}
+/**
+ * Begins a log group in GitHub Actions. Close it with {@link endLogGroup}.
  *
  * @param name - The name of the log group.
  */
 function beginLogGroup(name) {
-    process.stdout.write(`::group::${name}${external_node_os_.EOL}`);
+    process.stdout.write(`::group::${name}${node_os__WEBPACK_IMPORTED_MODULE_0__.EOL}`);
 }
 /**
- * Ends the current log group in GitHub Actions.
+ * Ends the log group opened by {@link beginLogGroup}.
  */
 function endLogGroup() {
-    process.stdout.write(`::endgroup::${external_node_os_.EOL}`);
+    process.stdout.write(`::endgroup::${node_os__WEBPACK_IMPORTED_MODULE_0__.EOL}`);
 }
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/gha-utils@0.4.1/node_modules/gha-utils/dist/index.js
-
-
+/**
+ * Stops processing workflow commands in GitHub Actions until
+ * {@link resumeCommands} is called with the same token.
+ *
+ * @param endToken - A unique token identifying this stop/resume pair.
+ */
+function stopCommands(endToken) {
+    process.stdout.write(`::stop-commands::${endToken}${EOL}`);
+}
+/**
+ * Resumes processing workflow commands in GitHub Actions after
+ * {@link stopCommands} was called with the same token.
+ *
+ * @param endToken - The token that was passed to {@link stopCommands}.
+ */
+function resumeCommands(endToken) {
+    process.stdout.write(`::${endToken}::${EOL}`);
+}
 
 
 /***/ }),

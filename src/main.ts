@@ -7,7 +7,7 @@ import {
   logError,
   logInfo,
   logWarning,
-} from "gha-utils";
+} from "ghakit/log";
 
 import { getCacheKey, getCachePaths } from "./cache.js";
 import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
