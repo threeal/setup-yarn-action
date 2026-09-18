@@ -28,13 +28,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, macos-14, windows-2022]
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
-      - name: Checkout Package
-        uses: actions/checkout@v6.0.3
-        with:
-          repository: threeal/nodejs-starter
-          ref: v2.1.2
-
       - name: Checkout Action
         uses: actions/checkout@v6.0.3
         with:
@@ -43,6 +39,20 @@ jobs:
             action.yml
             dist
           sparse-checkout-cone-mode: false
+
+      - name: Create Sample Package
+        shell: bash
+        run: |
+          cat <<'EOF' > package.json
+          {
+            "name": "sample-package",
+            "version": "0.0.0",
+            "packageManager": "yarn@4.0.2",
+            "dependencies": {
+              "picocolors": "^1.1.1"
+            }
+          }
+          EOF
 
       - name: Setup Yarn
         uses: ./setup-yarn-action
@@ -57,17 +67,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, macos-14, windows-2022]
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
-      - name: Checkout Package
-        uses: actions/checkout@v6.0.3
-        with:
-          repository: threeal/nodejs-starter
-          ref: v1.0.0
-
-      - name: Alter Package
-        shell: bash
-        run: jq 'del(.packageManager)' package.json > package.json.tmp && mv package.json.tmp package.json
-
       - name: Checkout Action
         uses: actions/checkout@v6.0.3
         with:
@@ -76,6 +78,19 @@ jobs:
             action.yml
             dist
           sparse-checkout-cone-mode: false
+
+      - name: Create Sample Package
+        shell: bash
+        run: |
+          cat <<'EOF' > package.json
+          {
+            "name": "sample-package",
+            "version": "0.0.0",
+            "dependencies": {
+              "picocolors": "^1.1.1"
+            }
+          }
+          EOF
 
       - name: Setup Yarn
         uses: ./setup-yarn-action
@@ -96,13 +111,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, macos-14, windows-2022]
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
-      - name: Checkout Package
-        uses: actions/checkout@v6.0.3
-        with:
-          repository: threeal/nodejs-starter
-          ref: v2.1.2
-
       - name: Checkout Action
         uses: actions/checkout@v6.0.3
         with:
@@ -111,6 +122,20 @@ jobs:
             action.yml
             dist
           sparse-checkout-cone-mode: false
+
+      - name: Create Sample Package
+        shell: bash
+        run: |
+          cat <<'EOF' > package.json
+          {
+            "name": "sample-package",
+            "version": "0.0.0",
+            "packageManager": "yarn@4.0.2",
+            "dependencies": {
+              "picocolors": "^1.1.1"
+            }
+          }
+          EOF
 
       - name: Setup Yarn
         uses: ./setup-yarn-action
@@ -123,13 +148,9 @@ jobs:
   test-action-with-yarn-local-cache:
     name: Test Action With Yarn Local Cache
     runs-on: ubuntu-24.04
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
-      - name: Checkout Package
-        uses: actions/checkout@v6.0.3
-        with:
-          repository: threeal/nodejs-starter
-          ref: v2.1.2
-
       - name: Checkout Action
         uses: actions/checkout@v6.0.3
         with:
@@ -138,6 +159,20 @@ jobs:
             action.yml
             dist
           sparse-checkout-cone-mode: false
+
+      - name: Create Sample Package
+        shell: bash
+        run: |
+          cat <<'EOF' > package.json
+          {
+            "name": "sample-package",
+            "version": "0.0.0",
+            "packageManager": "yarn@4.0.2",
+            "dependencies": {
+              "picocolors": "^1.1.1"
+            }
+          }
+          EOF
 
       - name: Disable Yarn Global Cache
         run: |
