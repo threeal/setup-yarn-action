@@ -17,9 +17,9 @@ importers:
       catched-error-message:
         specifier: ^0.0.1
         version: 0.0.1
-      gha-utils:
-        specifier: ^0.4.1
-        version: 0.4.1
+      ghakit:
+        specifier: ^1.0.0
+        version: 1.0.0
       hasha:
         specifier: ^7.0.0
         version: 7.0.0
@@ -738,9 +738,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  gha-utils@0.4.1:
-    resolution: {integrity: sha512-KHWQj6SQWFfsTt4epwcyx/LfLUU/3bFFkGhfkzpFKV/77w46Nm5vt8O+3KVk10sfON+3Ca578RZk0hQnLMUtCw==}
-    deprecated: Package renamed to ghakit. Please use ghakit instead.
+  ghakit@1.0.0:
+    resolution: {integrity: sha512-PrKZCYZDjnMKCudOlqTujzg+H/yLc9zjqenVxPqNTE3QDkIK5rpPeK2tjkzYkYYaj7Q9f7IuTtDggmpfmYCYmw==}
+    engines: {node: '>=24'}
 
   glob-parent@6.0.2:
     resolution: {integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==}
@@ -1798,7 +1798,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  gha-utils@0.4.1: {}
+  ghakit@1.0.0: {}
 
   glob-parent@6.0.2:
     dependencies:

@@ -1,5 +1,5 @@
 import { exec } from "@actions/exec";
-import { addPath } from "gha-utils";
+import { addPath } from "ghakit/io";
 import { mkdirSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -8,7 +8,7 @@ import { corepackAssertYarnVersion, corepackEnableYarn } from "./corepack.js";
 import { getYarnVersion } from "./yarn/index.js";
 
 vi.mock("@actions/exec", () => ({ exec: vi.fn() }));
-vi.mock("gha-utils", () => ({ addPath: vi.fn() }));
+vi.mock("ghakit/io", () => ({ addPath: vi.fn() }));
 vi.mock("node:fs", () => ({ mkdirSync: vi.fn() }));
 vi.mock("./yarn/index.js", () => ({ getYarnVersion: vi.fn() }));
 

@@ -1,8 +1,8 @@
-import { getInput } from "gha-utils";
+import { getInput } from "ghakit/io";
 import { beforeEach, expect, it, vi } from "vitest";
 import { getInputs } from "./inputs.js";
 
-vi.mock("gha-utils", () => ({ getInput: vi.fn() }));
+vi.mock("ghakit/io", () => ({ getInput: vi.fn() }));
 
 beforeEach(() => {
   vi.mocked(getInput).mockImplementation((name) => {

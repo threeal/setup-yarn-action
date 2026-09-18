@@ -1,5 +1,5 @@
 import { exec } from "@actions/exec";
-import { logError, logInfo, logWarning } from "gha-utils";
+import { logError, logInfo, logWarning } from "ghakit/log";
 
 export interface YarnInstallOutput {
   type: "info" | "warning" | "error";
