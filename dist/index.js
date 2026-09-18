@@ -164,24 +164,6 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 481:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   G: () => (/* binding */ getInputs)
-/* harmony export */ });
-/* harmony import */ var ghakit_io__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76);
-
-function getInputs() {
-    return {
-        version: (0,ghakit_io__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)("version"),
-        cache: (0,ghakit_io__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)("cache") === "true",
-    };
-}
-
-
-/***/ }),
-
 /***/ 785:
 /***/ ((module, __webpack_exports__, __nccwpck_require__) => {
 
@@ -191,13 +173,13 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ });
 /* harmony import */ var cache_action__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(630);
 /* harmony import */ var catched_error_message__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(493);
-/* harmony import */ var ghakit_log__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(990);
-/* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(348);
-/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(142);
-/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(481);
+/* harmony import */ var ghakit_io__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(76);
+/* harmony import */ var ghakit_log__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(990);
+/* harmony import */ var _cache_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(348);
+/* harmony import */ var _corepack_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(142);
 /* harmony import */ var _yarn_index_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(613);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_2__]);
-_cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_cache_js__WEBPACK_IMPORTED_MODULE_3__]);
+_cache_js__WEBPACK_IMPORTED_MODULE_3__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
 
 
@@ -206,89 +188,81 @@ _cache_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? 
 
 
 async function main() {
-    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Getting action inputs...");
-    let inputs;
+    const version = (0,ghakit_io__WEBPACK_IMPORTED_MODULE_1__/* .getInput */ .V4)("version");
+    const cache = (0,ghakit_io__WEBPACK_IMPORTED_MODULE_1__/* .getInput */ .V4)("cache") === "true";
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logInfo */ .fH)("Enabling Yarn...");
     try {
-        inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_4__/* .getInputs */ .G)();
-    }
-    catch (err) {
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get action inputs: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
-        process.exitCode = 1;
-        return;
-    }
-    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Enabling Yarn...");
-    try {
-        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackEnableYarn */ .e)();
-        if (inputs.version != "") {
-            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .setYarnVersion */ .DA)(inputs.version);
+        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_4__/* .corepackEnableYarn */ .e)();
+        if (version != "") {
+            await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .setYarnVersion */ .DA)(version);
         }
-        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_3__/* .corepackAssertYarnVersion */ .N)();
+        await (0,_corepack_js__WEBPACK_IMPORTED_MODULE_4__/* .corepackAssertYarnVersion */ .N)();
     }
     catch (err) {
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logError */ .vV)(`Failed to enable Yarn: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
         process.exitCode = 1;
         return;
     }
     let cacheKey = { key: "", version: "" };
-    if (inputs.cache) {
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Getting cache key");
+    if (cache) {
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .beginLogGroup */ .NL)("Getting cache key");
         try {
-            cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCacheKey */ .e)();
+            cacheKey = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_3__/* .getCacheKey */ .e)();
         }
         catch (err) {
-            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .endLogGroup */ .NZ)();
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logError */ .vV)(`Failed to get cache key: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Restoring cache...");
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .endLogGroup */ .NZ)();
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logInfo */ .fH)("Restoring cache...");
         try {
             const cacheRestored = await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .restoreCache */ .P)(cacheKey.key, cacheKey.version);
             if (cacheRestored) {
-                (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Cache restored successfully");
+                (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logInfo */ .fH)("Cache restored successfully");
                 return;
             }
             else {
-                (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logWarning */ .FF)("Cache not found");
+                (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logWarning */ .FF)("Cache not found");
             }
         }
         catch (err) {
-            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logError */ .vV)(`Failed to restore cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
     }
-    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Installing dependencies");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .beginLogGroup */ .NL)("Installing dependencies");
     try {
         await (0,_yarn_index_js__WEBPACK_IMPORTED_MODULE_5__/* .yarnInstall */ .yr)();
     }
     catch (err) {
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .endLogGroup */ .NZ)();
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logError */ .vV)(`Failed to install dependencies: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
         process.exitCode = 1;
         return;
     }
-    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-    if (inputs.cache) {
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .beginLogGroup */ .NL)("Getting cache paths");
+    (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .endLogGroup */ .NZ)();
+    if (cache) {
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .beginLogGroup */ .NL)("Getting cache paths");
         let cachePaths = [];
         try {
-            cachePaths = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_2__/* .getCachePaths */ .V)();
+            cachePaths = await (0,_cache_js__WEBPACK_IMPORTED_MODULE_3__/* .getCachePaths */ .V)();
         }
         catch (err) {
-            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .endLogGroup */ .NZ)();
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logError */ .vV)(`Failed to get cache paths: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .endLogGroup */ .NZ)();
-        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logInfo */ .fH)("Saving cache...");
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .endLogGroup */ .NZ)();
+        (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logInfo */ .fH)("Saving cache...");
         try {
             await (0,cache_action__WEBPACK_IMPORTED_MODULE_0__/* .saveCache */ .I)(cacheKey.key, cacheKey.version, cachePaths);
         }
         catch (err) {
-            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_1__/* .logError */ .vV)(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
+            (0,ghakit_log__WEBPACK_IMPORTED_MODULE_2__/* .logError */ .vV)(`Failed to save cache: ${(0,catched_error_message__WEBPACK_IMPORTED_MODULE_6__/* .getErrorMessage */ .u)(err)}`);
             process.exitCode = 1;
             return;
         }
